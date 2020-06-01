@@ -1,0 +1,11 @@
+{
+	"client":{
+		"cp_id":"890086000300347509",
+		"product_id":"9105385871708328998",
+		"client_id":"254903481821824000",
+		"client_secret":"15FF3EF03447CFC99D95C8449D78020FCA032B7C45972CC48F9886A1E3BEECB6",
+		"app_id":"101508155",
+		"package_name":"com.fantaiai.flutter"
+	},
+	"configuration_version":"1.0"
+}

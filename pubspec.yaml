@@ -1,0 +1,128 @@
+name: flutter_play
+description: A new Flutter project.
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# In Android, build-name is used as versionName while build-number used as versionCode.
+# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
+# In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
+# Read more about iOS versioning at
+# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.2.2 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+
+  device_info: ^0.4.1+4
+  connectivity: ^0.4.3+2
+  url_launcher: ^5.0.3
+  permission_handler: ^5.0.0
+  crypto: ^2.1.4
+  provider: ^4.1.2
+  fluro: ^1.6.3
+  path_provider: ^1.6.9
+  uuid: 2.0.4
+  orientation: ^1.1.0
+  dio: ^3.0.5
+  dio_cookie_manager: ^1.0.0
+  cookie_jar: ^1.0.0
+  qrcode: ^1.0.4
+  flutter_inappwebview: ^3.2.0
+  flutter_screenutil: ^1.1.0
+  shared_preferences: ^0.5.7+3
+#  image_pickers: ^1.0.7
+  multi_image_picker: ^4.5.9
+#  flutter_multiple_image_picker: 0.0.1
+  image_picker: ^0.6.0+4
+  image_cropper: ^1.1.1
+  pull_to_refresh: ^1.5.8
+  flutter_swiper: ^1.1.6
+  extended_image: ^0.8.0
+  flutter_alert: ^0.4.0
+#  fluttertoast: ^3.1.3
+  web_socket_channel: ^1.0.14
+  move_bg:
+    git:
+      url: https://github.com/chavesgu/flutter-movebg.git
+      ref: ee36ab4fbaf1f38ce18f55f7c1c98e52f80d4141
+  qiniu_manager:
+    git:
+      url: https://github.com/chavesgu/flutter_qiniu_manager.git
+      ref: 3fe0b591dfc710bbc78d2dc4b9e5ff2c6e0aa313
+  statusbar_util: ^1.0.0
+  video_player: ^0.10.11+1
+  audioplayers: ^0.13.5
+#  amap_base: ^0.3.5
+#  amap_base_location: ^0.4.0+1
+  amap_location: ^0.2.0
+#  vibration: ^1.2.2
+#  after_layout: ^1.0.7+2
+#  local_auth: ^0.6.1
+  push:
+    path: ../flutter-plugin/push/
+
+#  flutter_ios_dark_mode: 0.0.1
+#  page_life_cycle: 1.1.0
+  flutter_inner_drawer: 0.5.4
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+# For information on the generic Dart part of this file, see the
+# following page: https://www.dartlang.org/tools/pub/pubspec
+
+# The following section is specific to Flutter.
+flutter:
+
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/images/avatar.png
+
+
+  fonts:
+    - family: iconfont
+      fonts:
+        - asset: assets/fonts/iconfont.ttf
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/assets-and-images/#resolution-aware.
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/assets-and-images/#from-packages
+
+  # To add custom fonts to your application, add a fonts section here,
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
+  #   - family: Trajan Pro
+  #     fonts:
+  #       - asset: fonts/TrajanPro.ttf
+  #       - asset: fonts/TrajanPro_Bold.ttf
+  #         weight: 700
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/custom-fonts/#from-packages
