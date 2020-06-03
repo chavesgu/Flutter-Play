@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_play/components/GlobalComponents.dart' show MyImage;
+import 'package:flutter_play/pages/global/musicListDetail.dart';
 import 'package:flutter_play/variable.dart';
 
 
@@ -60,7 +61,7 @@ class RecommendMusicList extends StatelessWidget {
     for (int i = 0;i < list.length;i++) {
       res.add(GestureDetector(
         onTap: () {
-          Navigator.of(context).pushNamed("musicListDetail?id=${list[i]["id"]}");
+          Navigator.of(context).pushNamed("${MusicListDetailPage.name}?id=${list[i]["id"]}");
         },
         child: Container(
           width: width(210),

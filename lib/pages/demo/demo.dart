@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ import 'package:flutter_play/utils/utils.dart';
 import 'package:flutter_play/variable.dart';
 import 'package:flutter_play/service.dart';
 import 'package:flutter_play/pages/demo/testFixed.dart';
+import 'package:flutter_play/pages/demo/testOCR.dart';
 
 class DemoPage extends StatefulWidget {
   @override
@@ -28,13 +30,15 @@ class DemoPage extends StatefulWidget {
   }
 }
 
-class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
+class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin,TickerProviderStateMixin {
 
   IOWebSocketChannel channel;
   String _data = '';
 
   File _image;
   String url;
+
+  double progress = 0;
 
   String deviceToken = '';
   String message = '';
@@ -46,8 +50,11 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Demo'),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50.0),
+        child: AppBar(
+          title: Text('Demo'),
+        ),
       ),
       body: ListView(
         children: <Widget>[
@@ -88,6 +95,24 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
                 child: Text('test fixed'),
                 onPressed: () {
                   Navigator.of(context).pushNamed(TestFixedPage.name);
+                },
+              ),
+              RaisedButton(
+                child: Text('test ocr'),
+                onPressed: () {
+                  goOCR();
+                },
+              ),
+              RaisedButton(
+                child: Text('throttle'),
+                onPressed: () {
+                  throttle();
+                },
+              ),
+              RaisedButton(
+                child: Text('debounce'),
+                onPressed: () {
+                  debounce();
                 },
               ),
             ],
@@ -306,7 +331,6 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
         appKey: appKey,
         type: type,
         getToken: (_token) {
-          print(111);
           deviceToken = _token;
           setState(() {
 
@@ -332,5 +356,51 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
         },
       );
     }
+  }
+
+  void goOCR() async {
+    PermissionStatus permissionStatus = await Permission.camera.status;
+    bool hasPermission = permissionStatus.isGranted;
+    bool unknown = (permissionStatus.isUndetermined) || (permissionStatus.isDenied);
+    if (unknown) {
+      // microphone
+      hasPermission = await Permission.camera.request().isGranted;
+    }
+    if (!hasPermission) {
+      showAlert(
+        context: context,
+        barrierDismissible: false,
+        title: '提示',
+        body: '需要打开相机权限，前往"设置"',
+        actions: [
+          AlertAction(
+            text: '取消',
+            onPressed: () {
+            },
+          ),
+          AlertAction(
+            text: '设置',
+            onPressed: () {
+              openAppSettings();
+            },
+          )
+        ],
+      );
+    } else {
+      Navigator.of(context).pushNamed(TestOCR.name);
+    }
+  }
+
+  void throttle() {
+    Utils.throttle(() {
+      DateTime now = DateTime.now();
+      print('throttle:'+now.toString());
+    }, Duration(seconds: 2));
+  }
+  void debounce() {
+    Utils.debounce(() {
+      DateTime now = DateTime.now();
+      print('debounce:'+now.toString());
+    }, Duration(seconds: 2));
   }
 }

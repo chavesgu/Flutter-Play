@@ -110,6 +110,37 @@ class Utils {
     return new File(tempPath+'/'+Uuid().v4()).writeAsBytes(
       buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
   }
+
+  // 节流
+  static final Map<int, Throttling> _throttleMap = Map();
+  static throttle(Function fn, Duration duration) {
+    Throttling thr;
+    int ms = duration.inMilliseconds;
+    if (_throttleMap.containsKey(ms)) {
+      thr = _throttleMap[ms];
+    } else {
+      thr = Throttling(duration: duration);
+      _throttleMap[ms] = thr;
+    }
+    thr.throttle(() {
+      fn();
+    });
+  }
+  // 防抖
+  static final Map<int, Debouncing> _debounceMap = Map();
+  static debounce(Function fn, Duration duration) {
+    Debouncing deb;
+    int ms = duration.inMilliseconds;
+    if (_debounceMap.containsKey(ms)) {
+      deb = _debounceMap[ms];
+    } else {
+      deb = Debouncing(duration: duration);
+      _debounceMap[ms] = deb;
+    }
+    deb.debounce(() {
+      fn();
+    });
+  }
 }
 
 class Toast {
@@ -186,6 +217,95 @@ class Toast {
     _currentEntry = null;
     if (_complete!=null) _complete();
     _complete = null;
+  }
+}
+
+class Throttling {
+  Duration _duration;
+  Duration get duration => this._duration;
+  set duration(Duration value) {
+    assert(duration is Duration && !duration.isNegative);
+    this._duration = value;
+  }
+
+  bool _isReady = true;
+  bool get isReady => isReady;
+  Future<void> get _waiter => Future.delayed(this._duration);
+  // ignore: close_sinks
+  final StreamController<bool> _stateSC =
+  new StreamController<bool>.broadcast();
+
+  Throttling({Duration duration = const Duration(seconds: 1)})
+    : assert(duration is Duration && !duration.isNegative),
+      this._duration = duration ?? Duration(seconds: 1) {
+    this._stateSC.sink.add(true);
+  }
+
+  dynamic throttle(Function func) {
+    if (!this._isReady) return null;
+    this._stateSC.sink.add(false);
+    this._isReady = false;
+    _waiter
+      ..then((_) {
+        this._isReady = true;
+        this._stateSC.sink.add(true);
+      });
+    return Function.apply(func, []);
+  }
+
+  StreamSubscription<bool> listen(Function(bool) onData) =>
+    this._stateSC.stream.listen(onData);
+
+  dispose() {
+    this._stateSC.close();
+  }
+}
+
+class Debouncing {
+  Duration _duration;
+  Duration get duration => this._duration;
+  set duration(Duration value) {
+    assert(duration is Duration && !duration.isNegative);
+    this._duration = value;
+  }
+
+  Timer _waiter;
+  bool _isReady = true;
+  bool get isReady => isReady;
+  // ignore: close_sinks
+  StreamController<dynamic> _resultSC =
+  new StreamController<dynamic>.broadcast();
+  // ignore: close_sinks
+  final StreamController<bool> _stateSC =
+  new StreamController<bool>.broadcast();
+
+  Debouncing({Duration duration = const Duration(seconds: 1)})
+    : assert(duration is Duration && !duration.isNegative),
+      this._duration = duration ?? Duration(seconds: 1) {
+    this._stateSC.sink.add(true);
+  }
+
+  Future<dynamic> debounce(Function func) async {
+    if (this._waiter?.isActive ?? false) {
+      this._waiter?.cancel();
+      this._resultSC.sink.add(null);
+    }
+    this._isReady = false;
+    this._stateSC.sink.add(false);
+    this._waiter = Timer(this._duration, () {
+      this._isReady = true;
+      this._stateSC.sink.add(true);
+      this._resultSC.sink.add(Function.apply(func, []));
+    });
+    return this._resultSC.stream.first;
+  }
+
+  StreamSubscription<bool> listen(Function(bool) onData) =>
+    this._stateSC.stream.listen(onData);
+
+  dispose() {
+    this._resultSC.close();
+    this._stateSC.close();
   }
 }
 

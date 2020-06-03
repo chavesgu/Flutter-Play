@@ -54,66 +54,69 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
     super.build(context);
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: false,
-        titleSpacing: 0,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(IconData(0xe610, fontFamily: 'iconfont')),
-            onPressed: (){
-              _focusNode?.unfocus();
-              goScan();
-            },
-          )
-        ],
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: Icon(Icons.menu),
-              onPressed: () {
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50),
+        child: AppBar(
+          centerTitle: false,
+          titleSpacing: 0,
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(IconData(0xe610, fontFamily: 'iconfont')),
+              onPressed: (){
                 _focusNode?.unfocus();
-                if (widget.drawerKey!=null) widget.drawerKey.currentState.open();
+                goScan();
               },
-            );
-          },
-        ),
-        title: ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(36)),
-          child: Container(
-            height: 36,
-            child: TextField(
-              keyboardType: TextInputType.text,
-              style: TextStyle(
-                fontSize: width(30),
-                textBaseline: TextBaseline.alphabetic,
-                color: Colors.black
-              ),
-              focusNode: _focusNode,
-              controller: _inputController,
-              cursorColor: Theme.of(context).primaryColor,
-              textInputAction: TextInputAction.search,
-              onSubmitted: _submit,
-              decoration: InputDecoration(
-                isDense: true,
-                filled: true,
-                fillColor: Colors.white,
-                hintText: '请输入关键词搜索',
-                hintStyle: TextStyle(
-                  color: Colors.grey,
+            )
+          ],
+          leading: Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                icon: Icon(Icons.menu),
+                onPressed: () {
+                  _focusNode?.unfocus();
+                  if (widget.drawerKey!=null) widget.drawerKey.currentState.open();
+                },
+              );
+            },
+          ),
+          title: ClipRRect(
+            borderRadius: BorderRadius.all(Radius.circular(36)),
+            child: Container(
+              height: 36,
+              child: TextField(
+                keyboardType: TextInputType.text,
+                style: TextStyle(
                   fontSize: width(30),
+                  textBaseline: TextBaseline.alphabetic,
+                  color: Colors.black
                 ),
-                border: InputBorder.none,
-                prefixIcon: Icon(
-                  Icons.search,
-                  size: width(48),
-                ),
-                suffixIcon: Offstage(
-                  offstage: _hideInputClear,
-                  child: GestureDetector(
-                    onTap: _clearInput,
-                    child: Icon(
-                      Icons.close,
-                      size: width(48),
+                focusNode: _focusNode,
+                controller: _inputController,
+                cursorColor: Theme.of(context).primaryColor,
+                textInputAction: TextInputAction.search,
+                onSubmitted: _submit,
+                decoration: InputDecoration(
+                  isDense: true,
+                  filled: true,
+                  fillColor: Colors.white,
+                  hintText: '请输入关键词搜索',
+                  hintStyle: TextStyle(
+                    color: Colors.grey,
+                    fontSize: width(30),
+                  ),
+                  border: InputBorder.none,
+                  prefixIcon: Icon(
+                    Icons.search,
+                    size: width(48),
+                  ),
+                  suffixIcon: Offstage(
+                    offstage: _hideInputClear,
+                    child: GestureDetector(
+                      onTap: _clearInput,
+                      child: Icon(
+                        Icons.close,
+                        size: width(48),
+                      ),
                     ),
                   ),
                 ),

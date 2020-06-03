@@ -15,6 +15,7 @@ import 'package:statusbar_util/statusbar_util.dart';
 import 'package:device_info/device_info.dart';
 
 import 'router.dart';
+import 'routeObserver.dart';
 import 'package:flutter_play/store/global.dart';
 import 'variable.dart';
 import 'utils/chinese_localization.dart';
@@ -114,6 +115,9 @@ class MyApp extends StatelessWidget {
             themeMode: model.useSystemMode?ThemeMode.system:model.appThemeMode,
             home: splashed?EntryPage():SplashBanner(),
             onGenerateRoute: RouterManager.router.generator,
+            navigatorObservers: <NavigatorObserver>[
+              MyRouteObserve(),
+            ],
             supportedLocales: [
               Locale('zh', ''),
               Locale('en', 'US'), // English

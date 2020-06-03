@@ -19,19 +19,16 @@ class SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          '搜索结果',
-          style: TextStyle(
-            color: Colors.black,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50),
+        child: AppBar(
+          centerTitle: true,
+          title: Text(
+            '搜索结果',
           ),
+          brightness: Brightness.light,
+          backgroundColor: Colors.white,
         ),
-        iconTheme: IconThemeData(
-          color: Colors.black,
-        ),
-        brightness: Brightness.light,
-        backgroundColor: Colors.white,
       ),
       body: Center(
         child: Text(

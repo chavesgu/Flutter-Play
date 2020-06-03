@@ -25,9 +25,12 @@ class SettingPageState extends State<SettingPage> {
     final toggleUseSystemMode = Provider.of<GlobalModel>(context, listen: false).toggleUseSystemMode;
     final toggleAppThemeMode = Provider.of<GlobalModel>(context, listen: false).toggleAppThemeMode;
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('设置'),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50),
+        child: AppBar(
+          centerTitle: true,
+          title: Text('设置'),
+        ),
       ),
       body: Consumer<GlobalModel>(
         builder: (context, GlobalModel model, child) {

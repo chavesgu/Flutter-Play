@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class TestFixedPage extends StatelessWidget {
   static const name = '/testFixed';
 
+  ScrollController controller = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -11,9 +13,16 @@ class TestFixedPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
+            RaisedButton(
+              child: Text('test animate to'),
+              onPressed: () {
+                animateTo();
+              },
+            ),
             Expanded(
               child: ListView(
                 children: _renderList(),
+                controller: controller,
               ),
             ),
             Container(
@@ -23,6 +32,14 @@ class TestFixedPage extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void animateTo() {
+    controller.animateTo(
+      100,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.bounceInOut,
     );
   }
 

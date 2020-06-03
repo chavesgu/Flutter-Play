@@ -18,12 +18,6 @@ class MediaPageState extends State<MediaPage> with AutomaticKeepAliveClientMixin
 
   Key _refreshKey = Key('smartRefresh');
   final _refreshController = RefreshController();
-  List<String> bannerList = [
-    'http://trademaster-files.oss-cn-shanghai.aliyuncs.com/8aecde43-3d9a-bb67-81d3-0c703d21e07f.jpg',
-    'http://trademaster-files.oss-cn-shanghai.aliyuncs.com/6153a0a8-dc90-4bfa-8e92-c328dbcb8189.jpg',
-    'http://trademaster-files.oss-cn-shanghai.aliyuncs.com/f51b68c9-811d-e7db-8079-b0a86e85b4b2.jpg',
-    'http://trademaster-files.oss-cn-shanghai.aliyuncs.com/205b15f0-69f7-a42b-8ed7-c43460792d0f.jpg',
-  ];
   String url;
   String videoTitle = '';
   bool get _isFullScreen => MediaQuery.of(context).orientation == Orientation.landscape;
@@ -35,8 +29,11 @@ class MediaPageState extends State<MediaPage> with AutomaticKeepAliveClientMixin
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      appBar: _isFullScreen?null:AppBar(
-        title: Text('Media'),
+      appBar: _isFullScreen?null:PreferredSize(
+        preferredSize: Size.fromHeight(50),
+        child: AppBar(
+          title: Text('Media'),
+        ),
       ),
       body: Container(
         child: SmartRefresher(
@@ -62,23 +59,6 @@ class MediaPageState extends State<MediaPage> with AutomaticKeepAliveClientMixin
           child: ListView(
             physics: _isFullScreen?NeverScrollableScrollPhysics():BouncingScrollPhysics(),
             children: <Widget>[
-//              Offstage(
-//                offstage: _isFullScreen,
-//                child: Container(
-//                  width: vw,
-//                  height: vw*9/16,
-//                  child: Swiper(
-//                    itemBuilder: (BuildContext context,int index){
-//                      return MyImage(
-//                        url: bannerList[index],
-//                      );
-//                    },
-//                    itemCount: bannerList.length,
-//                    pagination: new SwiperPagination(),
-//                    control: new SwiperControl(),
-//                  ),
-//                ),
-//              ),
               Offstage(
                 offstage: _isFullScreen,
                 child: Wrap(
@@ -101,6 +81,7 @@ class MediaPageState extends State<MediaPage> with AutomaticKeepAliveClientMixin
                   title: videoTitle,
                   width: _isFullScreen?vh:vw,
                   height: _isFullScreen?vw:vw/16*9,
+                  autoplay: true,
                 ),
               ),
             ],

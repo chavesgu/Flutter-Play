@@ -48,40 +48,56 @@ abstract class Service {
 
   // 首页轮播图
   static Future<List> getHomeBanner() async {
-    Response res = await api.post(
-      '/music/banner',
-      data: {
-        "type": Platform.isIOS?2:1,
-      }
-    );
-    return res.data["banners"];
+    try {
+      Response res = await api.post(
+        '/music/banner',
+        data: {
+          "type": Platform.isIOS?2:1,
+        }
+      );
+      return res.data["banners"];
+    } on DioError catch(e) {
+      return Future.error(e);
+    }
   }
   // 推荐歌单
   static Future<List> getRecommendMusicList() async {
-    Response res = await api.post(
-      '/music/personalized',
-      data: {
-        "limit": 6
-      }
-    );
-    return res.data["result"];
+    try {
+      Response res = await api.post(
+        '/music/personalized',
+        data: {
+          "limit": 6
+        }
+      );
+      return res.data["result"];
+    } on DioError catch(e) {
+      return Future.error(e);
+    }
   }
   // 排行榜
   static Future<List> getTopList() async {
-    Response res = await api.post(
-      '/music/toplist/detail',
-    );
-    return res.data["list"];
+    try {
+      Response res = await api.post(
+        '/music/toplist/detail',
+      );
+      return res.data["list"];
+    } on DioError catch(e) {
+      return Future.error(e);
+    }
   }
   // 歌单详情
-  static Future<Map> getMusicListDetail(String id) async {
-    Response res = await api.post(
-      '/music/playlist/detail?timestamp=${DateTime.now()}',
-      data: {
-        "id": id
-      }
-    );
-    return res.data["playlist"];
+  static Future<Map<String, dynamic>> getMusicListDetail(String id) async {
+    try {
+      Response res = await api.post(
+        '/music/playlist/detail?timestamp=${DateTime.now()}',
+        data: {
+          "id": id
+        }
+      );
+      return res.data["playlist"];
+    } on DioError catch(e) {
+      return Future.error(e);
+    }
   }
 
   static Future getMusic() {

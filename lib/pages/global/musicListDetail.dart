@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_play/components/GlobalComponents.dart';
 import 'package:flutter_play/service.dart';
@@ -47,10 +48,13 @@ class MusicListDetailPageState extends State<MusicListDetailPage> {
         )
       ),
       child: Scaffold(
-        appBar: AppBar(
-          brightness: Brightness.dark,
-          backgroundColor: Colors.transparent,
-          title: Text("歌单"),
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(50),
+          child: AppBar(
+            brightness: Brightness.dark,
+            backgroundColor: Colors.transparent,
+            title: Text("歌单"),
+          ),
         ),
         extendBodyBehindAppBar: true,
         body: detail!=null?
@@ -66,8 +70,8 @@ class MusicListDetailPageState extends State<MusicListDetailPage> {
             ClipRect(
               child: BackdropFilter(
                 filter: ImageFilter.blur(
-                  sigmaX: 20,
-                  sigmaY: 20,
+                  sigmaX: 5,
+                  sigmaY: 5,
                 ),
                 child: Container(
                   color: Colors.black.withOpacity(0.7),
@@ -78,6 +82,7 @@ class MusicListDetailPageState extends State<MusicListDetailPage> {
             ),
             CupertinoScrollbar(
               child: ListView(
+                primary: false,
                 padding: EdgeInsets.only(top: statusBarHeight + kToolbarHeight),
                 children: <Widget>[
                   Container(
@@ -214,7 +219,6 @@ class MusicListDetailPageState extends State<MusicListDetailPage> {
   }
 
   void getData(String id) async {
-    print(id);
     detail = await Service.getMusicListDetail(id);
     setState(() {
 

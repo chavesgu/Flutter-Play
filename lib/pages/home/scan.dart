@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:qrcode/qrcode.dart';
 import 'package:flutter_play/variable.dart';
 
@@ -16,23 +17,26 @@ class _ScanPageState extends State<ScanPage> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(
-        title: Text('扫一扫'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(_isFlashOn?Icons.flash_off:Icons.flash_on),
-            onPressed: (){
-              setState(() {
-                if (_isFlashOn) {
-                  _captureController.torchMode = CaptureTorchMode.off;
-                } else {
-                  _captureController.torchMode = CaptureTorchMode.on;
-                }
-                _isFlashOn = !_isFlashOn;
-              });
-            },
-          )
-        ]
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50),
+        child: AppBar(
+          title: Text('扫一扫'),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(_isFlashOn?Icons.flash_off:Icons.flash_on),
+              onPressed: (){
+                setState(() {
+                  if (_isFlashOn) {
+                    _captureController.torchMode = CaptureTorchMode.off;
+                  } else {
+                    _captureController.torchMode = CaptureTorchMode.on;
+                  }
+                  _isFlashOn = !_isFlashOn;
+                });
+              },
+            )
+          ]
+        ),
       ),
       body: Column(
         children: <Widget>[
@@ -71,10 +75,13 @@ class _ScanPageState extends State<ScanPage> {
   void initState() {
     super.initState();
     _captureController.onCapture((data) {
-      setState(() {
-        _scanData = data;
-      });
-      print('onCapture----$data');
+      if (_scanData==null || _scanData=='') {
+        HapticFeedback.heavyImpact();
+        setState(() {
+          _scanData = data;
+        });
+        print('onCapture----$data');
+      }
     });
   }
 }

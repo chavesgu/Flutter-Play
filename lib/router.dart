@@ -73,6 +73,14 @@ class RouterManager {
       }),
       transitionType:  TransitionType.cupertino,
     );
+    // test ocr
+    router.define(
+      TestOCR.name,
+      handler: Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+        return TestOCR();
+      }),
+      transitionType:  TransitionType.cupertino,
+    );
 
     // 404
 //    router.notFoundHandler = Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {

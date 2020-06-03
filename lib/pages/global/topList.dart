@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_play/components/GlobalComponents.dart';
 import 'package:flutter_play/service.dart';
 import 'package:flutter_play/variable.dart';
@@ -24,8 +25,11 @@ class TopListPageState extends State<TopListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('排行榜'),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50),
+        child: AppBar(
+          title: Text('排行榜'),
+        ),
       ),
       body: CupertinoScrollbar(
         child: ListView(
