@@ -9,3 +9,4 @@ export 'package:flutter_play/pages/drawer/about.dart';
 export 'package:flutter_play/pages/drawer/setting.dart';
 export 'package:flutter_play/pages/demo/testFixed.dart';
 export 'package:flutter_play/pages/demo/testOCR.dart';
+export 'package:flutter_play/pages/demo/pdf.dart';

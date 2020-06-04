@@ -20,8 +20,7 @@ import 'package:push/push.dart';
 import 'package:flutter_play/utils/utils.dart';
 import 'package:flutter_play/variable.dart';
 import 'package:flutter_play/service.dart';
-import 'package:flutter_play/pages/demo/testFixed.dart';
-import 'package:flutter_play/pages/demo/testOCR.dart';
+import 'package:flutter_play/routerPath.dart';
 
 class DemoPage extends StatefulWidget {
   @override
@@ -113,6 +112,12 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin,T
                 child: Text('debounce'),
                 onPressed: () {
                   debounce();
+                },
+              ),
+              RaisedButton(
+                child: Text('view pdf'),
+                onPressed: () {
+                  Navigator.of(context).pushNamed('${PDFView.name}?url=${Uri.encodeComponent('https://cdn.chavesgu.com/profile.pdf')}');
                 },
               ),
             ],

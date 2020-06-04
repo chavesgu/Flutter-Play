@@ -81,6 +81,14 @@ class RouterManager {
       }),
       transitionType:  TransitionType.cupertino,
     );
+    // pdf
+    router.define(
+      PDFView.name,
+      handler: Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+        return PDFView(params["url"].first);
+      }),
+      transitionType:  TransitionType.cupertino,
+    );
 
     // 404
 //    router.notFoundHandler = Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {

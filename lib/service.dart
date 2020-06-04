@@ -16,6 +16,10 @@ parseJson(String text) {
   return compute(_parseAndDecode, text);
 }
 
+final Dio simple = Dio(BaseOptions(
+  sendTimeout: 60000,
+  receiveTimeout: 60000,
+));
 final Dio api = Dio(BaseOptions(
   baseUrl: 'https://api.chavesgu.com',
   sendTimeout: 60000,
@@ -107,5 +111,20 @@ abstract class Service {
         "id": "347230"
       }
     );
+  }
+
+  static Future download(String url, String savePath) async {
+    try {
+      Response res = await simple.download(
+        url,
+        savePath,
+        options: Options(
+          responseType: ResponseType.bytes
+        )
+      );
+      return res.data;
+    } on DioError catch(e) {
+      return Future.error(e);
+    }
   }
 }
