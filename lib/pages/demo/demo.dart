@@ -29,7 +29,7 @@ class DemoPage extends StatefulWidget {
   }
 }
 
-class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin,TickerProviderStateMixin {
+class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
 
   IOWebSocketChannel channel;
   String _data = '';
@@ -73,6 +73,10 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin,T
               RaisedButton(
                 onPressed: _toast,
                 child: Text('toast'),
+              ),
+              RaisedButton(
+                onPressed: _loading,
+                child: Text('5s loading'),
               ),
               RaisedButton(
                 onPressed: _launchURL,
@@ -233,6 +237,14 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin,T
     );
   }
 
+  _loading() {
+    Loading.show(
+      context,
+      msg: "这是一个loading",
+      maxDuration: Duration(seconds: 5),
+    );
+  }
+
   _launchURL() async {
     const url = 'https://www.chavesgu.com';
 //    const url = 'mqq://';
@@ -291,7 +303,7 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin,T
   getImage(SourceType source) async {
     String imagePath;
     List<File> images = await Utils.imagePicker(
-      context: context,
+      context,
       source: source,
       maxImages: 2
     );

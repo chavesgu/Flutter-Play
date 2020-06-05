@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_alert/flutter_alert.dart';
+import 'package:flutter_play/components/MyCircularProgressIndicator.dart';
 import 'package:flutter_play/variable.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -16,7 +17,7 @@ import 'package:uuid/uuid.dart';
 class Utils {
 
   // 选取照片
-  static Future<List<File>> imagePicker({ @required BuildContext context, SourceType source = SourceType.gallery, int maxImages = 1, int quality = 100 })async {
+  static Future<List<File>> imagePicker(BuildContext context, { SourceType source = SourceType.gallery, int maxImages = 1, int quality = 100 })async {
     String permissionReason = '';
     bool hasPermission = false;
     List<File> output = [];
@@ -143,23 +144,103 @@ class Utils {
   }
 }
 
-class Toast {
+class Loading {
   static OverlayEntry _currentEntry;
-  static Function _complete;
+  static Timer _timer;
 
   static void show(BuildContext context, {
     String msg,
-    bool mask = false,
+    bool mask = true,
+    Duration maxDuration = const Duration(seconds: 30),
+  }) async {
+    if (_currentEntry!=null) return;
+
+    _currentEntry = OverlayEntry(
+      opaque: false,
+      builder: (_) {
+        Widget wrap;
+        Widget content = ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(width(20))),
+          child: Container(
+            width: width(300),
+            height: width(300),
+            color: Color.fromRGBO(0, 0, 0, .7),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  width: width(100),
+                  height: width(100),
+                  child: MyCircularProgressIndicator(),
+                ),
+                msg==null?SizedBox.shrink():Container(
+                  margin: EdgeInsets.only(top: width(50)),
+                  child: Text(
+                    msg,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      height: 1.2,
+                      fontSize: width(30),
+                      color: Colors.white,
+                      decoration: TextDecoration.none,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+        wrap = Center(
+          child: content,
+        );
+        if (mask) {
+          return GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            child: Container(
+//            color: Colors.red,
+              child: wrap,
+            ),
+          );
+        }
+        return wrap;
+      },
+    );
+    Overlay.of(context).insert(_currentEntry);
+
+    _timer?.cancel();
+    _timer = Timer(maxDuration, () {
+      hide();
+    });
+  }
+
+  static void hide() {
+    _currentEntry?.remove();
+    _currentEntry = null;
+    _timer?.cancel();
+  }
+}
+
+class Toast {
+  static Function _complete;
+  static OverlayEntry _currentEntry;
+
+  static void show(BuildContext context, {
+    String msg,
+    bool mask = true,
     Duration duration = const Duration(milliseconds: 1200),
     ToastPosition position = ToastPosition.middle,
     Function complete,
-  }) {
+  }) async {
     if (_currentEntry!=null) return;
 
     _complete = complete;
     _currentEntry = OverlayEntry(
-      opaque: mask,
+      opaque: false,
       builder: (_) {
+        Widget wrap;
         Widget content = ClipRRect(
           borderRadius: BorderRadius.all(Radius.circular(width(8))),
           child: Container(
@@ -188,7 +269,7 @@ class Toast {
           ),
         );
         if (position!=ToastPosition.middle) {
-          return Column(
+          wrap = Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Padding(
@@ -200,16 +281,26 @@ class Toast {
             ],
           );
         }
-        return Center(
+        wrap = Center(
           child: content,
         );
+        if (mask) {
+          return GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            child: Container(
+//            color: Colors.red,
+              child: wrap,
+            ),
+          );
+        }
+        return wrap;
       },
     );
     Overlay.of(context).insert(_currentEntry);
+    
+    await Future.delayed(duration);
 
-    Timer(duration, () {
-      hide();
-    });
+    hide();
   }
 
   static void hide() {
@@ -308,6 +399,7 @@ class Debouncing {
     this._stateSC.close();
   }
 }
+
 
 enum SourceType {
   camera,

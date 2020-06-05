@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../variable.dart';
+
 class TestFixedPage extends StatelessWidget {
   static const name = '/testFixed';
 
@@ -26,7 +28,7 @@ class TestFixedPage extends StatelessWidget {
               ),
             ),
             Container(
-              height: ScreenUtil().setWidth(50),
+              height: width(50),
               child: TextField(),
             ),
           ],
@@ -48,7 +50,7 @@ class TestFixedPage extends StatelessWidget {
     for (int i = 0;i<20;i++) {
       list.add(Container(
         child: Text('item-$i'),
-        height: ScreenUtil().setWidth(100),
+        height: width(100),
       ));
     }
     return list;

@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../service.dart';
+import '../../variable.dart';
 
 
 class PDFView extends StatefulWidget {
@@ -36,7 +37,7 @@ class PDFViewState extends State<PDFView> {
           actions: [
             Center(
               child: Padding(
-                padding: EdgeInsets.only(right: ScreenUtil().setWidth(30)),
+                padding: EdgeInsets.only(right: width(30)),
                 child: Text(
                   '$currentPage/$allPage',
                   style: TextStyle(
