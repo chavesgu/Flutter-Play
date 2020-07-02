@@ -51,6 +51,7 @@ class PDFViewState extends State<PDFView> {
         ),
       ),
       body: _pdfController!=null?PdfView(
+        scrollDirection: Axis.vertical,
         documentLoader: Center(child: CircularProgressIndicator()),
         pageLoader: Center(child: CircularProgressIndicator()),
         controller: _pdfController,

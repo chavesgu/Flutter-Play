@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:orientation/orientation.dart';
 import 'package:flutter_play/variable.dart';
+import 'package:home_indicator/home_indicator.dart';
 
 class MyVideo extends StatefulWidget {
   MyVideo({
@@ -340,10 +341,12 @@ class _MyVideoState extends State<MyVideo> {
 
   void _toggleFullScreen() {
     setState(() {
-      if (_isFullScreen) {
+      if (_isFullScreen) { // 设置竖屏
         OrientationPlugin.forceOrientation(DeviceOrientation.portraitUp);
-      } else {
+        HomeIndicator.show(); // iphoneX底部横条
+      } else { // 设置横屏
         OrientationPlugin.forceOrientation(DeviceOrientation.landscapeRight);
+        HomeIndicator.hide();
       }
       _startPlayControlTimer();
       if (widget.screenChange!=null) widget.screenChange();

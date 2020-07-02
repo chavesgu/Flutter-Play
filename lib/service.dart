@@ -5,6 +5,7 @@ import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_http2_adapter/dio_http2_adapter.dart';
 
 import 'variable.dart';
 
@@ -29,6 +30,7 @@ final Dio api = Dio(BaseOptions(
 
 abstract class Service {
   static init() {
+//    api.httpClientAdapter = Http2Adapter(ConnectionManager());
     (api.transformer as DefaultTransformer).jsonDecodeCallback = parseJson;
     api.interceptors.add(CookieManager(CookieJar()));
     api.interceptors.add(InterceptorsWrapper(

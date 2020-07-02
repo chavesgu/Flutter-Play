@@ -8,6 +8,9 @@ import 'package:flutter_play/service.dart';
 import 'package:flutter_play/variable.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+
+import 'package:http/http.dart' as http;
+
 class MusicListDetailPage extends StatefulWidget {
   static const name = "/musicListDetail";
 
@@ -138,6 +141,7 @@ class MusicListDetailPageState extends State<MusicListDetailPage> {
                         ),
                         Expanded(
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Text(
@@ -165,6 +169,7 @@ class MusicListDetailPageState extends State<MusicListDetailPage> {
                                   ),
                                   Text(
                                     detail["creator"]["nickname"],
+                                    overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       color: Colors.white70,
                                       fontSize: width(28),
@@ -219,10 +224,13 @@ class MusicListDetailPageState extends State<MusicListDetailPage> {
   }
 
   void getData(String id) async {
-    detail = await Service.getMusicListDetail(id);
-    setState(() {
-
-    });
+    try {
+      detail = await Service.getMusicListDetail(id);
+      setState(() {
+      });
+    } catch(e) {
+      print(e);
+    }
   }
 
   String calcCount(int count) {
