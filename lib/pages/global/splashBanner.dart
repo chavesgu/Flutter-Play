@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_play/router.dart';
 import 'package:flutter_play/components/GlobalComponents.dart';
 import 'package:flutter_play/variable.dart';
-import 'package:flutter_play/store/global.dart';
+import 'package:flutter_play/store/model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashBanner extends StatefulWidget{
@@ -25,6 +25,7 @@ class SplashBannerState extends State<SplashBanner> {
 
   @override
   Widget build(BuildContext context) {
+    globalContext = context;
     ScreenUtil.init(context, width: 750, height: 1334);
     return WillPopScope(
       child: MyBrightness(

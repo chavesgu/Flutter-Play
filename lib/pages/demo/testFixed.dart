@@ -6,7 +6,7 @@ import '../../variable.dart';
 class TestFixedPage extends StatelessWidget {
   static const name = '/testFixed';
 
-  ScrollController controller = ScrollController();
+  final ScrollController controller = ScrollController();
 
   @override
   Widget build(BuildContext context) {

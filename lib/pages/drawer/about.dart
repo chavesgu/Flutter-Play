@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
+import '../../variable.dart';
+
 class AboutPage extends StatefulWidget {
   static const name = '/about';
 
@@ -14,7 +16,7 @@ class AboutPage extends StatefulWidget {
 
 class _AboutPageState extends State<AboutPage> {
   InAppWebViewController webView;
-  double progress = 0;
+  int _progress = 0;
 
   get url => widget.url;
 
@@ -32,24 +34,40 @@ class _AboutPageState extends State<AboutPage> {
         builder: (BuildContext context) {
           return SafeArea(
             top: false,
-            child: InAppWebView(
-              initialUrl: url,
-              initialOptions: InAppWebViewGroupOptions(),
-              onWebViewCreated: (InAppWebViewController controller) {
-                webView = controller;
-                // flutter和webview通信
-                webView.addJavaScriptHandler(handlerName: 'handlerFooWithArgs', callback: (arguments) {
+            child: Stack(
+              children: <Widget>[
+                InAppWebView(
+                  initialUrl: url,
+                  initialOptions: InAppWebViewGroupOptions(),
+                  onWebViewCreated: (InAppWebViewController controller) {
+                    webView = controller;
+                    // flutter和webview通信
+                    webView.addJavaScriptHandler(handlerName: 'handlerFooWithArgs', callback: (arguments) {
 //                  print(arguments);
 //                  Scaffold.of(context).showSnackBar(SnackBar(
 //                    content: Text(arguments.toString())
 //                  ));
-                });
-              },
-              onProgressChanged: (InAppWebViewController controller, int progress) {
-                setState(() {
-                  this.progress = progress / 100;
-                });
-              },
+                    });
+                  },
+                  onProgressChanged: (InAppWebViewController controller, int progress) {
+                    setState(() {
+                      _progress = progress;
+                    });
+                  },
+                ),
+                _progress!=100?Positioned(
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    child: Center(
+                      child: Container(
+                        width: width(100),
+                        height: width(100),
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  ),
+                  ):SizedBox.shrink(),
+              ],
             ),
           );
         },

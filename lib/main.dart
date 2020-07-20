@@ -16,7 +16,7 @@ import 'package:device_info/device_info.dart';
 
 import 'router.dart';
 import 'routeObserver.dart';
-import 'package:flutter_play/store/global.dart';
+import 'package:flutter_play/store/model.dart';
 import 'variable.dart';
 import 'utils/chinese_localization.dart';
 import 'service.dart';
@@ -35,7 +35,6 @@ void main() async {
   // 设置竖屏
   OrientationPlugin.forceOrientation(DeviceOrientation.portraitUp);
   setViewPort();
-//  OrientationPlugin.forceOrientation(DeviceOrientation.landscapeRight);
   // 获取uuid
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   if (Platform.isIOS) {
@@ -114,6 +113,7 @@ class MyApp extends StatelessWidget {
             darkTheme: MyTheme.dark(themeColor),
             themeMode: model.useSystemMode?ThemeMode.system:model.appThemeMode,
             home: splashed?EntryPage():SplashBanner(),
+            navigatorKey: navigatorKey,
             onGenerateRoute: RouterManager.router.generator,
             navigatorObservers: <NavigatorObserver>[
               MyRouteObserve(),

@@ -11,7 +11,14 @@ class MyRouteObserve extends NavigatorObserver {
   @override
   void didPush(Route route, Route previousRoute) {
     // TODO: implement didPush
-    print(route.settings);
+    print(route.settings.name);
     super.didPush(route, previousRoute);
+  }
+
+  @override
+  void didReplace({ Route<dynamic> newRoute, Route<dynamic> oldRoute }) {
+    // TODO: implement didPush
+    print(newRoute.settings.name);
+    super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
   }
 }

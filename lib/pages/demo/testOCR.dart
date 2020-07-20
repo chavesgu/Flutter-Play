@@ -60,7 +60,7 @@ class TestOCRState extends State<TestOCR> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    _camera.dispose();
+    _camera?.dispose();
   }
 
   @override
@@ -97,10 +97,9 @@ class TestOCRState extends State<TestOCR> {
 
   // 获取所选择前置/后置可用的相机
   Future<CameraDescription> _getCamera(CameraLensDirection dir) async {
-    return await availableCameras().then(
-        (List<CameraDescription> cameras) => cameras.firstWhere(
-          (CameraDescription camera) => camera.lensDirection == dir,
-      ),
-    );
+    return await availableCameras().then((List<CameraDescription> cameras) {
+      List res = cameras.where((CameraDescription camera) => camera.lensDirection == dir).toList();
+      return res.first;
+    });
   }
 }

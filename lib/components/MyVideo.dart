@@ -343,10 +343,11 @@ class _MyVideoState extends State<MyVideo> {
     setState(() {
       if (_isFullScreen) { // 设置竖屏
         OrientationPlugin.forceOrientation(DeviceOrientation.portraitUp);
-        HomeIndicator.show(); // iphoneX底部横条
+        // iphoneX底部横条
+        HomeIndicator.deferScreenEdges([]);
       } else { // 设置横屏
         OrientationPlugin.forceOrientation(DeviceOrientation.landscapeRight);
-        HomeIndicator.hide();
+        HomeIndicator.deferScreenEdges([ScreenEdge.bottom]);
       }
       _startPlayControlTimer();
       if (widget.screenChange!=null) widget.screenChange();

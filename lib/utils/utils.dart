@@ -148,7 +148,8 @@ class Loading {
   static OverlayEntry _currentEntry;
   static Timer _timer;
 
-  static void show(BuildContext context, {
+  static void show({
+    BuildContext context,
     String msg,
     bool mask = true,
     Duration maxDuration = const Duration(seconds: 30),
@@ -208,7 +209,7 @@ class Loading {
         return wrap;
       },
     );
-    Overlay.of(context).insert(_currentEntry);
+    Overlay.of(context ?? globalContext).insert(_currentEntry);
 
     _timer?.cancel();
     _timer = Timer(maxDuration, () {
@@ -227,7 +228,8 @@ class Toast {
   static Function _complete;
   static OverlayEntry _currentEntry;
 
-  static void show(BuildContext context, {
+  static void show({
+    BuildContext context,
     String msg,
     bool mask = true,
     Duration duration = const Duration(milliseconds: 1200),
@@ -296,7 +298,7 @@ class Toast {
         return wrap;
       },
     );
-    Overlay.of(context).insert(_currentEntry);
+    Overlay.of(context ?? globalContext).insert(_currentEntry);
     
     await Future.delayed(duration);
 

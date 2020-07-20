@@ -7,6 +7,10 @@ import 'dart:convert';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+BuildContext globalContext;
+
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 final double statusBarHeight = MediaQueryData.fromWindow(window).padding.top;
 
 final double bottomAreaHeight = MediaQueryData.fromWindow(window).padding.bottom;

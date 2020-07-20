@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:flutter_play/variable.dart';
-import 'package:flutter_play/store/global.dart';
+import 'package:flutter_play/store/model.dart';
 
 class SettingPage extends StatefulWidget {
   static const name = '/setting';
@@ -26,11 +26,6 @@ class SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Provider.of<GlobalModel>(context, listen: true).isDark;
-    final setTheme = Provider.of<GlobalModel>(context, listen: false).changeTheme;
-    final toggleUseSystemMode = Provider.of<GlobalModel>(context, listen: false).toggleUseSystemMode;
-    final toggleAppThemeMode = Provider.of<GlobalModel>(context, listen: false).toggleAppThemeMode;
-
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(50),
@@ -41,6 +36,7 @@ class SettingPageState extends State<SettingPage> {
       body: Consumer<GlobalModel>(
         builder: (context, GlobalModel model, child) {
           widgetList = _buildWidgetList(model);
+          _toggleAnimate(model);
           return AnimatedList(
             key: listKey,
             initialItemCount: listControl.length,
@@ -68,15 +64,10 @@ class SettingPageState extends State<SettingPage> {
     listControl.add(2);
   }
 
+  // 切换主题时的 动画变化
 
-  @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
-    // below toggle AnimateList 、 useSystemMode
-    GlobalModel model = context.read<GlobalModel>();
+  _toggleAnimate(GlobalModel model) {
     bool useSystemMode = model.useSystemMode;
-    print('是否使用系统主题: $useSystemMode');
     if (!useSystemMode) {
       int index = listControl.indexOf(1);
       if (index < 0) {
@@ -96,6 +87,9 @@ class SettingPageState extends State<SettingPage> {
       }
     }
   }
+
+
+  // 渲染func
 
   Widget _removedItem(GlobalModel model) {
     return _renderItem(

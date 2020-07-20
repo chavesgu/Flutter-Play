@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:flutter_play/store/global.dart';
+import 'package:flutter_play/store/model.dart';
 import 'package:flutter_play/components/GlobalComponents.dart';
 import 'package:flutter_play/pages/global/imagePreview.dart';
 import 'package:flutter_play/variable.dart';

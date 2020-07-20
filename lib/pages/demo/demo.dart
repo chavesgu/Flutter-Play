@@ -232,14 +232,12 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
 
   _toast() {
     Toast.show(
-      context,
       msg: "这是一个toast",
     );
   }
 
   _loading() {
     Loading.show(
-      context,
       msg: "这是一个loading",
       maxDuration: Duration(seconds: 5),
     );

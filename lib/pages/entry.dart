@@ -39,6 +39,7 @@ class EntryPageState extends State<EntryPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    globalContext = context;
     ScreenUtil.init(context, width: 750, height: 1334);
     Widget _drawer = Container(
       padding: EdgeInsets.only(
