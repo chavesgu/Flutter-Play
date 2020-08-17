@@ -33,8 +33,8 @@ class SettingPageState extends State<SettingPage> {
           title: Text('设置'),
         ),
       ),
-      body: Consumer<GlobalModel>(
-        builder: (context, GlobalModel model, child) {
+      body: Consumer<ThemeModel>(
+        builder: (context, model, child) {
           widgetList = _buildWidgetList(model);
           _toggleAnimate(model);
           return AnimatedList(
@@ -58,7 +58,7 @@ class SettingPageState extends State<SettingPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    GlobalModel model = context.read<GlobalModel>();
+    ThemeModel model = context.read<ThemeModel>();
     listControl.add(0);
     if (!model.useSystemMode) listControl.add(1);
     listControl.add(2);
@@ -66,7 +66,7 @@ class SettingPageState extends State<SettingPage> {
 
   // 切换主题时的 动画变化
 
-  _toggleAnimate(GlobalModel model) {
+  _toggleAnimate(ThemeModel model) {
     bool useSystemMode = model.useSystemMode;
     if (!useSystemMode) {
       int index = listControl.indexOf(1);
@@ -91,7 +91,7 @@ class SettingPageState extends State<SettingPage> {
 
   // 渲染func
 
-  Widget _removedItem(GlobalModel model) {
+  Widget _removedItem(ThemeModel model) {
     return _renderItem(
       title: Text('深色主题'),
       control: CupertinoSwitch(
@@ -104,7 +104,7 @@ class SettingPageState extends State<SettingPage> {
     );
   }
 
-  List<Widget> _buildWidgetList(GlobalModel model) {
+  List<Widget> _buildWidgetList(ThemeModel model) {
     return [
       _renderItem(
         title: Text('跟随系统主题'),
@@ -149,7 +149,7 @@ class SettingPageState extends State<SettingPage> {
     ];
   }
 
-  Widget _renderItem({ Widget title, Widget control, GlobalModel model}) {
+  Widget _renderItem({ Widget title, Widget control, ThemeModel model}) {
     return Container(
       margin: EdgeInsets.only(top: 20),
       padding: EdgeInsets.only(left: width(30), right: width(30)),

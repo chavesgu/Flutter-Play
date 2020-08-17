@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
@@ -8,9 +9,13 @@ import 'package:amap_location/amap_location.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_play/pages/entry.dart';
+import 'package:flutter_play/utils/utils.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:home_indicator/home_indicator.dart';
+import 'package:move_bg/move_bg.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:orientation/orientation.dart';
+import 'package:auto_orientation/auto_orientation.dart';
 import 'package:statusbar_util/statusbar_util.dart';
 import 'package:device_info/device_info.dart';
 
@@ -33,8 +38,18 @@ void main() async {
   // 沉浸式状态栏
   StatusbarUtil.setTranslucent();
   // 设置竖屏
-  OrientationPlugin.forceOrientation(DeviceOrientation.portraitUp);
+  HomeIndicator.deferScreenEdges([]);
+  await AutoOrientation.portraitUpMode();
   setViewPort();
+  // 配置路由
+  RouterManager.init();
+  // 监听网络变化
+  // 配置dio
+  Service.init();
+
+  // 启动页显示2秒
+  await Future.delayed(Duration(seconds: 2));
+
   // 获取uuid
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   if (Platform.isIOS) {
@@ -48,15 +63,6 @@ void main() async {
 //    print(info.hardware);
 //    print(info.manufacturer);
   }
-  // 配置路由
-  final router = Router();
-  RouterManager.defineRoutes(router);
-  RouterManager.router = router;
-  await Future.delayed(Duration(seconds: 2));
-  // 监听网络变化
-  // 配置dio
-  Service.init();
-
 
   // 获取缓存主题
   int themeIndex = await getTheme();
@@ -80,14 +86,8 @@ class MyApp extends StatelessWidget {
     this.useSystemMode,
     this.themeMode,
     this.themeIndex,
-  }) {
-    // 初始化全局model
-    this.globalModel = GlobalModel(
-      useSystemMode: useSystemMode,
-      themeMode: themeMode,
-      systemThemeMode: isSystemDark?ThemeMode.dark:ThemeMode.light
-    );
-  }
+  });
+
   final bool splashed;
 
   final bool useSystemMode;
@@ -96,15 +96,19 @@ class MyApp extends StatelessWidget {
 
   final int themeIndex;
 
-  GlobalModel globalModel;
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: globalModel)
+        ChangeNotifierProvider.value(value: ThemeModel(
+          useSystemMode: useSystemMode,
+          themeMode: themeMode,
+          systemThemeMode: isSystemDark?ThemeMode.dark:ThemeMode.light
+        )),
+        ChangeNotifierProvider.value(value: GlobalModel()),
+        ChangeNotifierProvider.value(value: UserModel())
       ],
-      child: Consumer<GlobalModel>(
+      child: Consumer<ThemeModel>(
         builder: (context, model, child) {
           final Color themeColor = (model.isDark?darkThemeList:themeList)[model.themeIndex!=null?model.themeIndex:themeIndex];
           return MaterialApp(
@@ -112,22 +116,39 @@ class MyApp extends StatelessWidget {
             theme: MyTheme.light(themeColor),
             darkTheme: MyTheme.dark(themeColor),
             themeMode: model.useSystemMode?ThemeMode.system:model.appThemeMode,
-            home: splashed?EntryPage():SplashBanner(),
             navigatorKey: navigatorKey,
             onGenerateRoute: RouterManager.router.generator,
             navigatorObservers: <NavigatorObserver>[
               MyRouteObserve(),
             ],
             supportedLocales: [
-              Locale('zh', ''),
+              Locale('zh'),
               Locale('en', 'US'), // English
               Locale('zh', 'Hans'), // China
             ],
             localizationsDelegates: [
               GlobalMaterialLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
-              ChineseCupertinoLocalizations.delegate,
+//              ChineseCupertinoLocalizations.delegate,
             ],
+            home: WillPopScope(
+              onWillPop: () async {
+                bool canPop = navigatorKey.currentState.canPop();
+                if (canPop) return true;
+                if(Platform.isAndroid) {
+                  MoveBg.moveToBackground();
+                }
+                return false;
+              },
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  globalContext = context;
+                  ScreenUtil.init(context, width: 750, height: 1334);
+                  return splashed?EntryPage():SplashBanner();
+                },
+              ),
+            ),
           );
         },
       ),
@@ -138,10 +159,7 @@ class MyApp extends StatelessWidget {
 Future<int> getTheme() async {
   SharedPreferences sp = await SharedPreferences.getInstance();
   int themeIndex = sp.getInt('themeIndex');
-  if (themeIndex!=null) {
-    return themeIndex;
-  }
-  return 0;
+  return themeIndex ?? 0;
 }
 
 Future<int> getThemeMode() async {

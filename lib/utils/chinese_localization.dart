@@ -129,6 +129,16 @@ class ChineseCupertinoLocalizations implements CupertinoLocalizations {
     await localizaltions.init();
     return SynchronousFuture<CupertinoLocalizations>(localizaltions);
   }
+
+  @override
+  // TODO: implement modalBarrierDismissLabel
+  String get modalBarrierDismissLabel => throw UnimplementedError();
+
+  @override
+  String tabSemanticsLabel({int tabIndex, int tabCount}) {
+    // TODO: implement tabSemanticsLabel
+    throw UnimplementedError();
+  }
 }
 
 class _ChineseDelegate extends LocalizationsDelegate<CupertinoLocalizations> {

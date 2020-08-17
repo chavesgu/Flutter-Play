@@ -5,9 +5,17 @@ import 'routerPath.dart';
 
 
 class RouterManager {
-  static Router router;
+  static MyRouter router;
 
-  static defineRoutes(Router router) {
+  static init() {
+    if (router==null) {
+      router = MyRouter();
+      _defineRoutes(router);
+    }
+    return router;
+  }
+
+  static _defineRoutes(Router router) {
     // app入口
     router.define(
       EntryPage.name,
@@ -89,10 +97,26 @@ class RouterManager {
       }),
       transitionType:  TransitionType.cupertino,
     );
+    // WebView
+    router.define(
+      WebView.name,
+      handler: Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+        return WebView(params["url"].first);
+      }),
+      transitionType:  TransitionType.cupertino,
+    );
 
     // 404
 //    router.notFoundHandler = Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
 //      return 404;
 //    });
+  }
+}
+
+class MyRouter extends Router {
+  @override
+  Route generator(RouteSettings routeSettings) {
+    // TODO: implement generator
+    return super.generator(routeSettings);
   }
 }

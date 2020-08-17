@@ -1,11 +1,14 @@
+import 'dart:async';
+import 'dart:collection';
 import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_play/routerPath.dart';
 import 'package:flutter_play/variable.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:orientation/orientation.dart';
+import 'package:auto_orientation/auto_orientation.dart';
 import 'package:move_bg/move_bg.dart';
 import 'package:provider/provider.dart';
 
@@ -27,20 +30,31 @@ class EntryPage extends StatefulWidget {
 class EntryPageState extends State<EntryPage> with WidgetsBindingObserver {
   static GlobalKey<InnerDrawerState> drawerKey = GlobalKey<InnerDrawerState>();
 
-  List<Widget> _pages = [
-    DemoPage(),
-    HomePage(drawerKey: drawerKey),
-    MediaPage(),
-    UserCenter(),
+  List<Map<String, dynamic>> _pages = [
+    {
+      "title": DemoPage.title,
+      "icon": DemoPage.icon,
+      "instance": DemoPage(drawerKey: drawerKey),
+    },
+    {
+      "title": MediaPage.title,
+      "icon": MediaPage.icon,
+      "instance": MediaPage(),
+    },
+    {
+      "title": UserCenter.title,
+      "icon": UserCenter.icon,
+      "instance": UserCenter(),
+    },
   ];
   int _tab = 0;
 
   final PageController tabController = PageController();
 
+//  StreamSubscription<NativeDeviceOrientation> orientationSubscribe;
+
   @override
   Widget build(BuildContext context) {
-    globalContext = context;
-    ScreenUtil.init(context, width: 750, height: 1334);
     Widget _drawer = Container(
       padding: EdgeInsets.only(
         top: statusBarHeight + width(40),
@@ -70,49 +84,34 @@ class EntryPageState extends State<EntryPage> with WidgetsBindingObserver {
       ),
     );
 
-    return WillPopScope(
-      child: InnerDrawer(
-        key: drawerKey,
-        onTapClose: true,
-        swipe: false,
-        leftChild: _drawer,
-        backgroundColor: Theme.of(context).primaryColor,
-        scaffold: Scaffold(
-          body: PageView(
-            controller: tabController,
-            children: _pages,
-            onPageChanged: _pageChange,
-            physics: NeverScrollableScrollPhysics(),
-          ),
-          bottomNavigationBar: Offstage(
-            offstage: MediaQuery.of(context).orientation == Orientation.landscape,
-            child: MyBottomNav(
-              onTap: toggleTab,
-              currentIndex: _tab,
-              iconSize: width(46),
-              items: <MyBottomNavItem>[
-                MyBottomNavItem(
-                  icon: Icon(Icons.build,),
-                  title: 'demo'
-                ),
-                MyBottomNavItem(
-                  icon: Icon(Icons.home),
-                  title: 'home'
-                ),
-                MyBottomNavItem(
-                  icon: Icon(Icons.subscriptions,),
-                  title: 'media'
-                ),
-                MyBottomNavItem(
-                  icon: Icon(Icons.people,),
-                  title: 'user'
-                ),
-              ],
-            ),
+    return InnerDrawer(
+      key: drawerKey,
+      onTapClose: true,
+      swipe: false,
+      leftChild: _drawer,
+      backgroundColor: Theme.of(context).primaryColor,
+      scaffold: Scaffold(
+        body: PageView(
+          controller: tabController,
+          children: _pages.map<Widget>((e) => e["instance"]).toList(),
+          onPageChanged: _pageChange,
+          physics: NeverScrollableScrollPhysics(),
+        ),
+        bottomNavigationBar: Offstage(
+          offstage: MediaQuery.of(context).orientation == Orientation.landscape,
+          child: MyBottomNav(
+            onTap: toggleTab,
+            currentIndex: _tab,
+            iconSize: width(46),
+            items: <MyBottomNavItem>[
+              for (var page in _pages) MyBottomNavItem(
+                icon: page["icon"],
+                title: page["title"],
+              ),
+            ],
           ),
         ),
       ),
-      onWillPop: _willPop,
     );
   }
 
@@ -156,10 +155,10 @@ class EntryPageState extends State<EntryPage> with WidgetsBindingObserver {
       case AppLifecycleState.resumed:// 应用程序可见，前台
         print('前台');
         if (MediaQuery.of(context).orientation == Orientation.portrait) {
-          OrientationPlugin.forceOrientation(DeviceOrientation.portraitUp);
+          AutoOrientation.portraitUpMode();
         } // 每次进入前台时锁定当前方向
         if (MediaQuery.of(context).orientation == Orientation.landscape) {
-          OrientationPlugin.forceOrientation(DeviceOrientation.landscapeRight);
+          AutoOrientation.landscapeRightMode();
         }
         break;
       case AppLifecycleState.paused: // 应用程序不可见，后台
@@ -172,8 +171,8 @@ class EntryPageState extends State<EntryPage> with WidgetsBindingObserver {
 
   @override
   void initState() {
-    WidgetsBinding.instance.addObserver(this);
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
@@ -197,15 +196,8 @@ class EntryPageState extends State<EntryPage> with WidgetsBindingObserver {
       _tab = value;
     });
   }
+}
 
-  Future<bool> _willPop() async {
-//    if (Navigator.canPop(context)) {
-//      return true;
-//    } else {
-//    }
-    if(Platform.isAndroid) {
-      MoveBg.moveToBackground();
-    }
-    return false;
-  }
+class TabbarItem extends Object {
+
 }

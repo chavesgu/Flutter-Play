@@ -1,11 +1,15 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:auto_orientation/auto_orientation.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_play/components/GlobalComponents.dart';
+import 'package:flutter_play/store/model.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:amap_location/amap_location.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -23,6 +27,15 @@ import 'package:flutter_play/service.dart';
 import 'package:flutter_play/routerPath.dart';
 
 class DemoPage extends StatefulWidget {
+  static const String title = 'demo';
+  static const Icon icon = Icon(Icons.build);
+
+  DemoPage({
+    this.drawerKey,
+  });
+
+  final GlobalKey<InnerDrawerState> drawerKey;
+
   @override
   State<StatefulWidget> createState() {
     return DemoPageState();
@@ -60,6 +73,12 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
           Wrap(
             spacing: 20,
             children: <Widget>[
+              RaisedButton(
+                onPressed: () {
+                  widget.drawerKey?.currentState?.open();
+                },
+                child: Text('open drawer'),
+              ),
               RaisedButton(
                 onPressed: () {
                   openAppSettings();
@@ -122,6 +141,30 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
                 child: Text('view pdf'),
                 onPressed: () {
                   Navigator.of(context).pushNamed('${PDFView.name}?url=${Uri.encodeComponent('https://cdn.chavesgu.com/profile.pdf')}');
+                },
+              ),
+              RaisedButton(
+                child: Text('view webview'),
+                onPressed: () {
+                  Navigator.of(context).pushNamed('${WebView.name}?url=${Uri.encodeQueryComponent('http://10.10.14.210:8080/a')}');
+                }
+              ),
+              RaisedButton(
+                child: Text('test fullscreen'),
+                onPressed: () {
+                  Orientation current = MediaQuery.of(context).orientation;
+                  if (current == Orientation.portrait) {
+                    AutoOrientation.landscapeRightMode();
+                  } else {
+                    AutoOrientation.portraitUpMode();
+                  }
+                },
+              ),
+              RaisedButton(
+                child: Text('random username'),
+                onPressed: () {
+                  var setName = context.read<UserModel>().setUserName;
+                  setName(Random().nextInt(100).toString());
                 },
               ),
             ],
@@ -238,8 +281,8 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
 
   _loading() {
     Loading.show(
-      msg: "这是一个loading",
-      maxDuration: Duration(seconds: 5),
+      msg: "加载中",
+      duration: Duration(seconds: 5),
     );
   }
 

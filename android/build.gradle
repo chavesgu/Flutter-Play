@@ -4,7 +4,7 @@ buildscript {
         // jcenter()
         maven{ url 'https://maven.aliyun.com/repository/google' }
         maven{ url 'https://maven.aliyun.com/repository/jcenter' }
-        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public'}
+        maven{ url 'http://maven.aliyun.com/repository/public'}
     }
 
     dependencies {
@@ -19,7 +19,7 @@ allprojects {
         // jcenter()
         maven{ url 'https://maven.aliyun.com/repository/google' }
         maven{ url 'https://maven.aliyun.com/repository/jcenter' }
-        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public'}
+        maven{ url 'http://maven.aliyun.com/repository/public'}
     }
     configurations.all {
         resolutionStrategy.force "androidx.vectordrawable:vectordrawable:1.0.0"

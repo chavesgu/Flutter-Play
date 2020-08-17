@@ -61,7 +61,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
           titleSpacing: 0,
           actions: <Widget>[
             IconButton(
-              icon: Icon(IconData(0xe610, fontFamily: 'iconfont')),
+              icon: Icon(const IconData(0xe610, fontFamily: 'iconfont')),
               onPressed: (){
                 _focusNode?.unfocus();
                 goScan();

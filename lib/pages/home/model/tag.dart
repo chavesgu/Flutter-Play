@@ -19,7 +19,7 @@ class Tag extends StatelessWidget {
           _renderColumn(
             context: context,
             icon: Icon(
-              IconData(0xe667, fontFamily: 'iconfont'),
+              const IconData(0xe667, fontFamily: 'iconfont'),
               size: width(40),
             ),
             title: '每日推荐',
@@ -27,7 +27,7 @@ class Tag extends StatelessWidget {
           _renderColumn(
             context: context,
             icon: Icon(
-              IconData(0xe619, fontFamily: 'iconfont'),
+              const IconData(0xe619, fontFamily: 'iconfont'),
               size: width(40),
             ),
             title: '歌单',
@@ -35,7 +35,7 @@ class Tag extends StatelessWidget {
           _renderColumn(
             context: context,
             icon: Icon(
-              IconData(0xe609, fontFamily: 'iconfont'),
+              const IconData(0xe609, fontFamily: 'iconfont'),
               size: width(40),
             ),
             title: '排行榜',
@@ -44,7 +44,7 @@ class Tag extends StatelessWidget {
           _renderColumn(
             context: context,
             icon: Icon(
-              IconData(0xe603, fontFamily: 'iconfont'),
+              const IconData(0xe603, fontFamily: 'iconfont'),
               size: width(40),
             ),
             title: '电台',
@@ -52,7 +52,7 @@ class Tag extends StatelessWidget {
           _renderColumn(
             context: context,
             icon: Icon(
-              IconData(0xe614, fontFamily: 'iconfont'),
+              const IconData(0xe614, fontFamily: 'iconfont'),
               size: width(40),
             ),
             title: '直播',

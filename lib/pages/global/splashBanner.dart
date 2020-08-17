@@ -25,47 +25,42 @@ class SplashBannerState extends State<SplashBanner> {
 
   @override
   Widget build(BuildContext context) {
-    globalContext = context;
-    ScreenUtil.init(context, width: 750, height: 1334);
-    return WillPopScope(
-      child: MyBrightness(
-        brightness: Provider.of<GlobalModel>(context).brightness,
-        child: Container(
-          width: vw,
-          height: vh,
-          color: Theme.of(context).primaryColor,
-          child: Stack(
-            children: <Widget>[
-              Center(
+    return MyBrightness(
+      brightness: context.read<ThemeModel>().brightness,
+      child: Container(
+        width: vw,
+        height: vh,
+        color: Theme.of(context).primaryColor,
+        child: Stack(
+          children: <Widget>[
+            Center(
+              child: Text(
+                '启动广告',
+                style: TextStyle(
+                  decoration: TextDecoration.none,
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: height(200),
+              right: width(60),
+              child: GestureDetector(
                 child: Text(
-                  '启动广告',
+                  '跳过 ${count.toString()}',
                   style: TextStyle(
                     decoration: TextDecoration.none,
                     color: Colors.white,
                     fontSize: 20,
                   ),
                 ),
+                onTap: _goEntry,
               ),
-              Positioned(
-                bottom: height(200),
-                right: width(60),
-                child: GestureDetector(
-                  child: Text(
-                    '跳过 ${count.toString()}',
-                    style: TextStyle(
-                      decoration: TextDecoration.none,
-                      color: Colors.white,
-                      fontSize: 20,
-                    ),
-                  ),
-                  onTap: _goEntry,
-                ),
-              )
-            ],
-          ),
+            )
+          ],
         ),
       ),
-      onWillPop: _willPop,
     );
   }
 
@@ -94,9 +89,5 @@ class SplashBannerState extends State<SplashBanner> {
       clearStack: true,
       transitionDuration: Duration(milliseconds: 500),
     );
-  }
-
-  Future<bool> _willPop() async {
-    return false;
   }
 }

@@ -6,6 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_alert/flutter_alert.dart';
 import 'package:flutter_play/components/MyCircularProgressIndicator.dart';
+import 'package:flutter_play/components/MyLoading.dart';
+import 'package:flutter_play/components/MyToast.dart';
 import 'package:flutter_play/variable.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:image_picker/image_picker.dart';
@@ -152,7 +154,7 @@ class Loading {
     BuildContext context,
     String msg,
     bool mask = true,
-    Duration maxDuration = const Duration(seconds: 30),
+    Duration duration = const Duration(seconds: 30),
   }) async {
     if (_currentEntry!=null) return;
 
@@ -160,39 +162,12 @@ class Loading {
       opaque: false,
       builder: (_) {
         Widget wrap;
-        Widget content = ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(width(20))),
-          child: Container(
-            width: width(300),
-            height: width(300),
-            color: Color.fromRGBO(0, 0, 0, .7),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  width: width(100),
-                  height: width(100),
-                  child: MyCircularProgressIndicator(),
-                ),
-                msg==null?SizedBox.shrink():Container(
-                  margin: EdgeInsets.only(top: width(50)),
-                  child: Text(
-                    msg,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      height: 1.2,
-                      fontSize: width(30),
-                      color: Colors.white,
-                      decoration: TextDecoration.none,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+        Widget content = MyLoading(
+          msg: msg,
+          duration: duration,
+          onComplete: () {
+            hide();
+          },
         );
         wrap = Center(
           child: content,
@@ -210,11 +185,6 @@ class Loading {
       },
     );
     Overlay.of(context ?? globalContext).insert(_currentEntry);
-
-    _timer?.cancel();
-    _timer = Timer(maxDuration, () {
-      hide();
-    });
   }
 
   static void hide() {
@@ -230,7 +200,7 @@ class Toast {
 
   static void show({
     BuildContext context,
-    String msg,
+    @required String msg,
     bool mask = true,
     Duration duration = const Duration(milliseconds: 1200),
     ToastPosition position = ToastPosition.middle,
@@ -243,32 +213,12 @@ class Toast {
       opaque: false,
       builder: (_) {
         Widget wrap;
-        Widget content = ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(width(8))),
-          child: Container(
-            constraints: BoxConstraints(
-              maxWidth: width(500)
-            ),
-            color: Color.fromRGBO(0, 0, 0, .7),
-            padding: EdgeInsets.only(
-              left: width(30),
-              right: width(30),
-              top: width(20),
-              bottom: width(20)
-            ),
-            child: Text(
-              msg,
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                height: 1.2,
-                fontSize: width(30),
-                color: Colors.white,
-                decoration: TextDecoration.none,
-                fontWeight: FontWeight.normal,
-              ),
-            ),
-          ),
+        Widget content = MyToast(
+          msg: msg,
+          duration: duration,
+          onComplete: () {
+            hide();
+          },
         );
         if (position!=ToastPosition.middle) {
           wrap = Column(
@@ -300,9 +250,9 @@ class Toast {
     );
     Overlay.of(context ?? globalContext).insert(_currentEntry);
     
-    await Future.delayed(duration);
+//    await Future.delayed(duration);
 
-    hide();
+//    hide();
   }
 
   static void hide() {

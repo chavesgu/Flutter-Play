@@ -32,7 +32,8 @@ dependencies:
   fluro: ^1.6.3
   path_provider: ^1.6.9
   uuid: 2.0.4
-  orientation: ^1.1.0
+  auto_orientation: ^1.0.6
+  native_device_orientation: ^0.4.3
   home_indicator: ^1.1.5
   dio: ^3.0.5
   dio_http2_adapter: ^1.0.0
@@ -50,7 +51,7 @@ dependencies:
 #  flutter_multiple_image_picker: 0.0.1
   image_picker: ^0.6.0+4
   image_cropper: ^1.1.1
-  pull_to_refresh: ^1.5.8
+  pull_to_refresh: ^1.6.1
   flutter_swiper: ^1.1.6
   extended_image: ^0.9.0
   flutter_alert: ^0.4.0
@@ -63,7 +64,7 @@ dependencies:
       url: https://github.com/chavesgu/flutter_qiniu_manager.git
       ref: 3fe0b591dfc710bbc78d2dc4b9e5ff2c6e0aa313
   statusbar_util: ^1.0.0
-  video_player: ^0.10.11+1
+  video_player: ^0.10.11+2
   audioplayers: ^0.13.5
 #  amap_base: ^0.3.5
 #  amap_base_location: ^0.4.0+1

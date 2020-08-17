@@ -7,6 +7,8 @@ import 'package:flutter_play/variable.dart';
 import 'package:flutter_play/components/GlobalComponents.dart';
 
 class MediaPage extends StatefulWidget {
+  static const String title = 'media';
+  static const Icon icon = Icon(Icons.subscriptions);
 
   @override
   State<StatefulWidget> createState() {
@@ -81,7 +83,7 @@ class MediaPageState extends State<MediaPage> with AutomaticKeepAliveClientMixin
                   title: videoTitle,
                   width: _isFullScreen?vh:vw,
                   height: _isFullScreen?vw:vw/16*9,
-                  autoplay: true,
+//                  autoplay: true,
                 ),
               ),
             ],

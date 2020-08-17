@@ -8,6 +8,9 @@ import 'package:flutter_play/pages/global/imagePreview.dart';
 import 'package:flutter_play/variable.dart';
 
 class UserCenter extends StatefulWidget {
+  static const String title = 'user';
+  static const Icon icon = Icon(Icons.people);
+
   @override
   createState() => UserCenterState();
 }
@@ -19,9 +22,11 @@ class UserCenterState extends State<UserCenter> with AutomaticKeepAliveClientMix
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text('个人中心'),
-        centerTitle: true,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50),
+        child: AppBar(
+          title: Text('个人中心'),
+        ),
       ),
       body: Container(
         child: ListView(
@@ -43,15 +48,12 @@ class UserCenterState extends State<UserCenter> with AutomaticKeepAliveClientMix
                     ),
                   ),
                 ),
-                MultiProvider(
-                  providers: [
-                    ChangeNotifierProvider(create: (_)=>UserModel())
-                  ],
-                  child: Consumer<UserModel>(
-                    builder: (context, model, child) {
-                      return Text(model.title);
-                    },
-                  ),
+                MyImage('assets/images/avatar.png'),
+                Selector<UserModel, String>(
+                  selector: (context, model) => model.title,
+                  builder: (context, value, child) {
+                    return Text(value);
+                  },
                 )
               ],
             ),

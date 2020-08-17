@@ -46,6 +46,15 @@
                   android:scheme="msg" />
             </intent-filter>
         </activity>
+        <provider
+          android:name="com.pichillilorenzo.flutter_inappwebview.InAppWebViewFileProvider"
+          android:authorities="com.fantaiai.flutter.flutter_inappwebview.fileprovider"
+          android:exported="false"
+          android:grantUriPermissions="true">
+            <meta-data
+              android:name="android.support.FILE_PROVIDER_PATHS"
+              android:resource="@xml/provider_paths" />
+        </provider>
         <activity
           android:name="com.yalantis.ucrop.UCropActivity"
           android:screenOrientation="portrait"
