@@ -9,7 +9,6 @@ import 'package:flutter_play/routerPath.dart';
 import 'package:flutter_play/variable.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:auto_orientation/auto_orientation.dart';
-import 'package:move_bg/move_bg.dart';
 import 'package:provider/provider.dart';
 
 import 'media/media.dart';
@@ -89,7 +88,9 @@ class EntryPageState extends State<EntryPage> with WidgetsBindingObserver {
       onTapClose: true,
       swipe: false,
       leftChild: _drawer,
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundDecoration: BoxDecoration(
+        color: Theme.of(context).primaryColor,
+      ),
       scaffold: Scaffold(
         body: PageView(
           controller: tabController,

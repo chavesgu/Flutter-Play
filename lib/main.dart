@@ -19,6 +19,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:auto_orientation/auto_orientation.dart';
 import 'package:statusbar_util/statusbar_util.dart';
 import 'package:device_info/device_info.dart';
+import 'package:connectivity/connectivity.dart';
 
 import 'router.dart';
 import 'routeObserver.dart';

@@ -5,7 +5,6 @@ import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
-import 'package:dio_http2_adapter/dio_http2_adapter.dart';
 
 import 'variable.dart';
 
@@ -128,5 +127,14 @@ abstract class Service {
     } on DioError catch(e) {
       return Future.error(e);
     }
+  }
+
+  static Future uploadFile(File file) async {
+    String fileName = file.path.split('/').last;
+    FormData formData = FormData.fromMap({
+      "file": await MultipartFile.fromFile(file.path, filename: fileName),
+    });
+    Response res = await api.post("/info", data: formData);
+    return res.data;
   }
 }
