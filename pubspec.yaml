@@ -55,10 +55,7 @@ dependencies:
   flutter_swiper: ^1.1.6
   extended_image: ^0.9.0
   flutter_alert: ^0.4.0
-  move_bg:
-    git:
-      url: https://github.com/chavesgu/flutter-movebg.git
-      ref: ee36ab4fbaf1f38ce18f55f7c1c98e52f80d4141
+  move_to_background: ^1.0.1
   qiniu_manager:
     git:
       url: https://github.com/chavesgu/flutter_qiniu_manager.git

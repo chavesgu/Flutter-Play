@@ -350,15 +350,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
-  move_bg:
+  move_to_background:
     dependency: "direct main"
     description:
-      path: "."
-      ref: ee36ab4fbaf1f38ce18f55f7c1c98e52f80d4141
-      resolved-ref: ee36ab4fbaf1f38ce18f55f7c1c98e52f80d4141
-      url: "https://github.com/chavesgu/flutter-movebg.git"
-    source: git
-    version: "0.0.1"
+      name: move_to_background
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.0.1"
   multi_image_picker:
     dependency: "direct main"
     description:

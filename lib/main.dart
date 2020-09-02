@@ -13,7 +13,7 @@ import 'package:flutter_play/utils/utils.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:home_indicator/home_indicator.dart';
 import 'package:mob_login/mob_login.dart';
-import 'package:move_bg/move_bg.dart';
+import 'package:move_to_background/move_to_background.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:auto_orientation/auto_orientation.dart';
@@ -138,7 +138,7 @@ class MyApp extends StatelessWidget {
                 bool canPop = navigatorKey.currentState.canPop();
                 if (canPop) return true;
                 if(Platform.isAndroid) {
-                  MoveBg.moveToBackground();
+                  MoveToBackground.moveTaskToBack();
                 }
                 return false;
               },
