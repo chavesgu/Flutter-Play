@@ -159,7 +159,7 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
               RaisedButton(
                 child: Text('login'),
                 onPressed: () {
-                  MobLogin.login(context);
+                  MobLogin.login();
                 },
               ),
             ],
