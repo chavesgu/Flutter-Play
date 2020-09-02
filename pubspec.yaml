@@ -72,6 +72,8 @@ dependencies:
   native_pdf_view: ^3.6.2
   push:
     path: ../flutter-plugin/push/
+  mob_login:
+    path: ../flutter-plugin/mob_login/
 #  page_life_cycle: 1.1.0
   flutter_inner_drawer: 0.5.4
 

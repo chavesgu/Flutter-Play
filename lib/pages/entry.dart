@@ -77,7 +77,7 @@ class EntryPageState extends State<EntryPage> with WidgetsBindingObserver {
           _renderDrawerItem(
             text: '关于我们',
             onTap: () {
-              Navigator.of(context).pushNamed('${AboutPage.name}?url=${Uri.encodeQueryComponent('https://www.chavesgu.com')}');
+              Navigator.of(context).pushNamed('${WebView.name}?url=${Uri.encodeQueryComponent('https://www.chavesgu.com')}');
             }
           ),
         ],

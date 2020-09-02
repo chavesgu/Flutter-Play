@@ -31,6 +31,14 @@ PODS:
     - TOCropViewController (~> 2.5.2)
   - image_picker (0.0.1):
     - Flutter
+  - Masonry (1.1.0)
+  - mob_login (0.0.1):
+    - Flutter
+    - Masonry
+    - mob_secverify
+  - mob_secverify (2.1.2):
+    - MOBFoundation
+  - MOBFoundation (3.2.18)
   - move_bg (0.0.1):
     - Flutter
   - multi_image_picker (4.6.0):
@@ -75,6 +83,7 @@ DEPENDENCIES:
   - home_indicator (from `.symlinks/plugins/home_indicator/ios`)
   - image_cropper (from `.symlinks/plugins/image_cropper/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
+  - mob_login (from `.symlinks/plugins/mob_login/ios`)
   - move_bg (from `.symlinks/plugins/move_bg/ios`)
   - multi_image_picker (from `.symlinks/plugins/multi_image_picker/ios`)
   - native_device_orientation (from `.symlinks/plugins/native_device_orientation/ios`)
@@ -99,6 +108,10 @@ SPEC REPOS:
     - Qiniu
     - Reachability
     - TOCropViewController
+  trunk:
+    - Masonry
+    - mob_secverify
+    - MOBFoundation
 
 EXTERNAL SOURCES:
   amap_location:
@@ -123,6 +136,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/image_cropper/ios"
   image_picker:
     :path: ".symlinks/plugins/image_picker/ios"
+  mob_login:
+    :path: ".symlinks/plugins/mob_login/ios"
   move_bg:
     :path: ".symlinks/plugins/move_bg/ios"
   multi_image_picker:
@@ -167,6 +182,10 @@ SPEC CHECKSUMS:
   home_indicator: 60c6a4b60d17173cd164c112eb9be37055b23af8
   image_cropper: 3c16d7651730ffe85897f5a1c4e2547e6b54989a
   image_picker: e3eacd46b94694dde7cf2705955cece853aa1a8f
+  Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+  mob_login: e1928520b0b5d2485643a3172621599dbf7a5691
+  mob_secverify: a95881f60619fc38d516b73c9aeef58298f65917
+  MOBFoundation: b9dcc4bb4d3d3ade8d625190d6a77adbca563dcc
   move_bg: 13c7c6fff7228e44095ede6fb9927fb6388ffbfe
   multi_image_picker: 20b39637c5728e44c69d7b3742bb555cd09a9970
   native_device_orientation: 3b4cfc9565a7b879cc4fde282b3e27745e852d0d
@@ -184,6 +203,6 @@ SPEC CHECKSUMS:
   url_launcher: a1c0cc845906122c4784c542523d8cacbded5626
   video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
 
-PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+PODFILE CHECKSUM: 7f76905c73a178a8ce6ea3490ca680df728dd042
 
 COCOAPODS: 1.9.1

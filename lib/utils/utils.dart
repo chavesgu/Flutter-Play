@@ -19,7 +19,12 @@ import 'package:uuid/uuid.dart';
 class Utils {
 
   // 选取照片
-  static Future<List<File>> imagePicker(BuildContext context, { SourceType source = SourceType.gallery, int maxImages = 1, int quality = 100 })async {
+  static Future<List<File>> imagePicker({
+    BuildContext context,
+    SourceType source = SourceType.gallery,
+    int maxImages = 1,
+    int quality = 100
+  })async {
     String permissionReason = '';
     bool hasPermission = false;
     List<File> output = [];
@@ -79,7 +84,7 @@ class Utils {
       return output;
     } else {
       showAlert(
-        context: context,
+        context: context ?? globalContext,
         barrierDismissible: false,
         title: '提示',
         body: permissionReason,
@@ -154,7 +159,7 @@ class Loading {
     BuildContext context,
     String msg,
     bool mask = true,
-    Duration duration = const Duration(seconds: 30),
+    Duration duration = const Duration(seconds: 60),
   }) async {
     if (_currentEntry!=null) return;
 

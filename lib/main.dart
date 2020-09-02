@@ -12,6 +12,7 @@ import 'package:flutter_play/pages/entry.dart';
 import 'package:flutter_play/utils/utils.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:home_indicator/home_indicator.dart';
+import 'package:mob_login/mob_login.dart';
 import 'package:move_bg/move_bg.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -39,16 +40,13 @@ void main() async {
   StatusbarUtil.setTranslucent();
   // 设置竖屏
   HomeIndicator.deferScreenEdges([]);
-  await AutoOrientation.portraitUpMode();
+  AutoOrientation.portraitUpMode();
   setViewPort();
   // 配置路由
   RouterManager.init();
   // 监听网络变化
   // 配置dio
   Service.init();
-
-  // 启动页显示2秒
-  await Future.delayed(Duration(seconds: 2));
 
   // 获取uuid
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -71,6 +69,9 @@ void main() async {
 
   // 判断是否需要splash
   SharedPreferences sp = await SharedPreferences.getInstance();
+
+  // 启动页显示2秒
+  await Future.delayed(Duration(seconds: 2));
 
   runApp(MyApp(
     splashed: sp.getBool("splash")??false,
@@ -145,6 +146,8 @@ class MyApp extends StatelessWidget {
                 builder: (context, constraints) {
                   globalContext = context;
                   ScreenUtil.init(context, width: 750, height: 1334);
+                  // mob login
+                  MobLogin.init(context);
                   return splashed?EntryPage():SplashBanner();
                 },
               ),

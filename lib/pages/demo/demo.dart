@@ -20,6 +20,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:image_cropper/image_cropper.dart';
 // import 'package:qiniu_manager/qiniu_manager.dart';
 import 'package:push/push.dart';
+import 'package:mob_login/mob_login.dart';
 
 import 'package:flutter_play/utils/utils.dart';
 import 'package:flutter_play/variable.dart';
@@ -102,7 +103,7 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
                 child: Text('launch url'),
               ),
               RaisedButton(
-                onPressed: ()async {
+                onPressed: () {
                   chooseImageSourse();
                 },
                 child: Text('take photo'),
@@ -126,29 +127,17 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
                 },
               ),
               RaisedButton(
-                child: Text('throttle'),
-                onPressed: () {
-                  throttle();
-                },
-              ),
-              RaisedButton(
-                child: Text('debounce'),
-                onPressed: () {
-                  debounce();
-                },
-              ),
-              RaisedButton(
                 child: Text('view pdf'),
                 onPressed: () {
                   Navigator.of(context).pushNamed('${PDFView.name}?url=${Uri.encodeComponent('https://cdn.chavesgu.com/profile.pdf')}');
                 },
               ),
-              RaisedButton(
-                child: Text('view webview'),
-                onPressed: () {
-                  Navigator.of(context).pushNamed('${WebView.name}?url=${Uri.encodeQueryComponent('http://10.10.14.210:8080/a')}');
-                }
-              ),
+//              RaisedButton(
+//                child: Text('view webview'),
+//                onPressed: () {
+//                  Navigator.of(context).pushNamed('${WebView.name}?url=${Uri.encodeQueryComponent('http://10.10.14.210:8080/a')}');
+//                }
+//              ),
               RaisedButton(
                 child: Text('test fullscreen'),
                 onPressed: () {
@@ -165,6 +154,12 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
                 onPressed: () {
                   var setName = context.read<UserModel>().setUserName;
                   setName(Random().nextInt(100).toString());
+                },
+              ),
+              RaisedButton(
+                child: Text('login'),
+                onPressed: () {
+                  MobLogin.login(context);
                 },
               ),
             ],
@@ -194,11 +189,11 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
     AMapLocationClient.startup(AMapLocationOption(
       desiredAccuracy:CLLocationAccuracy.kCLLocationAccuracyHundredMeters,
     ));
-    final token = generateToken(
-      'fe5756a59abc11e8a7830242ac640015',
-      '0oLcr8AsoQmq',
-      '00000005'
-    );
+//    final token = generateToken(
+//      'fe5756a59abc11e8a7830242ac640015',
+//      '0oLcr8AsoQmq',
+//      '00000005'
+//    );
 //    channel = IOWebSocketChannel.connect("ws://apiv0.fantaiai.com/ws?token=$token");
 //    channel.stream.listen((data) {
 //      setState(() {
@@ -317,8 +312,7 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
                 height: 50,
                 child: FlatButton(
                   onPressed: () {
-                    Navigator.pop(context);
-                    getImage(SourceType.camera);
+                    Navigator.pop(context, SourceType.camera);
                   },
                   child: Text('拍照'),
                 ),
@@ -328,8 +322,7 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
                 height: 50,
                 child: FlatButton(
                   onPressed: () {
-                    Navigator.pop(context);
-                    getImage(SourceType.gallery);
+                    Navigator.pop(context, SourceType.gallery);
                   },
                   child: Text('相册'),
                 ),
@@ -338,15 +331,16 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
           ),
         );
       }
-    );
+    ).then((popValue) {
+      getImage(popValue);
+    });
   }
 
   getImage(SourceType source) async {
     String imagePath;
     List<File> images = await Utils.imagePicker(
-      context,
       source: source,
-      maxImages: 2
+      maxImages: 1
     );
     imagePath = images.first.path;
     if (imagePath!=null) {
@@ -356,10 +350,12 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
         compressQuality: 90,
 //        cropStyle: CropStyle.circle,
       );
-      setState(() {
-        print('压缩后:'+cropImage.path);
-        _image = cropImage;
-      });
+      if (cropImage!=null) {
+        setState(() {
+          print('压缩后:'+cropImage.path);
+          _image = cropImage;
+        });
+      }
     }
   }
 
