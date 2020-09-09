@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_play/routerPath.dart';
 import 'package:flutter_play/variable.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:auto_orientation/auto_orientation.dart';
+import 'package:flutter_orientation/flutter_orientation.dart';
 import 'package:provider/provider.dart';
 
 import 'media/media.dart';
@@ -156,10 +156,10 @@ class EntryPageState extends State<EntryPage> with WidgetsBindingObserver {
       case AppLifecycleState.resumed:// 应用程序可见，前台
         print('前台');
         if (MediaQuery.of(context).orientation == Orientation.portrait) {
-          AutoOrientation.portraitUpMode();
+          FlutterOrientation.setOrientation(DeviceOrientation.portraitUp);
         } // 每次进入前台时锁定当前方向
         if (MediaQuery.of(context).orientation == Orientation.landscape) {
-          AutoOrientation.landscapeRightMode();
+          FlutterOrientation.setOrientation(DeviceOrientation.landscapeRight);
         }
         break;
       case AppLifecycleState.paused: // 应用程序不可见，后台

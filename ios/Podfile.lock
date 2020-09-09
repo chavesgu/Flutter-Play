@@ -2,12 +2,10 @@ PODS:
   - amap_location (0.0.1):
     - AMapLocation
     - Flutter
-  - AMapFoundation (1.6.0)
-  - AMapLocation (2.6.3):
-    - AMapFoundation (~> 1.4)
+  - AMapFoundation (1.6.4)
+  - AMapLocation (2.6.7):
+    - AMapFoundation (~> 1.6.4)
   - audioplayers (0.0.1):
-    - Flutter
-  - auto_orientation (0.0.1):
     - Flutter
   - BSGridCollectionViewLayout (1.2.5)
   - BSImagePicker (2.10.3):
@@ -24,29 +22,30 @@ PODS:
   - Flutter (1.0.0)
   - flutter_inappwebview (0.0.1):
     - Flutter
+  - flutter_orientation (0.0.1):
+    - Flutter
+  - HappyDNS (0.3.17)
   - home_indicator (0.0.1):
     - Flutter
-  - image_cropper (0.0.2):
+  - image_cropper (0.0.3):
     - Flutter
-    - TOCropViewController (~> 2.5.2)
+    - TOCropViewController (~> 2.5.4)
   - image_picker (0.0.1):
     - Flutter
-  - Masonry (1.1.0)
   - mob_login (0.0.1):
     - Flutter
-    - Masonry
     - mob_secverify
   - mob_secverify (2.1.2):
     - MOBFoundation
   - MOBFoundation (3.2.18)
-  - move_bg (0.0.1):
+  - move_to_background (0.0.1):
     - Flutter
-  - multi_image_picker (4.6.0):
+  - multi_image_picker (4.7.12):
     - BSImagePicker (~> 2.10.3)
     - Flutter
-  - native_device_orientation (0.0.1):
-    - Flutter
   - native_pdf_renderer (1.0.0):
+    - Flutter
+  - orientation (0.0.1):
     - Flutter
   - path_provider (0.0.1):
     - Flutter
@@ -54,7 +53,8 @@ PODS:
     - Flutter
   - push (0.0.1):
     - Flutter
-  - Qiniu (7.3.0)
+  - Qiniu (8.0.0):
+    - HappyDNS (~> 0.3.17)
   - qiniu_manager (1.0.0):
     - Flutter
     - Qiniu
@@ -65,7 +65,7 @@ PODS:
     - Flutter
   - statusbar_util (1.0.0):
     - Flutter
-  - TOCropViewController (2.5.2)
+  - TOCropViewController (2.5.4)
   - url_launcher (0.0.1):
     - Flutter
   - video_player (0.0.1):
@@ -74,20 +74,20 @@ PODS:
 DEPENDENCIES:
   - amap_location (from `.symlinks/plugins/amap_location/ios`)
   - audioplayers (from `.symlinks/plugins/audioplayers/ios`)
-  - auto_orientation (from `.symlinks/plugins/auto_orientation/ios`)
   - camera (from `.symlinks/plugins/camera/ios`)
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
   - device_info (from `.symlinks/plugins/device_info/ios`)
   - Flutter (from `Flutter`)
   - flutter_inappwebview (from `.symlinks/plugins/flutter_inappwebview/ios`)
+  - flutter_orientation (from `.symlinks/plugins/flutter_orientation/ios`)
   - home_indicator (from `.symlinks/plugins/home_indicator/ios`)
   - image_cropper (from `.symlinks/plugins/image_cropper/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
   - mob_login (from `.symlinks/plugins/mob_login/ios`)
-  - move_bg (from `.symlinks/plugins/move_bg/ios`)
+  - move_to_background (from `.symlinks/plugins/move_to_background/ios`)
   - multi_image_picker (from `.symlinks/plugins/multi_image_picker/ios`)
-  - native_device_orientation (from `.symlinks/plugins/native_device_orientation/ios`)
   - native_pdf_renderer (from `.symlinks/plugins/native_pdf_renderer/ios`)
+  - orientation (from `.symlinks/plugins/orientation/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
   - push (from `.symlinks/plugins/push/ios`)
@@ -99,27 +99,24 @@ DEPENDENCIES:
   - video_player (from `.symlinks/plugins/video_player/ios`)
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  trunk:
     - AMapFoundation
     - AMapLocation
     - BSGridCollectionViewLayout
     - BSImagePicker
     - BSImageView
+    - HappyDNS
+    - mob_secverify
+    - MOBFoundation
     - Qiniu
     - Reachability
     - TOCropViewController
-  trunk:
-    - Masonry
-    - mob_secverify
-    - MOBFoundation
 
 EXTERNAL SOURCES:
   amap_location:
     :path: ".symlinks/plugins/amap_location/ios"
   audioplayers:
     :path: ".symlinks/plugins/audioplayers/ios"
-  auto_orientation:
-    :path: ".symlinks/plugins/auto_orientation/ios"
   camera:
     :path: ".symlinks/plugins/camera/ios"
   connectivity:
@@ -130,6 +127,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_inappwebview:
     :path: ".symlinks/plugins/flutter_inappwebview/ios"
+  flutter_orientation:
+    :path: ".symlinks/plugins/flutter_orientation/ios"
   home_indicator:
     :path: ".symlinks/plugins/home_indicator/ios"
   image_cropper:
@@ -138,14 +137,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/image_picker/ios"
   mob_login:
     :path: ".symlinks/plugins/mob_login/ios"
-  move_bg:
-    :path: ".symlinks/plugins/move_bg/ios"
+  move_to_background:
+    :path: ".symlinks/plugins/move_to_background/ios"
   multi_image_picker:
     :path: ".symlinks/plugins/multi_image_picker/ios"
-  native_device_orientation:
-    :path: ".symlinks/plugins/native_device_orientation/ios"
   native_pdf_renderer:
     :path: ".symlinks/plugins/native_pdf_renderer/ios"
+  orientation:
+    :path: ".symlinks/plugins/orientation/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
   permission_handler:
@@ -167,40 +166,40 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   amap_location: a3e2a140bb25950d4e97560ce1b00e53a121e4f4
-  AMapFoundation: bc2f6e077b9279942734ba55f9624222fcf42848
-  AMapLocation: dc2c4fde95d72087d73934338160fadc72104bb7
-  audioplayers: 84f968cea3f2deab00ec4f8ff53358b3c0b3992c
-  auto_orientation: 2941c44ebe5c3d41016001597ab03e81a92a26ce
+  AMapFoundation: 3638198dfa40be54648570c3520edefad288286b
+  AMapLocation: a46c30d9930d0f3a3bd21139d8f845d10ac3f01d
+  audioplayers: 53f0f30789b10ab2009771c6c79def00980945e4
   BSGridCollectionViewLayout: 333dcb457a5a3bdd9212607ab5756553dcfe06cb
   BSImagePicker: 07404254f2fcdaf5a2eb403c0f8c337267ce8738
   BSImageView: a149459433a2687157d034c78e059d30ac7f2544
   camera: 38cc83ae9a5667bb5a71c7d9edaf60a91920fd4e
-  connectivity: 6e94255659cc86dcbef1d452ad3e0491bb1b3e75
+  connectivity: c4130b2985d4ef6fd26f9702e886bd5260681467
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
-  flutter_inappwebview: 239198123453705522ba6c4f78d3d7468215f248
+  flutter_inappwebview: 69dfbac46157b336ffbec19ca6dfd4638c7bf189
+  flutter_orientation: 4fcb34769db97f3fdc294851d0786e563b2b9286
+  HappyDNS: 848ef73e24f2b0e2752064223ce2dc0dd88900ea
   home_indicator: 60c6a4b60d17173cd164c112eb9be37055b23af8
-  image_cropper: 3c16d7651730ffe85897f5a1c4e2547e6b54989a
-  image_picker: e3eacd46b94694dde7cf2705955cece853aa1a8f
-  Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
-  mob_login: e1928520b0b5d2485643a3172621599dbf7a5691
+  image_cropper: c8f9b4157933c7bb965a66d1c5e6c8fd408c6eb4
+  image_picker: 9c3312491f862b28d21ecd8fdf0ee14e601b3f09
+  mob_login: ca6293d4a6432920a082ff272227982bee4cc82f
   mob_secverify: a95881f60619fc38d516b73c9aeef58298f65917
   MOBFoundation: b9dcc4bb4d3d3ade8d625190d6a77adbca563dcc
-  move_bg: 13c7c6fff7228e44095ede6fb9927fb6388ffbfe
-  multi_image_picker: 20b39637c5728e44c69d7b3742bb555cd09a9970
-  native_device_orientation: 3b4cfc9565a7b879cc4fde282b3e27745e852d0d
+  move_to_background: 39a5b79b26d577b0372cbe8a8c55e7aa9fcd3a2d
+  multi_image_picker: b256ba9de62ac1ec6be67bb03328d682e8f35663
   native_pdf_renderer: fa374da660730abe059e7a178e79895dd202f007
+  orientation: 6c9203efe86ce4cff379756910f18b2d745628c3
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   permission_handler: b7a0953389e699927c6217933754cdcd0fa2c5a7
   push: a02f9d91cfd1aa02ea7702a7a8e373b2d35d3306
-  Qiniu: a2fb1f87b40f52bc1f386d93c6d48aab09472eae
+  Qiniu: b9c638318b8179d01d8dfc745159e4047e8975b7
   qiniu_manager: b2f7e4b7de5f40001e4d9f18cf4f45f2c4816510
   qrcode: 703d52352679d9b4284555e9a09c2157062f1989
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   statusbar_util: 1069d2ddcdf165f9d3422fcabc7dd7530f64f553
-  TOCropViewController: e9da34f484aedd4e5d5a8ab230ba217cfe16c729
-  url_launcher: a1c0cc845906122c4784c542523d8cacbded5626
+  TOCropViewController: 2a1ae1242600b1f2d996fd91a5268b2309a33b5c
+  url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
   video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
 
 PODFILE CHECKSUM: 7f76905c73a178a8ce6ea3490ca680df728dd042

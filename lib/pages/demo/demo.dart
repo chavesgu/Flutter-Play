@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
-import 'package:auto_orientation/auto_orientation.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_orientation/flutter_orientation.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -82,6 +83,12 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
               ),
               RaisedButton(
                 onPressed: () {
+                  _getDeviceInfo();
+                },
+                child: Text('get device info'),
+              ),
+              RaisedButton(
+                onPressed: () {
                   openAppSettings();
                 },
                 child: Text('open app setting'),
@@ -143,9 +150,9 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
                 onPressed: () {
                   Orientation current = MediaQuery.of(context).orientation;
                   if (current == Orientation.portrait) {
-                    AutoOrientation.landscapeRightMode();
+                    FlutterOrientation.setOrientation(DeviceOrientation.landscapeRight);
                   } else {
-                    AutoOrientation.portraitUpMode();
+                    FlutterOrientation.setOrientation(DeviceOrientation.portraitUp);
                   }
                 },
               ),
@@ -187,7 +194,7 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     AMapLocationClient.startup(AMapLocationOption(
-      desiredAccuracy:CLLocationAccuracy.kCLLocationAccuracyHundredMeters,
+      desiredAccuracy: CLLocationAccuracy.kCLLocationAccuracyHundredMeters,
     ));
 //    final token = generateToken(
 //      'fe5756a59abc11e8a7830242ac640015',
@@ -209,6 +216,52 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
 //    channel.sink.close();
 //    audioPlayer.dispose();
     super.dispose();
+  }
+
+  _getDeviceInfo() async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    if (Platform.isIOS) {
+      // ios高德
+      AMapLocationClient.setApiKey("bfea8a8172612b2f2de52e256fcdbc66");
+      IosDeviceInfo info = await deviceInfo.iosInfo;
+      showAlert(
+        context: context,
+        barrierDismissible: false,
+        title: '位置提示',
+        body: 'name: ${info.name},\n'
+          'uuid: ${info.identifierForVendor},\n'
+          'localizedModel: ${info.localizedModel},\n'
+          'model: ${info.model},\n',
+        actions: [
+          AlertAction(
+            text: '确认',
+            onPressed: () {
+            },
+          ),
+        ],
+      );
+    }
+    if (Platform.isAndroid) {
+      AndroidDeviceInfo info = await deviceInfo.androidInfo;
+      showAlert(
+        context: context,
+        barrierDismissible: false,
+        title: '位置提示',
+        body: 'brand: ${info.brand},\n'
+          'hardware: ${info.hardware},\n'
+          'product: ${info.product},\n'
+          'manufacturer: ${info.manufacturer},\n'
+          'model: ${info.model},\n'
+          'androidId: ${info.androidId},\n',
+        actions: [
+          AlertAction(
+            text: '确认',
+            onPressed: () {
+            },
+          ),
+        ],
+      );
+    }
   }
 
   _getPosition() async {
@@ -332,7 +385,7 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
         );
       }
     ).then((popValue) {
-      getImage(popValue);
+      if (popValue.runtimeType == SourceType) getImage(popValue);
     });
   }
 
@@ -342,14 +395,11 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
       source: source,
       maxImages: 1
     );
-    imagePath = images.first.path;
+    if (images!=null) {
+      imagePath = images.first.path;
+    }
     if (imagePath!=null) {
-      File cropImage = await ImageCropper.cropImage(
-        sourcePath: imagePath,
-        compressFormat: ImageCompressFormat.jpg,
-        compressQuality: 90,
-//        cropStyle: CropStyle.circle,
-      );
+      File cropImage = await Utils.imageCrop(imagePath);
       if (cropImage!=null) {
         setState(() {
           print('压缩后:'+cropImage.path);
@@ -359,7 +409,7 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
     }
   }
 
-  initPush()async {
+  initPush() async {
     bool isPush = await Permission.notification.status.isGranted;
     if (!isPush) {
       isPush = await Permission.notification.request().isGranted;

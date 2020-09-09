@@ -9,6 +9,7 @@ import 'package:flutter_play/components/MyCircularProgressIndicator.dart';
 import 'package:flutter_play/components/MyLoading.dart';
 import 'package:flutter_play/components/MyToast.dart';
 import 'package:flutter_play/variable.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -23,11 +24,11 @@ class Utils {
     BuildContext context,
     SourceType source = SourceType.gallery,
     int maxImages = 1,
-    int quality = 100
-  })async {
+    int quality = 100,
+  }) async {
     String permissionReason = '';
     bool hasPermission = false;
-    List<File> output = [];
+    List<File> output;
     if (source==SourceType.gallery) {
       Permission _permission = Platform.isIOS?Permission.photos:Permission.storage;
       PermissionStatus permissionStatus = await _permission.status;
@@ -53,33 +54,40 @@ class Utils {
       }
     }
     if (hasPermission) {
-      if (source==SourceType.gallery) {
-        if (maxImages > 1) {
-          List<Asset> images = await MultiImagePicker.pickImages(
-            maxImages: maxImages
-          );
-          Iterable<Future<ByteData>> futureByteDataList = images.map((Asset image) {
-            return image.getByteData(quality: quality);
-          });
-          List<ByteData> byteDataList = await Future.wait(futureByteDataList);
-          Iterable<Future<File>> futureFileList = byteDataList.map((ByteData byteData) {
-            return bytesToFile(byteData);
-          });
-          output = await Future.wait(futureFileList);
-        } else {
-          File image = await ImagePicker.pickImage(
-            source: ImageSource.gallery,
+      try {
+        if (source==SourceType.gallery) {
+          if (maxImages > 1) {
+            List<Asset> images = await MultiImagePicker.pickImages(
+              maxImages: maxImages
+            );
+            if (images.length > 0) {
+              Iterable<Future<ByteData>> futureByteDataList = images.map((Asset image) {
+                return image.getByteData(quality: quality);
+              });
+              List<ByteData> byteDataList = await Future.wait(futureByteDataList);
+              Iterable<Future<File>> futureFileList = byteDataList.map((ByteData byteData) {
+                return bytesToFile(byteData);
+              });
+              output = await Future.wait(futureFileList);
+            }
+          } else {
+            PickedFile image = await ImagePicker().getImage(
+              source: ImageSource.gallery,
+              imageQuality: quality,
+            );
+            if (image != null) output = [new File(image.path)];
+          }
+        }
+        if (source==SourceType.camera) {
+          PickedFile image = await ImagePicker().getImage(
+            source: ImageSource.camera,
             imageQuality: quality,
           );
-          output = [image];
+          if (image != null) output = [new File(image.path)];
         }
-      }
-      if (source==SourceType.camera) {
-        File image = await ImagePicker.pickImage(
-          source: ImageSource.camera,
-          imageQuality: quality,
-        );
-        output = [image];
+      } catch(e) {
+        print(e);
+        output = null;
       }
       return output;
     } else {
@@ -104,6 +112,32 @@ class Utils {
       );
       return null;
     }
+  }
+
+  // 裁剪
+  static Future<File> imageCrop(String path, {
+    ImageCompressFormat imageType = ImageCompressFormat.jpg,
+    int quality = 90,
+    CropStyle cropStyle = CropStyle.rectangle,
+    int maxWidth,
+    int maxHeight,
+    CropAspectRatio aspectRatio,
+  }) async {
+    File res;
+    try {
+      res = await ImageCropper.cropImage(
+        sourcePath: path,
+        compressFormat: imageType,
+        compressQuality: quality,
+        cropStyle: cropStyle,
+        maxWidth: maxWidth,
+        maxHeight: maxHeight,
+        aspectRatio: aspectRatio,
+      );
+    } catch (e) {
+
+    }
+    return res;
   }
 
 // 二进制转file

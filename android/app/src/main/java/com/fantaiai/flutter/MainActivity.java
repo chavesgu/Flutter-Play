@@ -10,24 +10,32 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.chavesgu.push.PushPlugin;
-import com.tencent.bugly.crashreport.CrashReport;
+//import com.tencent.bugly.crashreport.CrashReport;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import io.flutter.app.FlutterActivity;
+//import io.flutter.app.FlutterActivity;
+import io.flutter.embedding.android.FlutterActivity;
+import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugins.GeneratedPluginRegistrant;
 
 public class MainActivity extends FlutterActivity {
 
   @Override
+  public void configureFlutterEngine(FlutterEngine flutterEngine) {
+    GeneratedPluginRegistrant.registerWith(flutterEngine);
+    super.configureFlutterEngine(flutterEngine);
+  }
+
+  @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    GeneratedPluginRegistrant.registerWith(this);
+//    GeneratedPluginRegistrant.registerWith(this);
 
-    CrashReport.initCrashReport(getApplicationContext(), "22481154f7", true);
+//    CrashReport.initCrashReport(getApplicationContext(), "22481154f7", true);
 
     Intent intent = getIntent();
     String data = getHWMsg(intent);

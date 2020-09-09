@@ -4,7 +4,7 @@ import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-import 'package:auto_orientation/auto_orientation.dart';
+import 'package:flutter_orientation/flutter_orientation.dart';
 import 'package:flutter_play/variable.dart';
 import 'package:home_indicator/home_indicator.dart';
 
@@ -230,7 +230,9 @@ class _MyVideoState extends State<MyVideo> {
               child: SizedBox(
                 width: 20,
                 height: 20,
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(
+                  strokeWidth: width(2.0),
+                ),
               ),
             ),
           ),
@@ -342,11 +344,11 @@ class _MyVideoState extends State<MyVideo> {
   void _toggleFullScreen() {
     setState(() {
       if (_isFullScreen) { // 设置竖屏
-        AutoOrientation.portraitUpMode();
+        FlutterOrientation.setOrientation(DeviceOrientation.portraitUp);
         // iphoneX底部横条
         HomeIndicator.deferScreenEdges([]);
       } else { // 设置横屏
-        AutoOrientation.landscapeRightMode();
+        FlutterOrientation.setOrientation(DeviceOrientation.landscapeRight);
         HomeIndicator.deferScreenEdges([ScreenEdge.bottom]);
       }
       _startPlayControlTimer();

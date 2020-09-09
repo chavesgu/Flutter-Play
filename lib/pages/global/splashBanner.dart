@@ -25,9 +25,8 @@ class SplashBannerState extends State<SplashBanner> {
 
   @override
   Widget build(BuildContext context) {
-    final Brightness brightness = context.read<ThemeModel>().brightness;
     return MyBrightness(
-      brightness: brightness,
+      brightness: context.watch<ThemeModel>().brightness,
       child: Container(
         width: vw,
         height: vh,

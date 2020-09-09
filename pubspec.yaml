@@ -32,7 +32,7 @@ dependencies:
   fluro: ^1.6.3
   path_provider: ^1.6.9
   uuid: 2.0.4
-  auto_orientation: ^1.0.6
+  orientation: ^1.2.0
 #  native_device_orientation: ^0.4.3
   home_indicator: ^1.1.5
   dio: ^3.0.5
@@ -43,7 +43,7 @@ dependencies:
   qrcode: ^1.0.4
   camera: ^0.5.8+2
 #  image: ^2.1.12
-  flutter_inappwebview: ^3.2.0
+  flutter_inappwebview: ^4.0.0
   flutter_screenutil: ^2.3.1
   shared_preferences: ^0.5.10
 #  image_pickers: ^1.0.7
@@ -71,6 +71,8 @@ dependencies:
     path: ../flutter-plugin/push/
   mob_login:
     path: ../flutter-plugin/mob_login/
+  flutter_orientation:
+    path: ../flutter-plugin/flutter_orientation/
 #  page_life_cycle: 1.1.0
   flutter_inner_drawer: 0.5.7+2
 
