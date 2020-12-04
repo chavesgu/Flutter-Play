@@ -29,56 +29,57 @@ final Dio api = Dio(BaseOptions(
 
 abstract class Service {
   static init() {
-//    api.httpClientAdapter = Http2Adapter(ConnectionManager());
     (api.transformer as DefaultTransformer).jsonDecodeCallback = parseJson;
+    // (api.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (client) {
+    //   client.findProxy = (uri) {
+    //     return "PROXY localhost:8888";
+    //   };
+    //   // you can also create a new HttpClient to dio
+    //   // return new HttpClient();
+    // };
+    api.interceptors.add(LogInterceptor(
+      responseHeader: false,
+      requestHeader: false,
+    )); //开启请求日志
     api.interceptors.add(CookieManager(CookieJar()));
-    api.interceptors.add(InterceptorsWrapper(
-      onRequest:(RequestOptions options) {
-        options.contentType = Headers.formUrlEncodedContentType;
+    api.interceptors
+        .add(InterceptorsWrapper(onRequest: (RequestOptions options) {
+      options.contentType = Headers.formUrlEncodedContentType;
 //        options.contentType = Headers.jsonContentType;
-        return options;
-      },
-      onResponse:(Response response) {
-        return response;
-      },
-      onError: (DioError e) {
+      return options;
+    }, onResponse: (Response response) {
+      return response;
+    }, onError: (DioError e) {
 // Do something with response error
-        print('==========数据响应错误==========');
-        print('==========$e==========');
-        print('==============================');
-        return e;
-      }
-    ));
+      print('==========数据响应错误==========');
+      print('==========$e==========');
+      print('==============================');
+      return e;
+    }));
   }
 
   // 首页轮播图
   static Future<List> getHomeBanner() async {
     try {
-      Response res = await api.post(
-        '/music/banner',
-        data: {
-          "type": Platform.isIOS?2:1,
-        }
-      );
+      Response res = await api.post('/music/banner', data: {
+        "type": Platform.isIOS ? 2 : 1,
+      });
       return res.data["banners"];
-    } on DioError catch(e) {
+    } on DioError catch (e) {
       return Future.error(e);
     }
   }
+
   // 推荐歌单
   static Future<List> getRecommendMusicList() async {
     try {
-      Response res = await api.post(
-        '/music/personalized',
-        data: {
-          "limit": 6
-        }
-      );
+      Response res = await api.post('/music/personalized', data: {"limit": 6});
       return res.data["result"];
-    } on DioError catch(e) {
+    } on DioError catch (e) {
       return Future.error(e);
     }
   }
+
   // 排行榜
   static Future<List> getTopList() async {
     try {
@@ -86,45 +87,36 @@ abstract class Service {
         '/music/toplist/detail',
       );
       return res.data["list"];
-    } on DioError catch(e) {
+    } on DioError catch (e) {
       return Future.error(e);
     }
   }
+
   // 歌单详情
   static Future<Map<String, dynamic>> getMusicListDetail(String id) async {
     try {
       Response res = await api.post(
-        '/music/playlist/detail?timestamp=${DateTime.now()}',
-        data: {
-          "id": id
-        }
-      );
+          '/music/playlist/detail?timestamp=${DateTime.now()}',
+          data: {"id": id});
       return res.data["playlist"];
-    } on DioError catch(e) {
+    } on DioError catch (e) {
       return Future.error(e);
     }
   }
 
   static Future getMusic() {
-    return api.post(
-      '/music/song/url',
-      data: {
-        "id": "347230"
-      }
-    );
+    return api.post('/music/song/url', data: {"id": "347230"});
   }
 
-  static Future download(String url, String savePath) async {
+  static Future download(String url, String savePath,
+      {ProgressCallback onReceiveProgress, CancelToken cancelToken}) async {
     try {
-      Response res = await simple.download(
-        url,
-        savePath,
-        options: Options(
-          responseType: ResponseType.bytes
-        )
-      );
+      Response res = await simple.download(url, savePath,
+          cancelToken: cancelToken,
+          onReceiveProgress: onReceiveProgress,
+          options: Options(responseType: ResponseType.bytes));
       return res.data;
-    } on DioError catch(e) {
+    } on DioError catch (e) {
       return Future.error(e);
     }
   }

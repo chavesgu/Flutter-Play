@@ -6,10 +6,12 @@ import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
+import 'package:flutter_play/components/CustomAnimatePage.dart';
 import 'package:flutter_play/components/GlobalComponents.dart';
 import 'package:flutter_play/store/model.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:images_picker/images_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:amap_location/amap_location.dart';
@@ -18,7 +20,7 @@ import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/status.dart' as status;
 import 'package:flutter_alert/flutter_alert.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:image_cropper/image_cropper.dart';
+//import 'package:image_cropper/image_cropper.dart';
 // import 'package:qiniu_manager/qiniu_manager.dart';
 import 'package:push/push.dart';
 import 'package:mob_login/mob_login.dart';
@@ -49,7 +51,7 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
   IOWebSocketChannel channel;
   String _data = '';
 
-  File _image;
+  dynamic _image;
   String url;
 
   double progress = 0;
@@ -68,6 +70,15 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
         preferredSize: Size.fromHeight(50.0),
         child: AppBar(
           title: Text('Demo'),
+          actions: [
+            IconButton(
+              icon: Icon(const IconData(0xe610, fontFamily: 'iconfont')),
+              onPressed: () {
+                HapticFeedback.heavyImpact();
+                goScan();
+              },
+            )
+          ]
         ),
       ),
       body: ListView(
@@ -167,6 +178,20 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
                 child: Text('login'),
                 onPressed: () {
                   MobLogin.login();
+                },
+              ),
+              RaisedButton(
+                child: Text('custom page'),
+                onPressed: () {
+                  Navigator.of(context).push(CustomRouteBuilder(
+                    enterWidget: TestFixedPage(),
+                  ));
+                },
+              ),
+              RaisedButton(
+                child: Text('canvas'),
+                onPressed: () {
+                  Navigator.of(context).pushNamed(CanvasPage.name);
                 },
               ),
             ],
@@ -390,22 +415,19 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
   }
 
   getImage(SourceType source) async {
-    String imagePath;
-    List<File> images = await Utils.imagePicker(
+    List<Media> images = await Utils.imagePicker(
       source: source,
-      maxImages: 1
+      count: 2,
+      // pickType: PickType.all,
+      // quality: .5,
+      // maxSize: 600,
+      cropOpt: CropOption(),
     );
     if (images!=null) {
-      imagePath = images.first.path;
-    }
-    if (imagePath!=null) {
-      File cropImage = await Utils.imageCrop(imagePath);
-      if (cropImage!=null) {
-        setState(() {
-          print('压缩后:'+cropImage.path);
-          _image = cropImage;
-        });
-      }
+      setState(() {
+        print(images.first.size);
+        _image = images.first.path;
+      });
     }
   }
 
@@ -463,36 +485,7 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
   }
 
   void goOCR() async {
-    PermissionStatus permissionStatus = await Permission.camera.status;
-    bool hasPermission = permissionStatus.isGranted;
-    bool unknown = (permissionStatus.isUndetermined) || (permissionStatus.isDenied);
-    if (unknown) {
-      // microphone
-      hasPermission = await Permission.camera.request().isGranted;
-    }
-    if (!hasPermission) {
-      showAlert(
-        context: context,
-        barrierDismissible: false,
-        title: '提示',
-        body: '需要打开相机权限，前往"设置"',
-        actions: [
-          AlertAction(
-            text: '取消',
-            onPressed: () {
-            },
-          ),
-          AlertAction(
-            text: '设置',
-            onPressed: () {
-              openAppSettings();
-            },
-          )
-        ],
-      );
-    } else {
-      Navigator.of(context).pushNamed(TestOCR.name);
-    }
+    Navigator.of(context).pushNamed(TestOCR.name);
   }
 
   void throttle() {
@@ -506,5 +499,36 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
       DateTime now = DateTime.now();
       print('debounce:'+now.toString());
     }, Duration(seconds: 2));
+  }
+  void goScan() async {
+    PermissionStatus permissionStatus = (await Permission.camera.status);
+    bool hasPermission = permissionStatus==PermissionStatus.granted;
+    bool unknown = (permissionStatus.isUndetermined) || (permissionStatus.isDenied);
+    if (unknown) {
+      hasPermission = await Permission.camera.request().isGranted;
+    }
+    if (hasPermission) {
+      Navigator.of(context).pushNamed(ScanPage.name);
+    } else{
+      showAlert(
+        context: context,
+        barrierDismissible: false,
+        title: '扫码提示',
+        body: '扫码需要允许相机权限',
+        actions: [
+          AlertAction(
+            text: '取消',
+            onPressed: () {
+            },
+          ),
+          AlertAction(
+            text: '前往设置',
+            onPressed: () {
+              openAppSettings();
+            },
+          )
+        ],
+      );
+    }
   }
 }

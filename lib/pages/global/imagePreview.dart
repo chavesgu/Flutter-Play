@@ -71,6 +71,7 @@ class _ImagePreviewState extends State<ImagePreview> {
           child: MyImage(
             list[i],
             mode: ExtendedImageMode.gesture,
+            preview: false,
           ),
         ),
       ));

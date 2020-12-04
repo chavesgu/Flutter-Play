@@ -34,19 +34,11 @@ class UserCenterState extends State<UserCenter> with AutomaticKeepAliveClientMix
           children: <Widget>[
             Column(
               children: <Widget>[
-                GestureDetector(
-                  onTapUp: (TapUpDetails details) {
-                    _scale('https://cdn.chavesgu.com/avatar.jpg', details);
-                  },
-                  child: Container(
-                    width: 150,
-                    height: 150,
-                    child: ClipOval(
-                      child: MyImage(
-                        'https://cdn.chavesgu.com/avatar.jpg',
-                      ),
-                    ),
-                  ),
+                MyImage(
+                  'https://cdn.chavesgu.com/avatar.jpg',
+                  width: 150,
+                  height: 150,
+                  shape: BoxShape.circle,
                 ),
                 MyImage('assets/images/avatar.png'),
                 Selector<UserModel, String>(

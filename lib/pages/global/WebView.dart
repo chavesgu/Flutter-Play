@@ -38,13 +38,21 @@ class _WebViewState extends State<WebView> {
               children: <Widget>[
                 InAppWebView(
                   initialUrl: url,
-                  initialOptions: InAppWebViewGroupOptions(),
+                  initialOptions: InAppWebViewGroupOptions(
+                    android: AndroidInAppWebViewOptions(
+                      verticalScrollbarPosition: AndroidVerticalScrollbarPosition.SCROLLBAR_POSITION_RIGHT
+                    )
+                  ),
                   onWebViewCreated: (InAppWebViewController controller) {
                     webView = controller;
                     // flutter和webview通信
                     webView.addJavaScriptHandler(handlerName: 'push', callback: (arguments) {
                       Navigator.of(context).pushNamed('${WebView.name}?url=${Uri.encodeQueryComponent(arguments.first)}');
                     });
+                  },
+                  onCreateWindow: (InAppWebViewController controller, CreateWindowRequest request) async {
+                    controller.loadUrl(url: request.url);
+                    return false;
                   },
                   onProgressChanged: (InAppWebViewController controller, int progress) {
                     setState(() {

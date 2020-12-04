@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 import 'dart:async';
 import 'dart:ui';
@@ -13,9 +14,11 @@ class MyVideo extends StatefulWidget {
     @required this.url,
     @required this.width,
     @required this.height,
+    this.controls = true,
     this.autoplay = false,
     this.loop = false,
     this.title = '',
+    this.background = Colors.black,
     this.screenChange,
   });
 
@@ -24,12 +27,16 @@ class MyVideo extends StatefulWidget {
   // 视频尺寸比例
   final double width;
   final double height;
+  // 是否需要控制栏
+  final bool controls;
   // 是否自动播放
   final bool autoplay;
   // 是否循环播放
   final bool loop;
   // 视频标题
   final String title;
+  // 视频背景
+  final Color background;
   // 切换横竖屏回调
   final Function screenChange;
 
@@ -212,7 +219,7 @@ class _MyVideoState extends State<MyVideo> {
     return Container(
       width: widget.width,
       height: widget.height,
-      color: Colors.black,
+      color: widget.background,
       child: widget.url!=null?Stack(
         children: <Widget>[
           GestureDetector(
@@ -287,10 +294,25 @@ class _MyVideoState extends State<MyVideo> {
     }
     setState(() {
       _hidePlayControl = true;
+      _playControlOpacity = 0;
       _videoInit = false;
       _position = Duration(seconds: 0);
     });
-    _controller = VideoPlayerController.network(widget.url);
+    try {
+      switch (getVideoOrigin(widget.url)) {
+        case 'network':
+          _controller = VideoPlayerController.network(widget.url);
+          break;
+        case 'assets':
+          _controller = VideoPlayerController.asset(widget.url);
+          break;
+        default:
+          _controller = VideoPlayerController.file(File(widget.url));
+          break;
+      }
+    } catch(e) {
+      print(e);
+    }
     _controller.initialize().then((_) {
       _controller.setVolume(1);
       _controller.setLooping(widget.loop);
@@ -304,7 +326,7 @@ class _MyVideoState extends State<MyVideo> {
 
   void _videoListener() async {
     Duration res = await _controller.position;
-    if (res >= _controller.value.duration) {
+    if (!widget.loop && res >= _controller.value.duration) {
       _controller.pause();
       _controller.seekTo(Duration(seconds: 0));
     }
@@ -314,19 +336,21 @@ class _MyVideoState extends State<MyVideo> {
   }
 
   void _togglePlayControl() {
-    setState(() {
-      if (_hidePlayControl) {
-        _hidePlayControl = false;
-        _playControlOpacity = 1;
-        _startPlayControlTimer();
-      } else {
-        if (_timer!=null) _timer.cancel();
-        _playControlOpacity = 0;
-        Future.delayed(Duration(milliseconds: 300)).whenComplete(() {
-          _hidePlayControl = true;
-        });
-      }
-    });
+    if (widget.controls) {
+      setState(() {
+        if (_hidePlayControl) {
+          _hidePlayControl = false;
+          _playControlOpacity = 1;
+          _startPlayControlTimer();
+        } else {
+          if (_timer!=null) _timer.cancel();
+          _playControlOpacity = 0;
+          Future.delayed(Duration(milliseconds: 300)).whenComplete(() {
+            _hidePlayControl = true;
+          });
+        }
+      });
+    }
   }
 
   void _startPlayControlTimer() {
@@ -354,6 +378,15 @@ class _MyVideoState extends State<MyVideo> {
       _startPlayControlTimer();
       if (widget.screenChange!=null) widget.screenChange();
     });
+  }
+
+  String getVideoOrigin(String url) {
+    if (RegExp(r"^https?:\/\/\S+").hasMatch(url)) {
+      return 'network';
+    } else if(RegExp(r"^assets\/\S+").hasMatch(url)) {
+      return 'assets';
+    }
+    return 'file';
   }
 }
 

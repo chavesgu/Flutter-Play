@@ -77,14 +77,12 @@ class MediaPageState extends State<MediaPage> with AutomaticKeepAliveClientMixin
                   ],
                 ),
               ),
-              Container(
-                child: MyVideo(
-                  url: url,
-                  title: videoTitle,
-                  width: _isFullScreen?vh:vw,
-                  height: _isFullScreen?vw:vw/16*9,
+              MyVideo(
+                url: url,
+                title: videoTitle,
+                width: _isFullScreen?vh:vw,
+                height: _isFullScreen?vw:vw/16*9,
 //                  autoplay: true,
-                ),
               ),
             ],
           ),

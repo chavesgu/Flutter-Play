@@ -198,7 +198,3 @@ class EntryPageState extends State<EntryPage> with WidgetsBindingObserver {
     });
   }
 }
-
-class TabbarItem extends Object {
-
-}

@@ -2,6 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:extended_image/extended_image.dart';
+import 'package:flutter_play/pages/global/imagePreview.dart';
+
+import '../variable.dart';
 
 class MyImage extends StatelessWidget{
   MyImage(dynamic image, {
@@ -18,6 +21,8 @@ class MyImage extends StatelessWidget{
     this.color,
     this.colorBlendMode,
     this.scale = 1.0,
+    this.preview = true,
+    this.gestureConfig,
   })
     :
       assert(image is String || image is File),
@@ -37,11 +42,14 @@ class MyImage extends StatelessWidget{
   final BlendMode colorBlendMode;
   final double scale;
   final BoxShape shape;
+  final InitGestureConfigHandler gestureConfig;
+  final bool preview;
 
   @override
   Widget build(BuildContext context) {
+    ExtendedImage _imageWidget;
     if (_content is File) {
-      return ExtendedImage.file(
+      _imageWidget = ExtendedImage.file(
         _content,
         width: width,
         height: height,
@@ -52,11 +60,11 @@ class MyImage extends StatelessWidget{
         loadStateChanged: _loadStateChanged,
         fit: fit,
         mode: mode,
-        initGestureConfigHandler: _gestureConfig,
+        initGestureConfigHandler: gestureConfig ?? _gestureConfig,
       );
     } else if (_content is String) {
       if (RegExp(r"^https?:\/\/\S+").hasMatch(_content)) { // network
-        return ExtendedImage.network(
+        _imageWidget = ExtendedImage.network(
           _content,
           width: width,
           height: height,
@@ -67,11 +75,25 @@ class MyImage extends StatelessWidget{
           loadStateChanged: _loadStateChanged,
           fit: fit,
           mode: mode,
-          initGestureConfigHandler: _gestureConfig,
+          initGestureConfigHandler: gestureConfig ?? _gestureConfig,
+        );
+      } else if (RegExp(r"^assets\/\S+").hasMatch(_content)) {
+        _imageWidget = ExtendedImage.asset(
+          _content,
+          width: width,
+          height: height,
+          color: color,
+          scale: scale,
+          shape: shape,
+          colorBlendMode: colorBlendMode,
+          loadStateChanged: _loadStateChanged,
+          fit: fit,
+          mode: mode,
+          initGestureConfigHandler: gestureConfig ?? _gestureConfig,
         );
       } else {
-        return ExtendedImage.asset(
-          _content,
+        _imageWidget = ExtendedImage.file(
+          File(_content),
           width: width,
           height: height,
           color: color,
@@ -81,11 +103,42 @@ class MyImage extends StatelessWidget{
           loadStateChanged: _loadStateChanged,
           fit: fit,
           mode: mode,
-          initGestureConfigHandler: _gestureConfig,
+          initGestureConfigHandler: gestureConfig ?? _gestureConfig,
         );
       }
     }
-    return Container();
+    if (preview) {
+      return GestureDetector(
+        onTapUp: (TapUpDetails details) {
+          _previewImage(context, _content, details);
+        },
+        child: _imageWidget,
+      );
+    }
+    return _imageWidget;
+  }
+
+  void _previewImage(BuildContext context, dynamic content, TapUpDetails details) {
+    double _x = (vw/2 - details.globalPosition.dx)/(vw/2);
+    double _y = (vh/2 - details.globalPosition.dy)/(vh/2);
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
+          return ScaleTransition(
+            scale: animation,
+            alignment: Alignment(
+              -_x,
+              -_y
+            ),
+            child: ImagePreview(
+              imageList: [content, content],
+            ),
+          );
+        },
+        transitionDuration: Duration(milliseconds: 150),
+      )
+    );
   }
 
   Widget _loadStateChanged(ExtendedImageState state){
@@ -110,7 +163,7 @@ class MyImage extends StatelessWidget{
 
   GestureConfig _gestureConfig(ExtendedImageState state) {
     return GestureConfig(
-      inPageView: true,
+      inPageView: false,
       initialScale: 1.0,
       cacheGesture: false
     );

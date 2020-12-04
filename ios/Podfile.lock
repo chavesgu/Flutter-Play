@@ -7,11 +7,6 @@ PODS:
     - AMapFoundation (~> 1.6.4)
   - audioplayers (0.0.1):
     - Flutter
-  - BSGridCollectionViewLayout (1.2.5)
-  - BSImagePicker (2.10.3):
-    - BSGridCollectionViewLayout (= 1.2.5)
-    - BSImageView (= 1.0.3)
-  - BSImageView (1.0.3)
   - camera (0.0.1):
     - Flutter
   - connectivity (0.0.1):
@@ -27,49 +22,44 @@ PODS:
   - HappyDNS (0.3.17)
   - home_indicator (0.0.1):
     - Flutter
-  - image_cropper (0.0.3):
+  - images_picker (0.0.1):
     - Flutter
-    - TOCropViewController (~> 2.5.4)
-  - image_picker (0.0.1):
-    - Flutter
+    - ZLPhotoBrowser (= 4.0.7)
   - mob_login (0.0.1):
     - Flutter
     - mob_secverify
   - mob_secverify (2.1.2):
     - MOBFoundation
-  - MOBFoundation (3.2.18)
+  - MOBFoundation (3.2.19)
   - move_to_background (0.0.1):
-    - Flutter
-  - multi_image_picker (4.7.12):
-    - BSImagePicker (~> 2.10.3)
     - Flutter
   - native_pdf_renderer (1.0.0):
     - Flutter
-  - orientation (0.0.1):
-    - Flutter
   - path_provider (0.0.1):
     - Flutter
-  - "permission_handler (5.0.0+hotfix.6)":
+  - "permission_handler (5.0.1+1)":
     - Flutter
   - push (0.0.1):
     - Flutter
-  - Qiniu (8.0.0):
+  - Qiniu (8.0.3):
     - HappyDNS (~> 0.3.17)
   - qiniu_manager (1.0.0):
     - Flutter
     - Qiniu
-  - qrcode (0.0.1):
-    - Flutter
   - Reachability (3.2)
+  - scan (0.0.1):
+    - Flutter
   - shared_preferences (0.0.1):
     - Flutter
   - statusbar_util (1.0.0):
     - Flutter
-  - TOCropViewController (2.5.4)
   - url_launcher (0.0.1):
     - Flutter
   - video_player (0.0.1):
     - Flutter
+  - ZLPhotoBrowser (4.0.7):
+    - ZLPhotoBrowser/Core (= 4.0.7)
+  - ZLPhotoBrowser/Core (4.0.7)
 
 DEPENDENCIES:
   - amap_location (from `.symlinks/plugins/amap_location/ios`)
@@ -81,18 +71,15 @@ DEPENDENCIES:
   - flutter_inappwebview (from `.symlinks/plugins/flutter_inappwebview/ios`)
   - flutter_orientation (from `.symlinks/plugins/flutter_orientation/ios`)
   - home_indicator (from `.symlinks/plugins/home_indicator/ios`)
-  - image_cropper (from `.symlinks/plugins/image_cropper/ios`)
-  - image_picker (from `.symlinks/plugins/image_picker/ios`)
+  - images_picker (from `.symlinks/plugins/images_picker/ios`)
   - mob_login (from `.symlinks/plugins/mob_login/ios`)
   - move_to_background (from `.symlinks/plugins/move_to_background/ios`)
-  - multi_image_picker (from `.symlinks/plugins/multi_image_picker/ios`)
   - native_pdf_renderer (from `.symlinks/plugins/native_pdf_renderer/ios`)
-  - orientation (from `.symlinks/plugins/orientation/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
   - push (from `.symlinks/plugins/push/ios`)
   - qiniu_manager (from `.symlinks/plugins/qiniu_manager/ios`)
-  - qrcode (from `.symlinks/plugins/qrcode/ios`)
+  - scan (from `.symlinks/plugins/scan/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - statusbar_util (from `.symlinks/plugins/statusbar_util/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
@@ -102,15 +89,12 @@ SPEC REPOS:
   trunk:
     - AMapFoundation
     - AMapLocation
-    - BSGridCollectionViewLayout
-    - BSImagePicker
-    - BSImageView
     - HappyDNS
     - mob_secverify
     - MOBFoundation
     - Qiniu
     - Reachability
-    - TOCropViewController
+    - ZLPhotoBrowser
 
 EXTERNAL SOURCES:
   amap_location:
@@ -131,20 +115,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_orientation/ios"
   home_indicator:
     :path: ".symlinks/plugins/home_indicator/ios"
-  image_cropper:
-    :path: ".symlinks/plugins/image_cropper/ios"
-  image_picker:
-    :path: ".symlinks/plugins/image_picker/ios"
+  images_picker:
+    :path: ".symlinks/plugins/images_picker/ios"
   mob_login:
     :path: ".symlinks/plugins/mob_login/ios"
   move_to_background:
     :path: ".symlinks/plugins/move_to_background/ios"
-  multi_image_picker:
-    :path: ".symlinks/plugins/multi_image_picker/ios"
   native_pdf_renderer:
     :path: ".symlinks/plugins/native_pdf_renderer/ios"
-  orientation:
-    :path: ".symlinks/plugins/orientation/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
   permission_handler:
@@ -153,8 +131,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/push/ios"
   qiniu_manager:
     :path: ".symlinks/plugins/qiniu_manager/ios"
-  qrcode:
-    :path: ".symlinks/plugins/qrcode/ios"
+  scan:
+    :path: ".symlinks/plugins/scan/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
   statusbar_util:
@@ -169,10 +147,7 @@ SPEC CHECKSUMS:
   AMapFoundation: 3638198dfa40be54648570c3520edefad288286b
   AMapLocation: a46c30d9930d0f3a3bd21139d8f845d10ac3f01d
   audioplayers: 53f0f30789b10ab2009771c6c79def00980945e4
-  BSGridCollectionViewLayout: 333dcb457a5a3bdd9212607ab5756553dcfe06cb
-  BSImagePicker: 07404254f2fcdaf5a2eb403c0f8c337267ce8738
-  BSImageView: a149459433a2687157d034c78e059d30ac7f2544
-  camera: 38cc83ae9a5667bb5a71c7d9edaf60a91920fd4e
+  camera: a0ca5080336f7af47b88436e5e26da3dee5568f0
   connectivity: c4130b2985d4ef6fd26f9702e886bd5260681467
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
@@ -180,28 +155,25 @@ SPEC CHECKSUMS:
   flutter_orientation: 4fcb34769db97f3fdc294851d0786e563b2b9286
   HappyDNS: 848ef73e24f2b0e2752064223ce2dc0dd88900ea
   home_indicator: 60c6a4b60d17173cd164c112eb9be37055b23af8
-  image_cropper: c8f9b4157933c7bb965a66d1c5e6c8fd408c6eb4
-  image_picker: 9c3312491f862b28d21ecd8fdf0ee14e601b3f09
+  images_picker: 5166ad88297acad3b6bb2b64924da8ad029f2174
   mob_login: ca6293d4a6432920a082ff272227982bee4cc82f
   mob_secverify: a95881f60619fc38d516b73c9aeef58298f65917
-  MOBFoundation: b9dcc4bb4d3d3ade8d625190d6a77adbca563dcc
+  MOBFoundation: 606bc4c10ff4c6ac573c09f5081a39c75316bc7b
   move_to_background: 39a5b79b26d577b0372cbe8a8c55e7aa9fcd3a2d
-  multi_image_picker: b256ba9de62ac1ec6be67bb03328d682e8f35663
   native_pdf_renderer: fa374da660730abe059e7a178e79895dd202f007
-  orientation: 6c9203efe86ce4cff379756910f18b2d745628c3
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
-  permission_handler: b7a0953389e699927c6217933754cdcd0fa2c5a7
+  permission_handler: eac8e15b4a1a3fba55b761d19f3f4e6b005d15b6
   push: a02f9d91cfd1aa02ea7702a7a8e373b2d35d3306
-  Qiniu: b9c638318b8179d01d8dfc745159e4047e8975b7
+  Qiniu: bc936fe7224188d74d4e93353bddc08936ea0780
   qiniu_manager: b2f7e4b7de5f40001e4d9f18cf4f45f2c4816510
-  qrcode: 703d52352679d9b4284555e9a09c2157062f1989
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
+  scan: aea35bb4aa59ccc8839c576a18cd57c7d492cc86
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   statusbar_util: 1069d2ddcdf165f9d3422fcabc7dd7530f64f553
-  TOCropViewController: 2a1ae1242600b1f2d996fd91a5268b2309a33b5c
   url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
   video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
+  ZLPhotoBrowser: f85662753ea4cfebff08b3512b17467467634fb2
 
-PODFILE CHECKSUM: 7f76905c73a178a8ce6ea3490ca680df728dd042
+PODFILE CHECKSUM: fe0e1ee7f3d1f7d00b11b474b62dd62134535aea
 
-COCOAPODS: 1.9.1
+COCOAPODS: 1.10.0.rc.1

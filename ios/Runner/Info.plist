@@ -28,8 +28,16 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>190703</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>MOBAppKey</key>
+	<string>307b80801f92e</string>
+	<key>MOBAppSecret</key>
+	<string>9dbc60bb0ca85e7842650b918eb79694</string>
+	<key>NSAllowsArbitraryLoads</key>
+	<false/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -37,8 +45,48 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>获取相机权限使用扫描二维码、拍照等功能</string>
+	<key>NSExceptionDomains</key>
+	<dict>
+		<key>cmpassport.com</key>
+		<dict>
+			<key>NSIncludesSubdomains</key>
+			<true/>
+			<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+			<true/>
+		</dict>
+		<key>id6.me</key>
+		<dict>
+			<key>NSIncludesSubdomains</key>
+			<true/>
+			<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+			<true/>
+		</dict>
+		<key>mdn.open.wo.cn</key>
+		<dict>
+			<key>NSIncludesSubdomains</key>
+			<true/>
+			<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+			<true/>
+		</dict>
+		<key>wostore.cn</key>
+		<dict>
+			<key>NSIncludesSubdomains</key>
+			<true/>
+			<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+			<true/>
+		</dict>
+		<key>zzx9.cn</key>
+		<dict>
+			<key>NSIncludesSubdomains</key>
+			<true/>
+			<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+			<true/>
+		</dict>
+	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>获取您的位置已推荐合适的服务</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>获取麦克风权限拍摄录制视频</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>获取相册权限才能使用选取照片设置头像等功能</string>
 	<key>UIApplicationShortcutItems</key>
@@ -73,49 +121,5 @@
 	<true/>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
-	<key>MOBAppKey</key>
-    <string>307b80801f92e</string>
-    <key>MOBAppSecret</key>
-    <string>9dbc60bb0ca85e7842650b918eb79694</string>
-    <key>NSExceptionDomains</key>
-    <dict>
-        <key>zzx9.cn</key>
-        <dict>
-            <key>NSIncludesSubdomains</key>
-            <true/>
-            <key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
-            <true/>
-        </dict>
-        <key>cmpassport.com</key>
-        <dict>
-            <key>NSIncludesSubdomains</key>
-            <true/>
-            <key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
-            <true/>
-        </dict>
-        <key>id6.me</key>
-        <dict>
-            <key>NSIncludesSubdomains</key>
-            <true/>
-            <key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
-            <true/>
-        </dict>
-        <key>wostore.cn</key>
-        <dict>
-            <key>NSIncludesSubdomains</key>
-            <true/>
-            <key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
-            <true/>
-        </dict>
-        <key>mdn.open.wo.cn</key>
-        <dict>
-            <key>NSIncludesSubdomains</key>
-            <true/>
-            <key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
-            <true/>
-        </dict>
-    </dict>
-    <key>NSAllowsArbitraryLoads</key>
-    <false/>
 </dict>
 </plist>

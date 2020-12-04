@@ -1,5 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Router;
 import 'package:fluro/fluro.dart';
+import 'package:flutter_play/store/model.dart';
+import 'package:flutter_play/variable.dart';
+import 'package:provider/provider.dart';
 
 import 'routerPath.dart';
 
@@ -105,6 +108,14 @@ class RouterManager {
       }),
       transitionType:  TransitionType.cupertino,
     );
+    // WebView
+    router.define(
+      CanvasPage.name,
+      handler: Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+        return CanvasPage();
+      }),
+      transitionType:  TransitionType.cupertino,
+    );
 
     // 404
 //    router.notFoundHandler = Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
@@ -117,6 +128,9 @@ class MyRouter extends Router {
   @override
   Route generator(RouteSettings routeSettings) {
     // TODO: implement generator
+    if (globalContext!=null) {
+      // print(Provider.of<UserModel>(globalContext, listen: false).title);
+    }
     return super.generator(routeSettings);
   }
 }

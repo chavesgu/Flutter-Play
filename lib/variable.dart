@@ -7,21 +7,26 @@ import 'dart:convert';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-BuildContext globalContext;
+
+GlobalKey rootKey = GlobalKey();
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-final double statusBarHeight = MediaQueryData.fromWindow(window).padding.top;
+OverlayState globalOverlayState;
 
-final double bottomAreaHeight = MediaQueryData.fromWindow(window).padding.bottom;
+BuildContext globalContext;
 
-final double dpr = MediaQueryData.fromWindow(window).devicePixelRatio;
+double statusBarHeight = MediaQueryData.fromWindow(window).padding.top;
+
+double bottomAreaHeight = MediaQueryData.fromWindow(window).padding.bottom;
+
+double dpr = MediaQueryData.fromWindow(window).devicePixelRatio;
 
 double vw = MediaQueryData.fromWindow(window).size.width;
 
 double vh = MediaQueryData.fromWindow(window).size.height;
 
-final bool isSystemDark = MediaQueryData.fromWindow(window).platformBrightness==Brightness.dark;
+bool isSystemDark = MediaQueryData.fromWindow(window).platformBrightness==Brightness.dark;
 
 final List<ThemeMode> themeModeList = [ThemeMode.system, ThemeMode.light, ThemeMode.dark];
 
@@ -168,8 +173,29 @@ class MyTheme {
   }
 }
 
-void setViewPort() {
-  vw = MediaQueryData.fromWindow(window).size.width;
+void setContext(BuildContext context) {
+  final BuildContext _context = context ?? globalContext;
 
-  vh = MediaQueryData.fromWindow(window).size.height;
+  final Orientation currentOrientation = MediaQuery.of(_context).orientation;
+
+  if (currentOrientation==Orientation.portrait) {
+    vw = MediaQuery.of(_context).size.width;
+
+    vh = MediaQuery.of(_context).size.height;
+  }
+
+  statusBarHeight = MediaQuery.of(_context).padding.top;
+
+  bottomAreaHeight = MediaQuery.of(_context).padding.bottom;
+
+  dpr = MediaQuery.of(_context).devicePixelRatio;
+
+  isSystemDark = MediaQuery.of(_context).platformBrightness==Brightness.dark;
+
+  //
+  globalContext = context;
+
+  globalOverlayState = Overlay.of(context);
+
+  ScreenUtil.init(context, width: 750, height: 1334);
 }

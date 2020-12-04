@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_alert/flutter_alert.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart' show InnerDrawerState;
-import 'package:flutter_play/pages/home/scan.dart';
+import 'package:flutter_play/pages/global/scan.dart';
 import 'package:flutter_play/pages/home/search.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -299,7 +299,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
       hasPermission = await Permission.camera.request().isGranted;
     }
     if (hasPermission) {
-      Navigator.of(context).pushNamed(ScanPage.name);
+      // Navigator.of(context).pushNamed(ScanPage.name);
     } else{
       showAlert(
         context: context,

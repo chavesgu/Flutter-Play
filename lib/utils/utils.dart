@@ -9,9 +9,7 @@ import 'package:flutter_play/components/MyCircularProgressIndicator.dart';
 import 'package:flutter_play/components/MyLoading.dart';
 import 'package:flutter_play/components/MyToast.dart';
 import 'package:flutter_play/variable.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:images_picker/images_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
@@ -20,15 +18,19 @@ import 'package:uuid/uuid.dart';
 class Utils {
 
   // 选取照片
-  static Future<List<File>> imagePicker({
+  static Future<List<Media>> imagePicker({
     BuildContext context,
+    PickType pickType = PickType.image,
+    bool gif = true,
     SourceType source = SourceType.gallery,
-    int maxImages = 1,
-    int quality = 100,
+    int count = 1,
+    CropOption cropOpt,
+    double quality,
+    int maxSize,
   }) async {
     String permissionReason = '';
     bool hasPermission = false;
-    List<File> output;
+    List<Media> output;
     if (source==SourceType.gallery) {
       Permission _permission = Platform.isIOS?Permission.photos:Permission.storage;
       PermissionStatus permissionStatus = await _permission.status;
@@ -56,34 +58,22 @@ class Utils {
     if (hasPermission) {
       try {
         if (source==SourceType.gallery) {
-          if (maxImages > 1) {
-            List<Asset> images = await MultiImagePicker.pickImages(
-              maxImages: maxImages
-            );
-            if (images.length > 0) {
-              Iterable<Future<ByteData>> futureByteDataList = images.map((Asset image) {
-                return image.getByteData(quality: quality);
-              });
-              List<ByteData> byteDataList = await Future.wait(futureByteDataList);
-              Iterable<Future<File>> futureFileList = byteDataList.map((ByteData byteData) {
-                return bytesToFile(byteData);
-              });
-              output = await Future.wait(futureFileList);
-            }
-          } else {
-            PickedFile image = await ImagePicker().getImage(
-              source: ImageSource.gallery,
-              imageQuality: quality,
-            );
-            if (image != null) output = [new File(image.path)];
-          }
+          output = await ImagesPicker.pick(
+            count: count,
+            pickType: pickType,
+            gif: gif,
+            cropOpt: cropOpt,
+            maxSize: maxSize,
+            quality: quality,
+          );
         }
         if (source==SourceType.camera) {
-          PickedFile image = await ImagePicker().getImage(
-            source: ImageSource.camera,
-            imageQuality: quality,
+          output = await ImagesPicker.openCamera(
+            pickType: pickType,
+            cropOpt: cropOpt,
+            maxSize: maxSize,
+            quality: quality,
           );
-          if (image != null) output = [new File(image.path)];
         }
       } catch(e) {
         print(e);
@@ -112,32 +102,6 @@ class Utils {
       );
       return null;
     }
-  }
-
-  // 裁剪
-  static Future<File> imageCrop(String path, {
-    ImageCompressFormat imageType = ImageCompressFormat.jpg,
-    int quality = 90,
-    CropStyle cropStyle = CropStyle.rectangle,
-    int maxWidth,
-    int maxHeight,
-    CropAspectRatio aspectRatio,
-  }) async {
-    File res;
-    try {
-      res = await ImageCropper.cropImage(
-        sourcePath: path,
-        compressFormat: imageType,
-        compressQuality: quality,
-        cropStyle: cropStyle,
-        maxWidth: maxWidth,
-        maxHeight: maxHeight,
-        aspectRatio: aspectRatio,
-      );
-    } catch (e) {
-
-    }
-    return res;
   }
 
 // 二进制转file
@@ -197,6 +161,7 @@ class Loading {
   }) async {
     if (_currentEntry!=null) return;
 
+    OverlayState overlayState = context!=null ? Overlay.of(context) : globalOverlayState;
     _currentEntry = OverlayEntry(
       opaque: false,
       builder: (_) {
@@ -223,7 +188,7 @@ class Loading {
         return wrap;
       },
     );
-    Overlay.of(context ?? globalContext).insert(_currentEntry);
+    overlayState.insert(_currentEntry);
   }
 
   static void hide() {
@@ -247,6 +212,7 @@ class Toast {
   }) async {
     if (_currentEntry!=null) return;
 
+    OverlayState overlayState = context!=null ? Overlay.of(context) : globalOverlayState;
     _complete = complete;
     _currentEntry = OverlayEntry(
       opaque: false,
@@ -287,7 +253,7 @@ class Toast {
         return wrap;
       },
     );
-    Overlay.of(context ?? globalContext).insert(_currentEntry);
+    overlayState.insert(_currentEntry);
     
 //    await Future.delayed(duration);
 

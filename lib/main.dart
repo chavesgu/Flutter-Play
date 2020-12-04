@@ -1,16 +1,11 @@
-import 'dart:collection';
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:amap_location/amap_location.dart';
-import 'package:fluro/fluro.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_play/pages/entry.dart';
-import 'package:flutter_play/utils/utils.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:home_indicator/home_indicator.dart';
 import 'package:mob_login/mob_login.dart';
 import 'package:move_to_background/move_to_background.dart';
@@ -18,14 +13,11 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_orientation/flutter_orientation.dart';
 import 'package:statusbar_util/statusbar_util.dart';
-import 'package:device_info/device_info.dart';
-import 'package:connectivity/connectivity.dart';
 
 import 'router.dart';
 import 'routeObserver.dart';
 import 'package:flutter_play/store/model.dart';
 import 'variable.dart';
-import 'utils/chinese_localization.dart';
 import 'service.dart';
 
 //import 'pages/global/splash.dart';
@@ -40,15 +32,16 @@ void main() async {
     Provider.debugCheckInvalidValueType = null;
     // 沉浸式状态栏
     StatusbarUtil.setTranslucent();
-    // 设置竖屏
+    // 设置竖屏 lock
     HomeIndicator.deferScreenEdges([]);
     FlutterOrientation.setOrientation(DeviceOrientation.portraitUp);
-    setViewPort();
     // 配置路由
     RouterManager.init();
     // 监听网络变化
     // 配置dio
     Service.init();
+    // mob login init
+    MobLogin.init();
 
     // 获取缓存主题
     int themeIndex = await getTheme();
@@ -92,18 +85,19 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: ThemeModel(
+        ChangeNotifierProvider(create: (_) => ThemeModel(
           useSystemMode: useSystemMode,
           themeMode: themeMode,
           systemThemeMode: isSystemDark?ThemeMode.dark:ThemeMode.light
         )),
-        ChangeNotifierProvider.value(value: GlobalModel()),
-        ChangeNotifierProvider.value(value: UserModel())
+        ChangeNotifierProvider(create: (_) => GlobalModel()),
+        ChangeNotifierProvider(create: (_) => UserModel())
       ],
       child: Consumer<ThemeModel>(
         builder: (context, model, child) {
           final Color themeColor = (model.isDark?darkThemeList:themeList)[model.themeIndex!=null?model.themeIndex:themeIndex];
           return MaterialApp(
+            key: rootKey,
             debugShowCheckedModeBanner: false,
             theme: MyTheme.light(themeColor),
             darkTheme: MyTheme.dark(themeColor),
@@ -135,10 +129,7 @@ class MyApp extends StatelessWidget {
               },
               child: LayoutBuilder(
                 builder: (context, constraints) {
-                  globalContext = context;
-                  ScreenUtil.init(context, width: 750, height: 1334);
-                  // mob login init
-                  MobLogin.init(context);
+                  setContext(context);
                   return splashed?EntryPage():SplashBanner();
                 },
               ),

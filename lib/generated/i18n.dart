@@ -21,19 +21,10 @@ class S implements WidgetsLocalizations {
   @override
   TextDirection get textDirection => TextDirection.ltr;
 
-  String get welcome_to_flutter => "Welcome to Flutter";
 }
 
 class en extends S {
   const en();
-}
-
-class zh_CN extends S {
-  const zh_CN();
-
-   @override
-  TextDirection get textDirection => TextDirection.ltr;
-
 }
 
 
@@ -44,7 +35,6 @@ class GeneratedLocalizationsDelegate extends LocalizationsDelegate<WidgetsLocali
     return const <Locale>[
 
       const Locale("en", ""),
-      const Locale("zh", "CN"),
 
     ];
   }
@@ -70,8 +60,6 @@ class GeneratedLocalizationsDelegate extends LocalizationsDelegate<WidgetsLocali
 
       case "en":
         return new SynchronousFuture<WidgetsLocalizations>(const en());
-      case "zh_CN":
-        return new SynchronousFuture<WidgetsLocalizations>(const zh_CN());
 
       default:
         return new SynchronousFuture<WidgetsLocalizations>(const S());
