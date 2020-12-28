@@ -1,4 +1,5 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../variable.dart';
@@ -46,6 +47,9 @@ class _MyLoadingState extends State<MyLoading> {
                 width: width(100),
                 height: width(100),
                 child: MyCircularProgressIndicator(),
+                // child: CupertinoActivityIndicator(
+                //   radius: 50,
+                // ),
               ),
               widget.msg==null?SizedBox.shrink():Container(
                 margin: EdgeInsets.only(top: width(50)),

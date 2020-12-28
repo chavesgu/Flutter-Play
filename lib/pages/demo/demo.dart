@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_play/components/CustomAnimatePage.dart';
 import 'package:flutter_play/components/GlobalComponents.dart';
+import 'package:flutter_play/components/Popup.dart';
 import 'package:flutter_play/store/model.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -109,6 +110,10 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
                 child: Text('get position'),
               ),
               RaisedButton(
+                onPressed: _dialog,
+                child: Text('dialog'),
+              ),
+              RaisedButton(
                 onPressed: _toast,
                 child: Text('toast'),
               ),
@@ -122,7 +127,7 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
               ),
               RaisedButton(
                 onPressed: () {
-                  chooseImageSourse();
+                  chooseImageSource();
                 },
                 child: Text('take photo'),
               ),
@@ -150,12 +155,12 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
                   Navigator.of(context).pushNamed('${PDFView.name}?url=${Uri.encodeComponent('https://cdn.chavesgu.com/profile.pdf')}');
                 },
               ),
-//              RaisedButton(
-//                child: Text('view webview'),
-//                onPressed: () {
-//                  Navigator.of(context).pushNamed('${WebView.name}?url=${Uri.encodeQueryComponent('http://10.10.14.210:8080/a')}');
-//                }
-//              ),
+             RaisedButton(
+               child: Text('view webview'),
+               onPressed: () {
+                 Navigator.of(context).pushNamed('${WebView.name}?url=${Uri.encodeQueryComponent('https://www.chavesgu.com/webview/')}');
+               }
+             ),
               RaisedButton(
                 child: Text('test fullscreen'),
                 onPressed: () {
@@ -189,9 +194,21 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
                 },
               ),
               RaisedButton(
-                child: Text('canvas'),
+                child: Text('canvas1'),
                 onPressed: () {
                   Navigator.of(context).pushNamed(CanvasPage.name);
+                },
+              ),
+              RaisedButton(
+                child: Text('canvas2'),
+                onPressed: () {
+                  Navigator.of(context).pushNamed(CanvasPage2.name);
+                },
+              ),
+              RaisedButton(
+                child: Text('close app'),
+                onPressed: () {
+                  Platform.isIOS?exit(0):SystemNavigator.pop();
                 },
               ),
             ],
@@ -221,6 +238,8 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
     AMapLocationClient.startup(AMapLocationOption(
       desiredAccuracy: CLLocationAccuracy.kCLLocationAccuracyHundredMeters,
     ));
+    // ios高德
+    AMapLocationClient.setApiKey("bfea8a8172612b2f2de52e256fcdbc66");
 //    final token = generateToken(
 //      'fe5756a59abc11e8a7830242ac640015',
 //      '0oLcr8AsoQmq',
@@ -246,45 +265,29 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
   _getDeviceInfo() async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     if (Platform.isIOS) {
-      // ios高德
-      AMapLocationClient.setApiKey("bfea8a8172612b2f2de52e256fcdbc66");
       IosDeviceInfo info = await deviceInfo.iosInfo;
-      showAlert(
+      MyDialog(
         context: context,
-        barrierDismissible: false,
-        title: '位置提示',
-        body: 'name: ${info.name},\n'
-          'uuid: ${info.identifierForVendor},\n'
-          'localizedModel: ${info.localizedModel},\n'
-          'model: ${info.model},\n',
-        actions: [
-          AlertAction(
-            text: '确认',
-            onPressed: () {
-            },
-          ),
-        ],
+        title: '提示',
+        content: 'name: ${info.name},\n'
+            'uuid: ${info.identifierForVendor},\n'
+            'localizedModel: ${info.localizedModel},\n'
+            'model: ${info.model}',
+        confirmText: '确认',
       );
     }
     if (Platform.isAndroid) {
       AndroidDeviceInfo info = await deviceInfo.androidInfo;
-      showAlert(
+      MyDialog(
         context: context,
-        barrierDismissible: false,
-        title: '位置提示',
-        body: 'brand: ${info.brand},\n'
-          'hardware: ${info.hardware},\n'
-          'product: ${info.product},\n'
-          'manufacturer: ${info.manufacturer},\n'
-          'model: ${info.model},\n'
-          'androidId: ${info.androidId},\n',
-        actions: [
-          AlertAction(
-            text: '确认',
-            onPressed: () {
-            },
-          ),
-        ],
+        title: '提示',
+        content: 'brand: ${info.brand},\n'
+            'hardware: ${info.hardware},\n'
+            'product: ${info.product},\n'
+            'manufacturer: ${info.manufacturer},\n'
+            'model: ${info.model},\n'
+            'androidId: ${info.androidId}',
+        confirmText: '确认',
       );
     }
   }
@@ -308,42 +311,43 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
           'formattedAddress: ${location.formattedAddress}';
       } else {
         res = '定位失败-${location.code}，原因: ${location.description}';
-        print(res);
       }
-      showAlert(
+      MyDialog(
         context: context,
-        barrierDismissible: false,
         title: '位置提示',
-        body: res,
-        actions: [
-          AlertAction(
-            text: '确认',
-            onPressed: () {
-            },
-          ),
-        ],
+        content: res,
+        confirmText: '确认',
       );
     } else {
-      showAlert(
+      MyDialog(
         context: context,
-        barrierDismissible: false,
         title: '位置提示',
-        body: '需要允许访问位置"设置-隐私-位置"',
-        actions: [
-          AlertAction(
-            text: '取消',
-            onPressed: () {
-            },
-          ),
-          AlertAction(
-            text: '设置',
-            onPressed: () {
-              openAppSettings();
-            },
-          )
-        ],
+        content: '需要允许访问位置,"设置-隐私-位置"',
+        confirmText: '前往设置',
+        onConfirm: () {
+          openAppSettings();
+        }
       );
     }
+  }
+
+  _dialog() {
+    MyDialog(
+      context: context,
+      content: TextSpan(
+        children: [
+          WidgetSpan(
+            child: MyImage(
+              'https://cdn.chavesgu.com/avatar.jpg',
+              width: 50,
+              height: 50,
+              shape: BoxShape.circle,
+            )
+          ),
+          TextSpan(text: '      ←我的照片')
+        ]
+      ),
+    );
   }
 
   _toast() {
@@ -360,11 +364,13 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
   }
 
   _launchURL() async {
-    const url = 'https://www.chavesgu.com';
+    const url = 'https://itunes.apple.com/cn/app/wechat/id414478124';
+    // const url = 'https://www.chavesgu.com';
 //    const url = 'mqq://';
     launch(
       url,
-      forceSafariVC: false,
+      forceSafariVC: true,
+      forceWebView: true,
     );
   }
 
@@ -374,7 +380,7 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
     channel.sink.add('/quote/stkdata?obj=$code&field=ZuiXinJia,ZhangFu&sub=1&qid=1');
   }
 
-  chooseImageSourse() {
+  chooseImageSource() {
     showCupertinoModalPopup(
       context: context,
       builder: (BuildContext context) {
@@ -410,7 +416,7 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
         );
       }
     ).then((popValue) {
-      if (popValue.runtimeType == SourceType) getImage(popValue);
+      if (popValue is SourceType) getImage(popValue);
     });
   }
 
@@ -510,24 +516,14 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
     if (hasPermission) {
       Navigator.of(context).pushNamed(ScanPage.name);
     } else{
-      showAlert(
+      MyDialog(
         context: context,
-        barrierDismissible: false,
         title: '扫码提示',
-        body: '扫码需要允许相机权限',
-        actions: [
-          AlertAction(
-            text: '取消',
-            onPressed: () {
-            },
-          ),
-          AlertAction(
-            text: '前往设置',
-            onPressed: () {
-              openAppSettings();
-            },
-          )
-        ],
+        content: '扫码需要允许相机权限',
+        confirmText: '前往设置',
+        onConfirm: () {
+          openAppSettings();
+        }
       );
     }
   }

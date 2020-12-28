@@ -33,7 +33,7 @@ class _MyToastState extends State<MyToast> {
           constraints: BoxConstraints(
             maxWidth: width(500)
           ),
-          color: Color.fromRGBO(0, 0, 0, .7),
+          color: Color.fromRGBO(0, 0, 0, .9),
           padding: EdgeInsets.only(
             left: width(30),
             right: width(30),

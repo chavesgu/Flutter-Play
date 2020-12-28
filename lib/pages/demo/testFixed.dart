@@ -20,7 +20,7 @@ class TestFixedPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             RaisedButton(
-              child: Text('test animate to'),
+              child: Text('test animate to end'),
               onPressed: () {
                 animateTo();
               },
@@ -43,7 +43,7 @@ class TestFixedPage extends StatelessWidget {
 
   void animateTo() {
     controller.animateTo(
-      100,
+      controller.position.maxScrollExtent,
       duration: Duration(milliseconds: 300),
       curve: Curves.bounceInOut,
     );

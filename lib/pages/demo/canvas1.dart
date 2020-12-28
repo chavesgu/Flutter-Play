@@ -141,6 +141,22 @@ class _Paint extends CustomPainter {
     if (image!=null) {
       canvas.drawImage(image, Offset(100, 500), Paint());
     }
+    // 文字
+    TextPainter textPainter = TextPainter(
+      text: TextSpan(
+        text: 'Flutter Play',
+        style: TextStyle(
+          color: Colors.deepOrange,
+          backgroundColor: Colors.blueGrey,
+          fontSize: 36,
+          // foreground: Paint()..style = PaintingStyle.stroke..color = Colors.deepOrange,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+      // maxLines: 2,
+    );
+    textPainter.layout();
+    textPainter.paint(canvas, Offset(100, 450));
   }
 
   @override

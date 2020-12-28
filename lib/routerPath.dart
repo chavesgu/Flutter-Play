@@ -11,4 +11,5 @@ export 'package:flutter_play/pages/drawer/setting.dart';
 export 'package:flutter_play/pages/demo/testFixed.dart';
 export 'package:flutter_play/pages/demo/testGesture.dart';
 export 'package:flutter_play/pages/demo/pdf.dart';
-export 'package:flutter_play/pages/demo/canvas.dart';
+export 'package:flutter_play/pages/demo/canvas1.dart';
+export 'package:flutter_play/pages/demo/canvas2.dart';

@@ -321,7 +321,7 @@ packages:
       path: "../flutter-plugin/images_picker"
       relative: true
     source: path
-    version: "0.0.5"
+    version: "0.0.6"
   intl:
     dependency: transitive
     description:

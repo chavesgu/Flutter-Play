@@ -65,18 +65,10 @@ class _ScanPageState extends State<ScanPage> {
                 child: ScanView(
                   controller: scanController,
                   onCapture: (data) {
-                    showAlert(
+                    MyDialog(
                       context: context,
-                      barrierDismissible: false,
                       title: '扫码结果',
-                      body: _scanData,
-                      actions: [
-                        AlertAction(
-                          text: '确认',
-                          onPressed: () {
-                          },
-                        ),
-                      ],
+                      content: data,
                     );
                   },
                 ),

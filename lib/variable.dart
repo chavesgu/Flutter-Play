@@ -131,10 +131,12 @@ class MyTheme {
           bodyText1: TextStyle(
             decoration: TextDecoration.none,
             color: Colors.white,
+            fontFamily: '-apple-system-font,Helvetica Neue,Helvetica,sans-serif',
           ),
           button: TextStyle(
             decoration: TextDecoration.none,
             color: Colors.white,
+            fontFamily: '-apple-system-font,Helvetica Neue,Helvetica,sans-serif',
           ),
         ),
         iconTheme: IconThemeData(color: Colors.white),

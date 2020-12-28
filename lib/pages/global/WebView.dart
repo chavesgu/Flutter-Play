@@ -17,6 +17,7 @@ class WebView extends StatefulWidget {
 class _WebViewState extends State<WebView> {
   InAppWebViewController webView;
   int _progress = 0;
+  String _windowTitle = 'WebView';
 
   get url => widget.url;
 
@@ -27,21 +28,41 @@ class _WebViewState extends State<WebView> {
         preferredSize: Size.fromHeight(50),
         child: AppBar(
           centerTitle: true,
-          title: Text('WebView'),
+          title: Text(_windowTitle),
+          leading: BackButton(
+            onPressed: () async {
+              if (await webView?.canGoBack()) {
+                webView.goBack();
+              } else {
+                Navigator.of(context).pop();
+              }
+            },
+          ),
         ),
       ),
       body: Builder(
         builder: (BuildContext context) {
           return SafeArea(
             top: false,
+            bottom: false,
             child: Stack(
               children: <Widget>[
                 InAppWebView(
                   initialUrl: url,
                   initialOptions: InAppWebViewGroupOptions(
+                    crossPlatform: InAppWebViewOptions(
+                      mediaPlaybackRequiresUserGesture: false,
+                      javaScriptCanOpenWindowsAutomatically: true,
+                    ),
                     android: AndroidInAppWebViewOptions(
-                      verticalScrollbarPosition: AndroidVerticalScrollbarPosition.SCROLLBAR_POSITION_RIGHT
-                    )
+                      verticalScrollbarPosition: AndroidVerticalScrollbarPosition.SCROLLBAR_POSITION_RIGHT,
+                      cacheMode: AndroidCacheMode.LOAD_CACHE_ELSE_NETWORK
+                    ),
+                    ios: IOSInAppWebViewOptions(
+                      // disallowOverScroll: true,
+                      allowsInlineMediaPlayback: true,
+                      alwaysBounceVertical: true,
+                    ),
                   ),
                   onWebViewCreated: (InAppWebViewController controller) {
                     webView = controller;
@@ -59,6 +80,11 @@ class _WebViewState extends State<WebView> {
                       _progress = progress;
                     });
                   },
+                  onTitleChanged: (InAppWebViewController controller, String title) {
+                    setState(() {
+                      _windowTitle = title;
+                    });
+                  },
                   onConsoleMessage: (controller, consoleMessage) {
                     print("console: " + consoleMessage.message);
                   },
@@ -70,7 +96,9 @@ class _WebViewState extends State<WebView> {
                       child: Container(
                         width: width(100),
                         height: width(100),
-                        child: CircularProgressIndicator(),
+                        child: CircularProgressIndicator(
+                          value: _progress / 100,
+                        ),
                       ),
                     ),
                   ),

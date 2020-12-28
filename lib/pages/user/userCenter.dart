@@ -39,6 +39,7 @@ class UserCenterState extends State<UserCenter> with AutomaticKeepAliveClientMix
                   width: 150,
                   height: 150,
                   shape: BoxShape.circle,
+                  preview: true,
                 ),
                 MyImage('assets/images/avatar.png'),
                 Selector<UserModel, String>(

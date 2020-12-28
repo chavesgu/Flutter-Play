@@ -21,7 +21,7 @@ class MyImage extends StatelessWidget{
     this.color,
     this.colorBlendMode,
     this.scale = 1.0,
-    this.preview = true,
+    this.preview = false,
     this.gestureConfig,
   })
     :

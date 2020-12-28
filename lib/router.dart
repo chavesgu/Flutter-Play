@@ -108,11 +108,19 @@ class RouterManager {
       }),
       transitionType:  TransitionType.cupertino,
     );
-    // WebView
+    // canvas
     router.define(
       CanvasPage.name,
       handler: Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
         return CanvasPage();
+      }),
+      transitionType:  TransitionType.cupertino,
+    );
+    // canvas
+    router.define(
+      CanvasPage2.name,
+      handler: Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+        return CanvasPage2();
       }),
       transitionType:  TransitionType.cupertino,
     );

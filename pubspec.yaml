@@ -50,6 +50,7 @@ dependencies:
 #  qr_flutter: ^3.2.0
   camera: ^0.5.8+2
   flutter_inappwebview: ^4.0.0
+#  webview_flutter: ^1.0.7
   flutter_screenutil: ^2.3.1
   shared_preferences: ^0.5.10
 #  multi_image_picker: ^4.7.14
@@ -81,6 +82,7 @@ dependencies:
     path: ../flutter-plugin/flutter_orientation/
   #  page_life_cycle: 1.1.0
   flutter_inner_drawer: 0.5.7+2
+#  fluwx_no_pay: ^2.4.0+1
 
 dev_dependencies:
   flutter_test:
@@ -100,7 +102,6 @@ flutter:
   assets:
     - assets/images/avatar.png
     - assets/videos/scan.mp4
-
 
   fonts:
     - family: iconfont
