@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_alert/flutter_alert.dart';
 import 'package:images_picker/images_picker.dart';
 import 'package:scan/scan.dart';
 import 'package:flutter_play/variable.dart';
@@ -37,18 +36,10 @@ class _ScanPageState extends State<ScanPage> {
                 List<Media> res = await Utils.imagePicker();
                 if (res!=null) {
                   String code = await Scan.parse(res[0].path);
-                  showAlert(
+                  MyDialog(
                     context: context,
-                    barrierDismissible: false,
                     title: '扫码结果',
-                    body: code,
-                    actions: [
-                      AlertAction(
-                        text: '确认',
-                        onPressed: () {
-                        },
-                      ),
-                    ],
+                    content: code,
                   );
                 }
               },

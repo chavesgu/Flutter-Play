@@ -175,7 +175,7 @@ class MyTheme {
   }
 }
 
-void setContext(BuildContext context) {
+void uiInit(BuildContext context, BoxConstraints boxConstraints) {
   final BuildContext _context = context ?? globalContext;
 
   final Orientation currentOrientation = MediaQuery.of(_context).orientation;
@@ -199,5 +199,5 @@ void setContext(BuildContext context) {
 
   globalOverlayState = Overlay.of(context);
 
-  ScreenUtil.init(context, width: 750, height: 1334);
+  ScreenUtil.init(boxConstraints, designSize: Size(750, 1134));
 }

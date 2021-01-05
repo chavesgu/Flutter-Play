@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+// import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../variable.dart';
 
-class WebView extends StatefulWidget {
+class MyWebView extends StatefulWidget {
   static const name = '/webview';
 
-  WebView(this.url);
+  MyWebView(this.url);
 
   final String url;
 
@@ -14,8 +15,8 @@ class WebView extends StatefulWidget {
   createState() => _WebViewState();
 }
 
-class _WebViewState extends State<WebView> {
-  InAppWebViewController webView;
+class _WebViewState extends State<MyWebView> {
+  InAppWebViewController controller;
   int _progress = 0;
   String _windowTitle = 'WebView';
 
@@ -24,20 +25,18 @@ class _WebViewState extends State<WebView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(50),
-        child: AppBar(
-          centerTitle: true,
-          title: Text(_windowTitle),
-          leading: BackButton(
-            onPressed: () async {
-              if (await webView?.canGoBack()) {
-                webView.goBack();
-              } else {
-                Navigator.of(context).pop();
-              }
-            },
-          ),
+      appBar:  AppBar(
+        centerTitle: true,
+        toolbarHeight: 50,
+        title: Text(_windowTitle),
+        leading: BackButton(
+          onPressed: () async {
+            if (controller!=null && await controller.canGoBack()) {
+              controller.goBack();
+            } else {
+              Navigator.of(context).pop();
+            }
+          },
         ),
       ),
       body: Builder(
@@ -47,28 +46,32 @@ class _WebViewState extends State<WebView> {
             bottom: false,
             child: Stack(
               children: <Widget>[
+                Container(
+                  color: Colors.indigo,
+                ),
                 InAppWebView(
                   initialUrl: url,
                   initialOptions: InAppWebViewGroupOptions(
                     crossPlatform: InAppWebViewOptions(
+                      supportZoom: false,
                       mediaPlaybackRequiresUserGesture: false,
-                      javaScriptCanOpenWindowsAutomatically: true,
+                      // javaScriptCanOpenWindowsAutomatically: true,
                     ),
                     android: AndroidInAppWebViewOptions(
                       verticalScrollbarPosition: AndroidVerticalScrollbarPosition.SCROLLBAR_POSITION_RIGHT,
                       cacheMode: AndroidCacheMode.LOAD_CACHE_ELSE_NETWORK
                     ),
                     ios: IOSInAppWebViewOptions(
-                      // disallowOverScroll: true,
+                      // disallowOverScroll: false,
                       allowsInlineMediaPlayback: true,
                       alwaysBounceVertical: true,
                     ),
                   ),
-                  onWebViewCreated: (InAppWebViewController controller) {
-                    webView = controller;
+                  onWebViewCreated: (InAppWebViewController c) {
+                    controller = c;
                     // flutter和webview通信
-                    webView.addJavaScriptHandler(handlerName: 'push', callback: (arguments) {
-                      Navigator.of(context).pushNamed('${WebView.name}?url=${Uri.encodeQueryComponent(arguments.first)}');
+                    controller.addJavaScriptHandler(handlerName: 'push', callback: (arguments) {
+                      Navigator.of(context).pushNamed('${MyWebView.name}?url=${Uri.encodeQueryComponent(arguments.first)}');
                     });
                   },
                   onCreateWindow: (InAppWebViewController controller, CreateWindowRequest request) async {
@@ -113,7 +116,7 @@ class _WebViewState extends State<WebView> {
 
   @override
   void dispose() {
-    webView?.removeJavaScriptHandler(handlerName: 'push');
+    controller?.removeJavaScriptHandler(handlerName: 'push');
     super.dispose();
   }
 }

@@ -47,7 +47,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
                   android:host="applink.chavesgu.com"
-                  android:path="/flutter"
+                  android:path="/flutter/*"
                   android:scheme="https" />
             </intent-filter>
         </activity>

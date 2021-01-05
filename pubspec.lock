@@ -35,7 +35,7 @@ packages:
       name: audioplayers
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.16.1"
+    version: "0.17.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -49,7 +49,14 @@ packages:
       name: camera
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.5.8+6"
+    version: "0.6.3+2"
+  camera_platform_interface:
+    dependency: transitive
+    description:
+      name: camera_platform_interface
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.2.0"
   characters:
     dependency: transitive
     description:
@@ -84,7 +91,7 @@ packages:
       name: connectivity
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.4.9+2"
+    version: "2.0.2"
   connectivity_for_web:
     dependency: transitive
     description:
@@ -120,6 +127,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.1"
+  cross_file:
+    dependency: transitive
+    description:
+      name: cross_file
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.1.0"
   crypto:
     dependency: "direct main"
     description:
@@ -133,14 +147,14 @@ packages:
       name: cupertino_icons
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.1.3"
+    version: "1.0.0"
   device_info:
     dependency: "direct main"
     description:
       name: device_info
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.4.2+8"
+    version: "1.0.0"
   device_info_platform_interface:
     dependency: transitive
     description:
@@ -168,7 +182,7 @@ packages:
       name: extended_image
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.1.1"
+    version: "1.5.0"
   extended_image_library:
     dependency: transitive
     description:
@@ -210,19 +224,12 @@ packages:
       name: fluro
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.6.3"
+    version: "1.7.8"
   flutter:
     dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_alert:
-    dependency: "direct main"
-    description:
-      name: flutter_alert
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.4.0"
   flutter_inappwebview:
     dependency: "direct main"
     description:
@@ -262,7 +269,7 @@ packages:
       name: flutter_screenutil
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.3.1"
+    version: "4.0.2+2"
   flutter_swiper:
     dependency: "direct main"
     description:
@@ -280,6 +287,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  fluwx_no_pay:
+    dependency: "direct main"
+    description:
+      name: fluwx_no_pay
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "2.4.0+1"
   home_indicator:
     dependency: "direct main"
     description:
@@ -314,7 +328,7 @@ packages:
       name: image
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.1.17"
+    version: "2.1.19"
   images_picker:
     dependency: "direct main"
     description:
@@ -377,14 +391,14 @@ packages:
       name: native_pdf_renderer
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.3.2"
+    version: "2.4.0"
   native_pdf_view:
     dependency: "direct main"
     description:
       name: native_pdf_view
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "3.8.0"
+    version: "3.9.0"
   nested:
     dependency: transitive
     description:
@@ -405,7 +419,7 @@ packages:
       name: path_provider
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.6.16"
+    version: "1.6.24"
   path_provider_linux:
     dependency: transitive
     description:
@@ -433,7 +447,7 @@ packages:
       name: path_provider_windows
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.0.3"
+    version: "0.0.4+3"
   pedantic:
     dependency: transitive
     description:
@@ -469,13 +483,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.2.1"
-  platform_detect:
-    dependency: transitive
-    description:
-      name: platform_detect
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "1.4.0"
   plugin_platform_interface:
     dependency: transitive
     description:
@@ -496,36 +503,20 @@ packages:
       name: provider
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "4.3.2+2"
-  pub_semver:
-    dependency: transitive
-    description:
-      name: pub_semver
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "1.4.4"
+    version: "4.3.2+3"
   pull_to_refresh:
     dependency: "direct main"
     description:
       name: pull_to_refresh
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.6.2"
+    version: "1.6.3"
   push:
     dependency: "direct main"
     description:
       path: "../flutter-plugin/push"
       relative: true
     source: path
-    version: "0.0.1"
-  qiniu_manager:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: "3fe0b591dfc710bbc78d2dc4b9e5ff2c6e0aa313"
-      resolved-ref: "3fe0b591dfc710bbc78d2dc4b9e5ff2c6e0aa313"
-      url: "https://github.com/chavesgu/flutter_qiniu_manager.git"
-    source: git
     version: "0.0.1"
   scan:
     dependency: "direct main"
@@ -540,7 +531,7 @@ packages:
       name: shared_preferences
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.5.10"
+    version: "0.5.12+4"
   shared_preferences_linux:
     dependency: transitive
     description:
@@ -569,6 +560,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.1.2+7"
+  shared_preferences_windows:
+    dependency: transitive
+    description:
+      name: shared_preferences_windows
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.0.1+3"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -602,6 +600,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.0-nullsafety.1"
+  stream_transform:
+    dependency: transitive
+    description:
+      name: stream_transform
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.2.0"
   string_scanner:
     dependency: transitive
     description:
@@ -650,7 +655,7 @@ packages:
       name: url_launcher
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "5.6.0"
+    version: "5.7.10"
   url_launcher_linux:
     dependency: transitive
     description:
@@ -671,14 +676,14 @@ packages:
       name: url_launcher_platform_interface
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.0.8"
+    version: "1.0.9"
   url_launcher_web:
     dependency: transitive
     description:
       name: url_launcher_web
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.1.3+2"
+    version: "0.1.5+1"
   url_launcher_windows:
     dependency: transitive
     description:
@@ -692,7 +697,7 @@ packages:
       name: uuid
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.0.4"
+    version: "2.2.2"
   vector_math:
     dependency: transitive
     description:
@@ -706,21 +711,21 @@ packages:
       name: video_player
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.10.12+3"
+    version: "1.0.1"
   video_player_platform_interface:
     dependency: transitive
     description:
       name: video_player_platform_interface
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.1.1"
+    version: "2.2.0"
   video_player_web:
     dependency: transitive
     description:
       name: video_player_web
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.1.3+2"
+    version: "0.1.4+1"
   web_socket_channel:
     dependency: "direct main"
     description:
@@ -741,7 +746,7 @@ packages:
       name: xdg_directories
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.1.0"
+    version: "0.1.2"
   xml:
     dependency: transitive
     description:
@@ -751,4 +756,4 @@ packages:
     version: "4.5.1"
 sdks:
   dart: ">=2.10.0-110 <2.11.0"
-  flutter: ">=1.20.0 <2.0.0"
+  flutter: ">=1.22.0 <2.0.0"

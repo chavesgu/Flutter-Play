@@ -96,14 +96,6 @@ class PDFViewState extends State<PDFView> {
   }
 
   @override
-  void didUpdateWidget(PDFView oldWidget) {
-    if (oldWidget.url != widget.url) {
-      _urlChange();
-    }
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
   void dispose() {
     _pdfController?.dispose();
     super.dispose();

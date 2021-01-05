@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_play/pages/entry.dart';
+import 'package:fluwx_no_pay/fluwx_no_pay.dart';
 import 'package:home_indicator/home_indicator.dart';
 import 'package:mob_login/mob_login.dart';
 import 'package:move_to_background/move_to_background.dart';
@@ -42,6 +43,10 @@ void main() async {
     Service.init();
     // mob login init
     MobLogin.init();
+    // init wx
+    registerWxApi(appId: 'wx9819a39d04a4253f', universalLink: 'https://applink.chavesgu.com/flutter/').then((value) {
+      // print(value);
+    });
 
     // 获取缓存主题
     int themeIndex = await getTheme();
@@ -109,8 +114,8 @@ class MyApp extends StatelessWidget {
             ],
             supportedLocales: [
               Locale('zh'),
-              Locale('en', 'US'), // English
               Locale('zh', 'Hans'), // China
+              Locale('en', 'US'), // English
             ],
             localizationsDelegates: [
               GlobalMaterialLocalizations.delegate,
@@ -129,7 +134,7 @@ class MyApp extends StatelessWidget {
               },
               child: LayoutBuilder(
                 builder: (context, constraints) {
-                  setContext(context);
+                  uiInit(context, constraints);
                   return splashed?EntryPage():SplashBanner();
                 },
               ),

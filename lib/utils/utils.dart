@@ -4,7 +4,6 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_alert/flutter_alert.dart';
 import 'package:flutter_play/components/MyCircularProgressIndicator.dart';
 import 'package:flutter_play/components/MyLoading.dart';
 import 'package:flutter_play/components/MyToast.dart';
@@ -143,6 +142,8 @@ class Utils {
   }
 }
 
+// Custom Dialog
+// there is no show method,because allow multiple dialogs
 class MyDialog {
   MyDialog({
     BuildContext context,
@@ -161,6 +162,8 @@ class MyDialog {
     _show();
   }
 
+  static int _length = 0;
+
   final String title;
   final dynamic content;
   final String confirmText;
@@ -175,7 +178,6 @@ class MyDialog {
   Popup _popup;
 
   void _show() {
-    //Popup
     OverlayState overlayState =
         _context != null ? Overlay.of(_context) : globalOverlayState;
     Widget titleWidget = FractionallySizedBox(
@@ -196,7 +198,6 @@ class MyDialog {
             fontWeight: FontWeight.w700,
             height: 1.7,
             decoration: TextDecoration.none,
-            fontFamily: 'PingFang SC',
           ),
         ),
       ),
@@ -287,6 +288,7 @@ class MyDialog {
       ),
     );
     _popup = Popup(
+      // mask: _length == 0,
       child: Container(
         width: vw - width(100),
         margin: EdgeInsets.only(
@@ -311,8 +313,7 @@ class MyDialog {
         ),
       ),
       handleHide: () {
-        _currentEntry?.remove();
-        _currentEntry = null;
+        hide(quick: true);
       },
     );
     _currentEntry = OverlayEntry(
@@ -322,132 +323,135 @@ class MyDialog {
       },
     );
     overlayState.insert(_currentEntry);
+    _length++;
   }
 
-  Future<void> hide() async {
-    await _popup.hide();
+  Future<void> hide({ bool quick = false }) async {
+    if (_popup!=null && !quick) {
+      await _popup.hide();
+      _popup = null;
+    }
     _currentEntry?.remove();
     _currentEntry = null;
+    _length--;
   }
 }
 
 class Loading {
   static OverlayEntry _currentEntry;
+  static Popup _popup;
   static Timer _timer;
 
   static void show({
     BuildContext context,
     String msg,
     bool mask = true,
-    Duration duration = const Duration(seconds: 60),
+    Duration maxDuration = const Duration(seconds: 60),
   }) async {
     if (_currentEntry != null) return;
 
     OverlayState overlayState =
         context != null ? Overlay.of(context) : globalOverlayState;
+    _popup = Popup(
+      mask: false,
+      child: MyLoading(
+        msg: msg,
+      ),
+    );
     _currentEntry = OverlayEntry(
       opaque: false,
       builder: (_) {
-        Widget wrap;
-        Widget content = MyLoading(
-          msg: msg,
-          duration: duration,
-          onComplete: () {
-            hide();
-          },
-        );
-        wrap = Center(
-          child: content,
-        );
-        if (mask) {
-          return GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            child: Container(
-//            color: Colors.red,
-              child: wrap,
-            ),
-          );
-        }
-        return wrap;
+        return _popup;
       },
     );
     overlayState.insert(_currentEntry);
+    _timer?.cancel();
+    _timer = Timer(maxDuration, () {
+      hide();
+    });
   }
 
-  static void hide() {
+  static Future<void> hide({ bool quick = false }) async {
+    if (_popup!=null && !quick) {
+      await _popup.hide();
+      _popup = null;
+    }
+    _timer?.cancel();
+    _timer = null;
     _currentEntry?.remove();
     _currentEntry = null;
-    _timer?.cancel();
   }
 }
 
 class Toast {
-  static Function _complete;
   static OverlayEntry _currentEntry;
+  static Popup _popup;
+  static Timer _timer;
 
   static void show({
     BuildContext context,
     @required String msg,
-    bool mask = true,
-    Duration duration = const Duration(milliseconds: 1200),
+    Duration maxDuration = const Duration(milliseconds: 1200),
     ToastPosition position = ToastPosition.middle,
-    Function complete,
   }) async {
     if (_currentEntry != null) return;
 
     OverlayState overlayState =
         context != null ? Overlay.of(context) : globalOverlayState;
-    _complete = complete;
+    EdgeInsetsGeometry padding;
+    MainAxisAlignment mainAxisAlignment;
+    switch (position) {
+      case ToastPosition.top:
+        padding = EdgeInsets.only(top: vh / 5);
+        mainAxisAlignment = MainAxisAlignment.start;
+        break;
+      case ToastPosition.bottom:
+        padding = EdgeInsets.only(top: vh * 4 / 5);
+        mainAxisAlignment = MainAxisAlignment.start;
+        break;
+      default:
+        padding = EdgeInsets.zero;
+        mainAxisAlignment = MainAxisAlignment.center;
+    }
+    _popup = Popup(
+      mask: false,
+      child: SizedBox(
+        height: vh,
+        child: Column(
+          mainAxisAlignment: mainAxisAlignment,
+          children: [
+            Padding(
+              padding: padding,
+              child: MyToast(
+                msg: msg,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
     _currentEntry = OverlayEntry(
       opaque: false,
       builder: (_) {
-        Widget wrap;
-        Widget content = MyToast(
-          msg: msg,
-          duration: duration,
-          onComplete: () {
-            hide();
-          },
-        );
-        if (position != ToastPosition.middle) {
-          wrap = Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(
-                    top: position == ToastPosition.top ? vh / 5 : vh * 4 / 5),
-                child: content,
-              )
-            ],
-          );
-        }
-        wrap = Center(
-          child: content,
-        );
-        if (mask) {
-          return GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            child: Container(
-//            color: Colors.red,
-              child: wrap,
-            ),
-          );
-        }
-        return wrap;
+        return _popup;
       },
     );
     overlayState.insert(_currentEntry);
-
-//    await Future.delayed(duration);
-
-//    hide();
+    _timer?.cancel();
+    _timer = Timer(maxDuration, () {
+      hide();
+    });
   }
 
-  static void hide() {
+  static Future<void> hide() async {
+    if (_popup!=null) {
+      await _popup.hide();
+      _popup = null;
+    }
+    _timer?.cancel();
+    _timer = null;
     _currentEntry?.remove();
     _currentEntry = null;
-    if (_complete != null) _complete();
-    _complete = null;
   }
 }
 

@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_alert/flutter_alert.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart' show InnerDrawerState;
 import 'package:flutter_play/pages/global/scan.dart';
 import 'package:flutter_play/pages/home/search.dart';
@@ -14,6 +13,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:flutter_play/service.dart';
 import 'package:flutter_play/variable.dart';
+import 'package:flutter_play/utils/utils.dart';
 import 'package:flutter_play/components/GlobalComponents.dart';
 import 'homeComponent.dart' as Home;
 
@@ -301,24 +301,14 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
     if (hasPermission) {
       // Navigator.of(context).pushNamed(ScanPage.name);
     } else{
-      showAlert(
+      MyDialog(
         context: context,
-        barrierDismissible: false,
         title: '扫码提示',
-        body: '扫码需要允许相机权限',
-        actions: [
-          AlertAction(
-            text: '取消',
-            onPressed: () {
-            },
-          ),
-          AlertAction(
-            text: '前往设置',
-            onPressed: () {
-              openAppSettings();
-            },
-          )
-        ],
+        content: '扫码需要允许相机权限',
+        confirmText: '前往设置',
+        onConfirm: () {
+          openAppSettings();
+        }
       );
     }
   }

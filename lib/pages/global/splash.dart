@@ -18,7 +18,7 @@ class SplashState extends State {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context, width: 750, height: 1334);
+    // ScreenUtil.init(context, width: 750, height: 1334);
     return Container(
       width: vw,
       height: vh,

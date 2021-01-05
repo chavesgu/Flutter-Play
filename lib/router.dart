@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' hide Router;
+import 'package:flutter/material.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter_play/store/model.dart';
 import 'package:flutter_play/variable.dart';
@@ -18,7 +18,7 @@ class RouterManager {
     return router;
   }
 
-  static _defineRoutes(Router router) {
+  static _defineRoutes(FluroRouter router) {
     // app入口
     router.define(
       EntryPage.name,
@@ -102,9 +102,9 @@ class RouterManager {
     );
     // WebView
     router.define(
-      WebView.name,
+      MyWebView.name,
       handler: Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
-        return WebView(params["url"].first);
+        return MyWebView(params["url"].first);
       }),
       transitionType:  TransitionType.cupertino,
     );
@@ -132,7 +132,7 @@ class RouterManager {
   }
 }
 
-class MyRouter extends Router {
+class MyRouter extends FluroRouter {
   @override
   Route generator(RouteSettings routeSettings) {
     // TODO: implement generator

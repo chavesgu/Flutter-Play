@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 
+import '../../service.dart';
 import '../../variable.dart';
 
 class TestOCR extends StatefulWidget {
@@ -68,5 +69,6 @@ class TestOCRState extends State<TestOCR> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    Service.getTopList();
   }
 }

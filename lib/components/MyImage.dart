@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:extended_image/extended_image.dart';
@@ -25,7 +26,10 @@ class MyImage extends StatelessWidget{
     this.gestureConfig,
   })
     :
-      assert(image is String || image is File),
+      assert(
+      image is String || image is File || image is Uint8List,
+      'param image must be String or File or Uint8List'
+      ),
       _content = image;
 
   dynamic _content;
@@ -48,7 +52,21 @@ class MyImage extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     ExtendedImage _imageWidget;
-    if (_content is File) {
+    if (_content is Uint8List) {
+      _imageWidget = ExtendedImage.memory(
+        _content,
+        width: width,
+        height: height,
+        color: color,
+        scale: scale,
+        shape: shape,
+        colorBlendMode: colorBlendMode,
+        loadStateChanged: _loadStateChanged,
+        fit: fit,
+        mode: mode,
+        initGestureConfigHandler: gestureConfig ?? _gestureConfig,
+      );
+    } else if (_content is File) {
       _imageWidget = ExtendedImage.file(
         _content,
         width: width,

@@ -40,6 +40,7 @@ abstract class Service {
     api.interceptors.add(LogInterceptor(
       responseHeader: false,
       requestHeader: false,
+      request: false,
     )); //开启请求日志
     api.interceptors.add(CookieManager(CookieJar()));
     api.interceptors

@@ -52,9 +52,20 @@ class _PopupState extends State<Popup> {
               color: widget.mask?Colors.black.withOpacity(0.6):Colors.transparent,
             ),
           ),
+          // SizedBox(
+          //   width: vw,
+          //   height: vh,
+          //   child: Column(
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     crossAxisAlignment: CrossAxisAlignment.center,
+          //     children: [
+          //       Flexible(child: widget.child),
+          //     ],
+          //   ),
+          // ),
           Center(
             child: widget.child,
-          ),
+          )
         ],
       ),
     );
