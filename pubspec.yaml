@@ -61,8 +61,11 @@ dependencies:
   extended_image: ^1.5.0
 #  extended_image: 1.5.0-dev
 #  flutter_image_compress: ^0.7.0
-  pull_to_refresh: ^1.6.3
+#  pull_to_refresh: ^1.6.3
+  flutter_easyrefresh: ^2.1.8
   flutter_swiper: ^1.1.6
+  flutter_slidable: ^0.5.7
+  flutter_spinkit: ^4.1.2
 #  flutter_alert: ^0.4.0
   move_to_background: ^1.0.1
 #  qiniu_manager:
@@ -71,15 +74,15 @@ dependencies:
 #      ref: 3fe0b591dfc710bbc78d2dc4b9e5ff2c6e0aa313
   statusbar_util: ^1.0.0
   video_player: ^1.0.1
-  audioplayers: ^0.17.1
+  audioplayers: 0.17.0
   #  amap_base: ^0.3.5
   #  amap_base_location: ^0.4.0+1
   amap_location: ^0.2.0
   native_pdf_view: ^3.9.0
   push:
     path: ../flutter-plugin/push/
-  mob_login:
-    path: ../flutter-plugin/mob_login/
+  mob:
+    path: ../flutter-plugin/mob/
   flutter_orientation:
     path: ../flutter-plugin/flutter_orientation/
   #  page_life_cycle: 1.1.0

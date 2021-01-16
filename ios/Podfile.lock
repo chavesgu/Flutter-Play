@@ -2,7 +2,7 @@ PODS:
   - amap_location (0.0.1):
     - AMapLocation
     - Flutter
-  - AMapFoundation (1.6.4)
+  - AMapFoundation (1.6.5.1)
   - AMapLocation (2.6.7):
     - AMapFoundation (~> 1.6.4)
   - audioplayers (0.0.1):
@@ -26,12 +26,15 @@ PODS:
   - images_picker (0.0.1):
     - Flutter
     - ZLPhotoBrowser (= 4.0.7)
-  - mob_login (0.0.1):
+  - mob (0.0.1):
     - Flutter
     - mob_secverify
-  - mob_secverify (2.1.2):
+    - mob_smssdk
+  - mob_secverify (3.0.4):
     - MOBFoundation
-  - MOBFoundation (3.2.19)
+  - mob_smssdk (3.3.1):
+    - MOBFoundation
+  - MOBFoundation (3.2.24)
   - move_to_background (0.0.1):
     - Flutter
   - native_pdf_renderer (1.1.0):
@@ -69,7 +72,7 @@ DEPENDENCIES:
   - fluwx_no_pay (from `.symlinks/plugins/fluwx_no_pay/ios`)
   - home_indicator (from `.symlinks/plugins/home_indicator/ios`)
   - images_picker (from `.symlinks/plugins/images_picker/ios`)
-  - mob_login (from `.symlinks/plugins/mob_login/ios`)
+  - mob (from `.symlinks/plugins/mob/ios`)
   - move_to_background (from `.symlinks/plugins/move_to_background/ios`)
   - native_pdf_renderer (from `.symlinks/plugins/native_pdf_renderer/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
@@ -86,6 +89,7 @@ SPEC REPOS:
     - AMapFoundation
     - AMapLocation
     - mob_secverify
+    - mob_smssdk
     - MOBFoundation
     - Reachability
     - ZLPhotoBrowser
@@ -113,8 +117,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/home_indicator/ios"
   images_picker:
     :path: ".symlinks/plugins/images_picker/ios"
-  mob_login:
-    :path: ".symlinks/plugins/mob_login/ios"
+  mob:
+    :path: ".symlinks/plugins/mob/ios"
   move_to_background:
     :path: ".symlinks/plugins/move_to_background/ios"
   native_pdf_renderer:
@@ -138,7 +142,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   amap_location: a3e2a140bb25950d4e97560ce1b00e53a121e4f4
-  AMapFoundation: 3638198dfa40be54648570c3520edefad288286b
+  AMapFoundation: b67560a6f21aab81c8c12f84616b55a3833b6253
   AMapLocation: a46c30d9930d0f3a3bd21139d8f845d10ac3f01d
   audioplayers: 455322b54050b30ea4b1af7cd9e9d105f74efa8c
   camera: a0ca5080336f7af47b88436e5e26da3dee5568f0
@@ -150,9 +154,10 @@ SPEC CHECKSUMS:
   fluwx_no_pay: 3003d5187cfd3c98712838f465960f4742b05999
   home_indicator: 60c6a4b60d17173cd164c112eb9be37055b23af8
   images_picker: 5166ad88297acad3b6bb2b64924da8ad029f2174
-  mob_login: ca6293d4a6432920a082ff272227982bee4cc82f
-  mob_secverify: a95881f60619fc38d516b73c9aeef58298f65917
-  MOBFoundation: 606bc4c10ff4c6ac573c09f5081a39c75316bc7b
+  mob: f667ce9dc54cae94e33522f8f99d973b20d3bb01
+  mob_secverify: 10a3532d6f1b50162f9e15c42d9456ebb8c73de0
+  mob_smssdk: 5a4ea1a132ba9c883af1a469c49d2ceede592fef
+  MOBFoundation: 934ee1a43aed452d51942b416bc3dc4d0813ac82
   move_to_background: 39a5b79b26d577b0372cbe8a8c55e7aa9fcd3a2d
   native_pdf_renderer: 3e81ffe3d40668cce75694596201bb9fb0fdb6e9
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
@@ -166,6 +171,6 @@ SPEC CHECKSUMS:
   video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
   ZLPhotoBrowser: f85662753ea4cfebff08b3512b17467467634fb2
 
-PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+PODFILE CHECKSUM: fe0e1ee7f3d1f7d00b11b474b62dd62134535aea
 
 COCOAPODS: 1.10.0.rc.1

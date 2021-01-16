@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 
 import 'package:flutter_play/variable.dart';
 import 'package:flutter_play/components/GlobalComponents.dart';
@@ -19,7 +19,7 @@ class MediaPage extends StatefulWidget {
 class MediaPageState extends State<MediaPage> with AutomaticKeepAliveClientMixin {
 
   Key _refreshKey = Key('smartRefresh');
-  final _refreshController = RefreshController();
+  final _refreshController = EasyRefreshController();
   String url;
   String videoTitle = '';
   bool get _isFullScreen => MediaQuery.of(context).orientation == Orientation.landscape;
@@ -38,26 +38,25 @@ class MediaPageState extends State<MediaPage> with AutomaticKeepAliveClientMixin
         ),
       ),
       body: Container(
-        child: SmartRefresher(
+        child: EasyRefresh(
           key: _refreshKey,
-          header: ClassicHeader(
-            idleText: '下拉刷新数据',
-            releaseText: '释放刷新',
+          header: ClassicalHeader(
+            refreshText: '下拉刷新数据',
+            refreshReadyText: '释放刷新',
             refreshingText: '刷新中',
-            completeText: '刷新数据成功',
-            failedText: '刷新数据失败',
+            refreshedText: '刷新数据成功',
+            refreshFailedText: '刷新数据失败',
           ),
-          footer: ClassicFooter(
-            idleText: '上拉加载',
+          footer: ClassicalFooter(
+            loadText: '上拉加载',
             loadingText: '加载中',
-            noDataText: '没有更多数据',
-            failedText: '加载失败，点击重试',
+            loadedText: '加载完成',
+            loadReadyText: '松开加载更多',
+            noMoreText: '没有更多数据',
+            loadFailedText: '加载失败，点击重试',
           ),
           controller: _refreshController,
-          onRefresh: _refresh,
-//          onLoading: _loadMore,
-          enablePullDown: !_isFullScreen,
-//          enablePullUp: true,
+          onRefresh: _isFullScreen?_refresh:null,
           child: ListView(
             physics: _isFullScreen?NeverScrollableScrollPhysics():BouncingScrollPhysics(),
             children: <Widget>[
@@ -103,6 +102,6 @@ class MediaPageState extends State<MediaPage> with AutomaticKeepAliveClientMixin
 
   _refresh()async {
     await Future.delayed(Duration(seconds: 2));
-    _refreshController.refreshCompleted();
+    _refreshController.finishRefresh(success: true);
   }
 }

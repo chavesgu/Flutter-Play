@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:flutter/services.dart';
@@ -7,7 +8,6 @@ import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
-import 'package:flutter_play/components/CustomAnimatePage.dart';
 import 'package:flutter_play/components/GlobalComponents.dart';
 import 'package:flutter_play/store/model.dart';
 
@@ -20,7 +20,7 @@ import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/status.dart' as status;
 // import 'package:qiniu_manager/qiniu_manager.dart';
 import 'package:push/push.dart';
-import 'package:mob_login/mob_login.dart';
+import 'package:mob/mob.dart';
 import 'package:fluwx_no_pay/fluwx_no_pay.dart';
 
 import 'package:flutter_play/utils/utils.dart';
@@ -175,7 +175,23 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
               RaisedButton(
                 child: Text('phone login'),
                 onPressed: () {
-                  MobLogin.login();
+                  Mob.login();
+                },
+              ),
+              RaisedButton(
+                child: Text('phone sms'),
+                onPressed: () {
+                  // Mob.sendSMS('17621106537');
+                },
+              ),
+              RaisedButton(
+                child: Text('verify sms'),
+                onPressed: () {
+                  // Mob.verifySMS('17621106537', '998495').then((value) {
+                  //   print('verify success');
+                  // }).catchError((e) {
+                  //   print('verify fail: ${e.message}');
+                  // });
                 },
               ),
               RaisedButton(
@@ -204,14 +220,16 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
                   Platform.isIOS ? exit(0) : SystemNavigator.pop();
                 },
               ),
-              RaisedButton(
-                child: Text('wechat login'),
+              RaisedButton.icon(
+                icon: Icon(const IconData(0xe65c, fontFamily: 'iconfont')),
+                label: Text('wechat login'),
                 onPressed: () {
                   _wxLogin();
                 },
               ),
-              RaisedButton(
-                child: Text('wechat share'),
+              RaisedButton.icon(
+                icon: Icon(const IconData(0xe65c, fontFamily: 'iconfont')),
+                label: Text('wechat share'),
                 onPressed: () {
                   _wxShare();
                 },
@@ -468,27 +486,26 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
     if (!isPush) {
       isPush = await Permission.notification.request().isGranted;
     }
-    if (isPush) {
+    if (isPush || Platform.isAndroid) {
       String type;
-      String appId = "101508155";
-      String appKey =
-          "03345fa08814e7d2d81329da87def92cd101da1b12558765b1aabfd216868956";
+      AppConfig app;
       if (Platform.isAndroid) {
         DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
         AndroidDeviceInfo info = await deviceInfo.androidInfo;
         type = info.manufacturer.toUpperCase();
       }
       if (type == "HUAWEI") {
-        appId = "101508155";
-        appKey =
-            "03345fa08814e7d2d81329da87def92cd101da1b12558765b1aabfd216868956";
+        app = HUAWEI(appId: "101508155");
+        // appKey = "03345fa08814e7d2d81329da87def92cd101da1b12558765b1aabfd216868956";
       } else if (type == "XIAOMI") {
-        appId = "2882303761518291647";
-        appKey = "5201829199647";
+        app = XIAOMI(appId: "2882303761518975690", appKey: "5401897576690");
+      } else if (type=="OPPO"||type=="REALME"||type=="ONEPLUS") {
+        app = OPPO(appKey: "1e72718f848f49b78a39ea1305c13e4c", appSecret: "18eb6e4b9e8243a1985832b92b63e5af");
+      } else if (type=="MEIZU") {
+        app = MEIZU(appId: "138382", appKey: "08eaa9c39ffe48b5b2f63e9d7cc6866c");
       }
       Push.init(
-        appId: appId,
-        appKey: appKey,
+        app: app,
         type: type,
         getToken: (_token) {
           deviceToken = _token;
@@ -506,6 +523,11 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
           message = 'onResume: ${_message.toString()}';
           setState(() {});
         },
+        onError: (e) {
+          MyDialog(
+            content: e,
+          );
+        }
       );
     }
   }

@@ -12,6 +12,9 @@ import android.widget.Toast;
 import com.chavesgu.push.PushPlugin;
 //import com.tencent.bugly.crashreport.CrashReport;
 
+import org.json.JSONObject;
+import org.json.JSONStringer;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,17 +41,23 @@ public class MainActivity extends FlutterActivity {
 //    CrashReport.initCrashReport(getApplicationContext(), "22481154f7", true);
 
     Intent intent = getIntent();
-    String data = getHWMsg(intent);
-    if (data!=null) PushPlugin.HWLaunchMsg.put("msg", data);
+    String data = getPushMsg(intent);
+    if (data!=null) PushPlugin.launchMsg.put("msg", data);
   }
 
   @Override
   protected void onNewIntent(Intent intent) {
-    if (PushPlugin.HWLaunchMsg.containsKey("msg")) return;
-    String data = getHWMsg(intent);
+    if (PushPlugin.launchMsg.containsKey("msg")) return;
+    String data = getPushMsg(intent);
     if (data!=null) {
       final Map<String, String> msg = new HashMap<>();
       msg.put("msg", data);
+      if (PushPlugin.appOnForeground()){ // app在前台
+//        PushPlugin._channel.invokeMethod("onMessage", msg);
+      } else { // app在后台
+        PushPlugin.moveTaskToFront();
+//        PushPlugin._channel.invokeMethod("onResume", msg);
+      }
       PushPlugin._channel.invokeMethod("onMessage", msg);
     };
   }
@@ -63,14 +72,26 @@ public class MainActivity extends FlutterActivity {
     super.onPause();
   }
 
-  private String getHWMsg(Intent intent) {
-    if (null != intent && intent.getData() != null) {
-      Uri intentData = intent.getData();
-      if (intentData.getScheme().equals("msg")) {
-        return intentData.getQueryParameter("data");
+  private String getPushMsg(Intent intent) {
+    if (null != intent) {
+      // 获取data
+      Bundle bundle = intent.getExtras();
+      if (bundle != null) {
+        String data = null;
+        for (String key : bundle.keySet()) {
+          Log.i("push", "key is " + key);
+          if (key.equals("msg")) {
+            Object content = bundle.get(key);
+            data = content.toString();
+          }
+        }
+        if (data!=null) return data;
+        return null;
       }
       return null;
+    } else {
+      Log.i("push", "intent is null");
+      return null;
     }
-    return null;
   }
 }

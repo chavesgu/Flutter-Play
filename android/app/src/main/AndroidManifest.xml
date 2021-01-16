@@ -5,6 +5,60 @@
   android:versionName="1.0.0"
 >
 
+    <!--   sdk -->
+    <uses-sdk tools:overrideLibrary="xyz.luan.audioplayers"/>
+    <!-- meizu -->
+    <!-- 兼容 Flyme5 的权限配置-->
+    <uses-permission android:name="com.meizu.flyme.push.permission.RECEIVE" />
+    <permission android:name="com.fantaiai.flutter.push.permission.MESSAGE"
+                android:protectionLevel="signature"/>
+    <uses-permission android:name="com.fantaiai.flutter.push.permission.MESSAGE" />
+    <!-- 兼容 Flyme3 的权限配置-->
+    <uses-permission android:name="com.meizu.c2dm.permission.RECEIVE" />
+    <permission android:name="com.fantaiai.flutter.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+    <uses-permission android:name="com.fantaiai.flutter.permission.C2D_MESSAGE"/>
+    <!--    oppo -->
+    <uses-permission android:name="com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE"/>
+    <uses-permission android:name="com.heytap.mcs.permission.RECIEVE_MCS_MESSAGE"/>
+    <!--    -->
+    <!--permission-->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <!--用于进行网络定位-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!--用于访问GPS定位-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!--用于获取运营商信息，用于支持提供运营商信息相关的接口-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!--用于访问wifi网络信息，wifi信息会用于进行网络定位-->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!--用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <!--长时间播放音频-->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-permission android:name="android.permission.REORDER_TASKS"/>
+
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL"/>
+
+    <uses-permission android:name="android.permission.GET_TOP_ACTIVITY_INFO"/>
+
+    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
+
+    <uses-permission android:name="android.permission.GET_TASKS" />
+
+    <uses-permission android:name="android.permission.READ_LOGS" />
+
+    <permission android:name="com.fantaiai.flutter.permission.MIPUSH_RECEIVE"
+                android:protectionLevel="signature" /> <!--这里com.xiaomi.mipushdemo改成app的包名-->
+
+    <uses-permission android:name="com.fantaiai.flutter.permission.MIPUSH_RECEIVE" /><!--这里com.xiaomi.mipushdemo改成app的包名-->
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
          In most cases you can leave this as-is, but you if you want to provide
@@ -14,7 +68,9 @@
       android:name="io.flutter.app.FlutterApplication"
       android:label="Flutter Play"
       android:icon="@mipmap/ic_launcher"
-      tools:ignore="GoogleAppIndexingWarning">
+      tools:ignore="GoogleAppIndexingWarning"
+      android:usesCleartextTraffic="true"
+    >
         <meta-data
           android:name="flutterEmbedding"
           android:value="2" />
@@ -50,6 +106,16 @@
                   android:path="/flutter/*"
                   android:scheme="https" />
             </intent-filter>
+            <!--      custom scheme      -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="com.fantaiai.flutter"
+                    android:path="/"
+                    android:scheme="push" />
+            </intent-filter>
         </activity>
         <provider
           android:name="com.pichillilorenzo.flutter_inappwebview.InAppWebViewFileProvider"
@@ -64,6 +130,25 @@
           android:name="com.amap.api.v2.apikey"
           android:value="798d80979d68058e033d8d403145ba0d"/>
 
+        <!-- vivo -->
+        <meta-data
+                android:name="com.vivo.push.api_key"
+                android:value="eea0705a44816097a3a825e528085920"/>
+        <meta-data
+                android:name="com.vivo.push.app_id"
+                android:value="105463067"/>
+        <service
+                android:name="com.vivo.push.sdk.service.CommandClientService"
+                android:permission="com.push.permission.UPSTAGESERVICE"
+                android:exported="true"/>
+
+        <receiver android:name="com.chavesgu.push.VivoMessageReceiver"
+                  android:exported="false">
+            <intent-filter>
+                <!--接收push消息-->
+                <action android:name="com.vivo.pushclient.action.RECEIVE"/>
+            </intent-filter>
+        </receiver>
         <!--    华为推送    -->
         <meta-data
           android:name="com.huawei.hms.client.appid"
@@ -116,43 +201,45 @@
             </intent-filter>
         </receiver>
         <!--    小米推送    -->
+
+
+        <!--        oppo-->
+        <service
+                android:name="com.heytap.msp.push.service.CompatibleDataMessageCallbackService"
+
+                android:permission="com.coloros.mcs.permission.SEND_MCS_MESSAGE">
+            <intent-filter>
+                <action android:name="com.coloros.mcs.action.RECEIVE_MCS_MESSAGE"/>
+            </intent-filter>
+        </service> <!--兼容Q以下版本-->
+
+        <service
+                android:name="com.heytap.msp.push.service.DataMessageCallbackService"
+
+                android:permission="com.heytap.mcs.permission.SEND_PUSH_MESSAGE">
+
+            <intent-filter>
+                <action android:name="com.heytap.mcs.action.RECEIVE_MCS_MESSAGE"/>
+
+                <action android:name="com.heytap.msp.push.RECEIVE_MCS_MESSAGE"/>
+            </intent-filter>
+        </service> <!--兼容Q版本-->
+        <!--        -->
+
+        <!-- 魅族Push 应用定义消息 receiver 声明 -->
+        <receiver android:name="com.chavesgu.push.MeizuMessageReceiver">
+            <intent-filter>
+                <!-- 接收 push 消息 -->
+                <action android:name="com.meizu.flyme.push.intent.MESSAGE" />
+                <!-- 接收 register 消息 -->
+                <action android:name="com.meizu.flyme.push.intent.REGISTER.FEEDBACK" />
+                <!-- 接收 unregister 消息-->
+                <action android:name="com.meizu.flyme.push.intent.UNREGISTER.FEEDBACK"/>
+                <!-- 兼容低版本 Flyme3 推送服务配置 -->
+                <action android:name="com.meizu.c2dm.intent.REGISTRATION" />
+                <action android:name="com.meizu.c2dm.intent.RECEIVE" />
+                <category android:name="com.chavesgu.push" />
+            </intent-filter>
+        </receiver>
     </application>
-
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-    <!--用于进行网络定位-->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!--用于访问GPS定位-->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <!--用于获取运营商信息，用于支持提供运营商信息相关的接口-->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!--用于访问wifi网络信息，wifi信息会用于进行网络定位-->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!--用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <!--长时间播放音频-->
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-    <uses-permission android:name="android.permission.REORDER_TASKS"/>
-
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
-    <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL"/>
-
-    <uses-permission android:name="android.permission.GET_TOP_ACTIVITY_INFO"/>
-
-    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
-
-    <uses-permission android:name="android.permission.GET_TASKS" />
-
-    <uses-permission android:name="android.permission.READ_LOGS" />
-
-    <permission android:name="com.fantaiai.flutter.permission.MIPUSH_RECEIVE"
-                android:protectionLevel="signature" /> <!--这里com.xiaomi.mipushdemo改成app的包名-->
-
-    <uses-permission android:name="com.fantaiai.flutter.permission.MIPUSH_RECEIVE" /><!--这里com.xiaomi.mipushdemo改成app的包名-->
 </manifest>

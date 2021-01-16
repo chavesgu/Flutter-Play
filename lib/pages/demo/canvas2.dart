@@ -105,6 +105,14 @@ class _Paint extends CustomPainter {
           ..color = Colors.red
           ..style = PaintingStyle.stroke
           ..strokeWidth = 4);
+
+    canvas.drawPath(
+        path1.shift(Offset(0, 40)).transform(Matrix4.rotationZ(pi/30).storage),
+        Paint()
+          ..color = Colors.green
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 4
+    );
   }
 
   @override

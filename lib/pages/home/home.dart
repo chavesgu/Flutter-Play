@@ -7,7 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart' show InnerDrawerState;
 import 'package:flutter_play/pages/global/scan.dart';
 import 'package:flutter_play/pages/home/search.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -36,7 +36,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
     _inputController.text = value;
   }
 
-  final _refreshController = RefreshController();
+  final _refreshController = EasyRefreshController();
   final _scrollController = ScrollController();
   bool _hideGoTop = true;
   double _goTopOpacity = 0;
@@ -54,69 +54,67 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
     super.build(context);
 
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(50),
-        child: AppBar(
-          centerTitle: false,
-          titleSpacing: 0,
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(const IconData(0xe610, fontFamily: 'iconfont')),
-              onPressed: (){
-                _focusNode?.unfocus();
-                goScan();
-              },
-            )
-          ],
-          leading: Builder(
-            builder: (BuildContext context) {
-              return IconButton(
-                icon: Icon(Icons.menu),
-                onPressed: () {
-                  _focusNode?.unfocus();
-                  if (widget.drawerKey!=null) widget.drawerKey.currentState.open();
-                },
-              );
+      appBar: AppBar(
+        centerTitle: false,
+        titleSpacing: 0,
+        toolbarHeight: 50,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(const IconData(0xe610, fontFamily: 'iconfont')),
+            onPressed: (){
+              _focusNode?.unfocus();
+              goScan();
             },
-          ),
-          title: ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(36)),
-            child: Container(
-              height: 36,
-              child: TextField(
-                keyboardType: TextInputType.text,
-                style: TextStyle(
+          )
+        ],
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: () {
+                _focusNode?.unfocus();
+                if (widget.drawerKey!=null) widget.drawerKey.currentState.open();
+              },
+            );
+          },
+        ),
+        title: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(36)),
+          child: Container(
+            height: 36,
+            child: TextField(
+              keyboardType: TextInputType.text,
+              style: TextStyle(
                   fontSize: width(30),
                   textBaseline: TextBaseline.alphabetic,
                   color: Colors.black
+              ),
+              focusNode: _focusNode,
+              controller: _inputController,
+              cursorColor: Theme.of(context).primaryColor,
+              textInputAction: TextInputAction.search,
+              onSubmitted: _submit,
+              decoration: InputDecoration(
+                isDense: true,
+                filled: true,
+                fillColor: Colors.white,
+                hintText: '请输入关键词搜索',
+                hintStyle: TextStyle(
+                  color: Colors.grey,
+                  fontSize: width(30),
                 ),
-                focusNode: _focusNode,
-                controller: _inputController,
-                cursorColor: Theme.of(context).primaryColor,
-                textInputAction: TextInputAction.search,
-                onSubmitted: _submit,
-                decoration: InputDecoration(
-                  isDense: true,
-                  filled: true,
-                  fillColor: Colors.white,
-                  hintText: '请输入关键词搜索',
-                  hintStyle: TextStyle(
-                    color: Colors.grey,
-                    fontSize: width(30),
-                  ),
-                  border: InputBorder.none,
-                  prefixIcon: Icon(
-                    Icons.search,
-                    size: width(48),
-                  ),
-                  suffixIcon: Offstage(
-                    offstage: _hideInputClear,
-                    child: GestureDetector(
-                      onTap: _clearInput,
-                      child: Icon(
-                        Icons.close,
-                        size: width(48),
-                      ),
+                border: InputBorder.none,
+                prefixIcon: Icon(
+                  Icons.search,
+                  size: width(48),
+                ),
+                suffixIcon: Offstage(
+                  offstage: _hideInputClear,
+                  child: GestureDetector(
+                    onTap: _clearInput,
+                    child: Icon(
+                      Icons.close,
+                      size: width(48),
                     ),
                   ),
                 ),
@@ -132,27 +130,27 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
         child: Stack(
           children: <Widget>[
             CupertinoScrollbar(
-              child: SmartRefresher(
-                header: ClassicHeader(
-                  idleText: '下拉刷新数据',
-                  releaseText: '释放刷新',
+              child: EasyRefresh(
+                header: ClassicalHeader(
+                  refreshText: '下拉刷新数据',
+                  refreshReadyText: '释放刷新',
                   refreshingText: '刷新中',
-                  completeText: '刷新数据成功',
-                  failedText: '刷新数据失败',
+                  refreshedText: '刷新数据成功',
+                  refreshFailedText: '刷新数据失败',
                 ),
-                footer: ClassicFooter(
-                  loadStyle: LoadStyle.ShowWhenLoading,
-                  idleText: '上拉加载',
+                footer: ClassicalFooter(
+                  loadText: '上拉加载',
                   loadingText: '加载中',
-                  canLoadingText: '松开加载更多',
-                  noDataText: '没有更多数据',
-                  failedText: '加载失败，点击重试',
+                  loadedText: '加载完成',
+                  loadReadyText: '松开加载更多',
+                  noMoreText: '没有更多数据',
+                  loadFailedText: '加载失败，点击重试',
                 ),
                 controller: _refreshController,
                 onRefresh: _refresh,
-                onLoading: _loadMore,
-                enablePullDown: true,
-                enablePullUp: true,
+                onLoad: _loadMore,
+                enableControlFinishRefresh: true,
+                enableControlFinishLoad: true,
                 child: ListView(
                   physics: BouncingScrollPhysics(),
                   controller: _scrollController,
@@ -224,21 +222,19 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
       bannerList = await Service.getHomeBanner();
       recommendMusicList = await Service.getRecommendMusicList();
       setState(() {
-        _refreshController.refreshCompleted();
+        _refreshController.finishRefresh(success: true);
       });
     } on DioError catch(e) {
       setState(() {
-        _refreshController.refreshFailed();
+        _refreshController.finishRefresh(success: false);
       });
     }
   }
 
   void _loadMore() async {
-//    await Future.delayed(Duration(seconds: 2));
+   await Future.delayed(Duration(seconds: 2));
     setState(() {
-      _refreshController.loadComplete();
-//      _refreshController.loadFailed();
-//      _refreshController.loadNoData();
+      _refreshController.finishLoad(success: true);
     });
   }
 

@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_play/mainAgreement.dart';
 import 'package:flutter_play/pages/entry.dart';
 import 'package:fluwx_no_pay/fluwx_no_pay.dart';
 import 'package:home_indicator/home_indicator.dart';
-import 'package:mob_login/mob_login.dart';
+import 'package:mob/mob.dart';
 import 'package:move_to_background/move_to_background.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,35 +37,20 @@ void main() async {
     // 设置竖屏 lock
     HomeIndicator.deferScreenEdges([]);
     FlutterOrientation.setOrientation(DeviceOrientation.portraitUp);
-    // 配置路由
-    RouterManager.init();
     // 监听网络变化
     // 配置dio
     Service.init();
-    // mob login init
-    MobLogin.init();
-    // init wx
-    registerWxApi(appId: 'wx9819a39d04a4253f', universalLink: 'https://applink.chavesgu.com/flutter/').then((value) {
-      // print(value);
-    });
-
-    // 获取缓存主题
-    int themeIndex = await getTheme();
-    // 获取缓存的内部主题模式
-    int themeModeIndex = await getThemeMode();
-
-    // 判断是否需要splash
-    SharedPreferences sp = await SharedPreferences.getInstance();
 
     // 启动页显示2秒
     await Future.delayed(Duration(seconds: 2));
 
-    runApp(MyApp(
-      splashed: sp.getBool("splash")??false,
-      useSystemMode: themeModeIndex==0,
-      themeMode: themeModeList[themeModeIndex],
-      themeIndex: themeIndex,
-    ));
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    bool agree = sp.getBool('agree') ?? false;
+    if (!agree) { // 是否没同意隐私协议
+      runApp(MainAgreement());
+    } else {
+      startApp();
+    }
   } catch (e) {
     print(e);
   }
@@ -144,6 +130,28 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<void> startApp() async {
+  // 配置路由
+  RouterManager.init();
+  // init wx
+  registerWxApi(appId: 'wx9819a39d04a4253f', universalLink: 'https://applink.chavesgu.com/flutter/').then((value) {
+    // print(value);
+  });
+  // mob server init
+  Mob.init();
+  SharedPreferences sp = await SharedPreferences.getInstance();
+  // 获取缓存主题
+  int themeIndex = await getTheme();
+  // 获取缓存的内部主题模式
+  int themeModeIndex = await getThemeMode();
+  runApp(MyApp(
+    splashed: sp.getBool("splash")??false,
+    useSystemMode: themeModeIndex==0,
+    themeMode: themeModeList[themeModeIndex],
+    themeIndex: themeIndex,
+  ));
 }
 
 Future<int> getTheme() async {
