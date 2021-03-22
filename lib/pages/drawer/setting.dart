@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:flutter_play/variable.dart';
 import 'package:flutter_play/store/model.dart';
@@ -17,7 +16,6 @@ class SettingPage extends StatefulWidget {
 }
 
 class SettingPageState extends State<SettingPage> {
-
   GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
 
   List<int> listControl = [];
@@ -42,7 +40,8 @@ class SettingPageState extends State<SettingPage> {
             initialItemCount: listControl.length,
             primary: true,
             physics: BouncingScrollPhysics(),
-            itemBuilder: (BuildContext context, int index, Animation<double> animation) {
+            itemBuilder:
+                (BuildContext context, int index, Animation<double> animation) {
               return SizeTransition(
                 sizeFactor: animation,
                 child: widgetList[listControl[index]],
@@ -72,13 +71,15 @@ class SettingPageState extends State<SettingPage> {
       int index = listControl.indexOf(1);
       if (index < 0) {
         listControl.insert(1, 1);
-        listKey.currentState?.insertItem(1, duration: Duration(milliseconds: 200));
+        listKey.currentState
+            ?.insertItem(1, duration: Duration(milliseconds: 200));
       }
     } else {
       int index = listControl.indexOf(1);
-      if (index>=0) {
+      if (index >= 0) {
         listControl.removeAt(index);
-        listKey.currentState?.removeItem(index, (BuildContext context, Animation<double> animation){
+        listKey.currentState?.removeItem(index,
+            (BuildContext context, Animation<double> animation) {
           return SizeTransition(
             sizeFactor: animation,
             child: _removedItem(model),
@@ -88,16 +89,15 @@ class SettingPageState extends State<SettingPage> {
     }
   }
 
-
   // 渲染func
 
   Widget _removedItem(ThemeModel model) {
     return _renderItem(
       title: Text('深色主题'),
       control: CupertinoSwitch(
-        value: model.appThemeMode!=ThemeMode.light,
+        value: model.appThemeMode != ThemeMode.light,
         onChanged: (isOn) {
-          model.toggleAppThemeMode(isOn?ThemeMode.dark:ThemeMode.light);
+          model.toggleAppThemeMode(isOn ? ThemeMode.dark : ThemeMode.light);
         },
       ),
       model: model,
@@ -119,28 +119,29 @@ class SettingPageState extends State<SettingPage> {
       _renderItem(
         title: Text('深色主题'),
         control: CupertinoSwitch(
-          value: model.appThemeMode!=ThemeMode.light,
+          value: model.appThemeMode != ThemeMode.light,
           onChanged: (isOn) {
-            model.toggleAppThemeMode(isOn?ThemeMode.dark:ThemeMode.light);
+            model.toggleAppThemeMode(isOn ? ThemeMode.dark : ThemeMode.light);
           },
         ),
         model: model,
       ),
       Row(
         children: <Widget>[
-          ...(model.isDark?darkThemeList:themeList).map((Color color) {
+          ...(model.isDark ? darkThemeList : themeList).map((Color color) {
             return GestureDetector(
               child: Container(
                 width: 40,
                 height: 40,
                 margin: EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  border: Border.all(color: model.isDark?Colors.white:Colors.black),
-                  color: color
-                ),
+                    border: Border.all(
+                        color: model.isDark ? Colors.white : Colors.black),
+                    color: color),
               ),
               onTap: () {
-                model.changeTheme((model.isDark?darkThemeList:themeList).indexOf(color));
+                model.changeTheme(
+                    (model.isDark ? darkThemeList : themeList).indexOf(color));
               },
             );
           }).toList(),
@@ -149,18 +150,20 @@ class SettingPageState extends State<SettingPage> {
     ];
   }
 
-  Widget _renderItem({ Widget title, Widget control, ThemeModel model}) {
+  Widget _renderItem(
+      {required Widget title,
+      required Widget control,
+      required ThemeModel model}) {
     return Container(
       margin: EdgeInsets.only(top: 20),
       padding: EdgeInsets.only(left: width(30), right: width(30)),
       height: 50,
       decoration: BoxDecoration(
-        color: model.isDark?Color(0xff666666):Color(0xfff9f9f9),
-        border: Border(
-          top: BorderSide(color: Color(0xffcccccc), width: .5),
-          bottom: BorderSide(color: Color(0xffcccccc), width: .5),
-        )
-      ),
+          color: model.isDark ? Color(0xff666666) : Color(0xfff9f9f9),
+          border: Border(
+            top: BorderSide(color: Color(0xffcccccc), width: .5),
+            bottom: BorderSide(color: Color(0xffcccccc), width: .5),
+          )),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[

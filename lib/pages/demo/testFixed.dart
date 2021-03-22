@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_play/utils/utils.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../variable.dart';
 
@@ -19,7 +20,7 @@ class TestFixedPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            RaisedButton(
+            ElevatedButton(
               child: Text('test animate to end'),
               onPressed: () {
                 animateTo();
@@ -51,10 +52,30 @@ class TestFixedPage extends StatelessWidget {
 
   List<Widget> _renderList() {
     List<Widget> list = [];
-    for (int i = 0;i<20;i++) {
-      list.add(Container(
-        child: Text('item-$i'),
-        height: width(100),
+    for (int i = 0; i < 20; i++) {
+      list.add(Slidable(
+        actionPane: SlidableDrawerActionPane(),
+        actionExtentRatio: 0.25,
+        child: Container(
+          color: Colors.white,
+          child: ListTile(
+            leading: CircleAvatar(
+              backgroundColor: Colors.indigoAccent,
+              foregroundColor: Colors.white,
+            ),
+            title: Text('line is ${i + 1}'),
+          ),
+        ),
+        secondaryActions: <Widget>[
+          IconSlideAction(
+            caption: 'Delete',
+            color: Colors.red,
+            icon: Icons.delete,
+            onTap: () {
+              Toast.show("delete ${i + 1}");
+            },
+          ),
+        ],
       ));
     }
     return list;

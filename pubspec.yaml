@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -26,68 +26,66 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
+  intl: ^0.17.0
+  cupertino_icons: ^1.0.2
 
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.0
+#  null safety
+  device_info: ^2.0.0
+  connectivity: ^3.0.2
+  url_launcher: ^6.0.2
+  crypto: ^3.0.0
+  provider: ^5.0.0
+  uuid: ^3.0.1
+  path_provider: ^2.0.1
+  dio: ^4.0.0-beta4
+  dio_cookie_manager: ^2.0.0-beta1
+  cookie_jar: ^3.0.0-beta1
+  web_socket_channel: ^2.0.0
+  local_auth: ^1.1.0
+  fluro: ^2.0.3
+  camera: ^0.8.0
+  flutter_inappwebview: ^5.0.5+3
+  webview_flutter: ^2.0.1
+  permission_handler: ^6.1.0
+  flutter_screenutil: ^5.0.0-nullsafety.7
+  shared_preferences: ^2.0.3
+  flutter_slidable: ^0.6.0-nullsafety.0
+  video_player: ^2.0.0
+  audioplayers: ^0.18.0
+  vibration: ^1.7.4-nullsafety.0
+  fluwx_no_pay: ^3.1.2-nullsafety.1
+  fl_chart: ^0.20.1
+  flutter_spinkit: ^5.0.0-nullsafety.0
+  extended_image: ^3.0.0
+  native_pdf_view: ^4.0.1
+  flutter_inner_drawer: ^1.0.0+1
+  #  qr_flutter: ^4.0.0
 
-  device_info: ^1.0.0
-  connectivity: ^2.0.2
-  url_launcher: ^5.7.10
-  permission_handler: ^5.0.1
-  crypto: ^2.1.5
-  provider: ^4.3.2+3
-  fluro: ^1.7.8
-  path_provider: ^1.6.24
-  uuid: 2.2.2
-  home_indicator: ^1.1.5
-  dio: ^3.0.10
-  dio_cookie_manager: ^1.0.0
-  cookie_jar: ^1.0.0
-  web_socket_channel: ^1.0.14
-  scan:
-    path: ../flutter-plugin/scan/
-#  qr_flutter: ^3.2.0
-  camera: ^0.6.3+2
-  flutter_inappwebview: ^4.0.0+4
-#  webview_flutter: ^1.0.7
-  flutter_screenutil: ^4.0.2+2
-  shared_preferences: ^0.5.12+4
-#  multi_image_picker: ^4.7.14
-#  image_picker: ^0.6.7+7
-#  image_cropper: ^1.3.1
-  images_picker:
-    path: ../flutter-plugin/images_picker/
-  extended_image: ^1.5.0
-#  extended_image: 1.5.0-dev
-#  flutter_image_compress: ^0.7.0
-#  pull_to_refresh: ^1.6.3
-  flutter_easyrefresh: ^2.1.8
-  flutter_swiper: ^1.1.6
-  flutter_slidable: ^0.5.7
-  flutter_spinkit: ^4.1.2
-#  flutter_alert: ^0.4.0
-  move_to_background: ^1.0.1
-#  qiniu_manager:
-#    git:
-#      url: https://github.com/chavesgu/flutter_qiniu_manager.git
-#      ref: 3fe0b591dfc710bbc78d2dc4b9e5ff2c6e0aa313
-  statusbar_util: ^1.0.0
-  video_player: ^1.0.1
-  audioplayers: 0.17.0
-  #  amap_base: ^0.3.5
-  #  amap_base_location: ^0.4.0+1
-  amap_location: ^0.2.0
-  native_pdf_view: ^3.9.0
   push:
     path: ../flutter-plugin/push/
   mob:
     path: ../flutter-plugin/mob/
   flutter_orientation:
     path: ../flutter-plugin/flutter_orientation/
-  #  page_life_cycle: 1.1.0
-  flutter_inner_drawer: 0.5.7+2
-  fluwx_no_pay: ^2.4.0+1
+  scan:
+    path: ../flutter-plugin/scan/
+  images_picker:
+    path: ../flutter-plugin/images_picker/
+  move_bg:
+    path: ../flutter-plugin/move_bg/
+  home_indicator:
+    path: ../flutter-plugin/home_indicator/
+
+  ##  qiniu_manager:
+  ##    git:
+  ##      url: https://github.com/chavesgu/flutter_qiniu_manager.git
+  ##      ref: 3fe0b591dfc710bbc78d2dc4b9e5ff2c6e0aa313
+
+# no null safety
+  pull_to_refresh: 1.6.4
+  flutter_swiper: ^1.1.6
+  amap_location: ^0.2.0
+
 
 dev_dependencies:
   flutter_test:
@@ -105,7 +103,7 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/avatar.png
+    - assets/images/
 
   fonts:
     - family: iconfont
@@ -141,3 +139,5 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+flutter_intl:
+  enabled: true

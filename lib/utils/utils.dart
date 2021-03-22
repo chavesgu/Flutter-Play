@@ -12,47 +12,35 @@ import 'package:flutter_play/variable.dart';
 import 'package:images_picker/images_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 // 工具类
 class Utils {
   // 选取照片
-  static Future<List<Media>> imagePicker({
-    BuildContext context,
+  static Future<List<Media>?> imagePicker({
+    BuildContext? context,
     PickType pickType = PickType.image,
     bool gif = true,
     SourceType source = SourceType.gallery,
     int count = 1,
-    CropOption cropOpt,
-    double quality,
-    int maxSize,
+    CropOption? cropOpt,
+    double? quality,
+    int? maxSize,
   }) async {
     String permissionReason = '';
     bool hasPermission = false;
-    List<Media> output;
+    List<Media>? output;
     if (source == SourceType.gallery) {
       Permission _permission =
           Platform.isIOS ? Permission.photos : Permission.storage;
-      PermissionStatus permissionStatus = await _permission.status;
-      hasPermission = permissionStatus.isGranted;
-      bool unknown =
-          (permissionStatus.isUndetermined) || (permissionStatus.isDenied);
-      if (unknown) {
-        hasPermission = await _permission.request().isGranted;
-      }
+      hasPermission = await _permission.request().isGranted;
       if (!hasPermission) {
         permissionReason = '需要打开${Platform.isIOS ? '相册读写' : '文件读写'}权限，前往"设置"';
       }
     }
     if (source == SourceType.camera) {
-      PermissionStatus permissionStatus = await Permission.camera.status;
-      hasPermission = permissionStatus.isGranted;
-      bool unknown =
-          (permissionStatus.isUndetermined) || (permissionStatus.isDenied);
-      if (unknown) {
-        // microphone
-        hasPermission = await Permission.camera.request().isGranted;
-      }
+      hasPermission = await Permission.camera.request().isGranted;
       if (!hasPermission) {
         permissionReason = '需要打开相机权限，前往"设置"';
       }
@@ -90,22 +78,22 @@ class Utils {
           confirmText: '前往设置',
           onConfirm: () {
             openAppSettings();
-          }
-      );
+          });
       return null;
     }
   }
 
 // 二进制转file
   static Future<File> bytesToFile(ByteData byteData) async {
-    Directory tempDir = Directory.systemTemp ?? await getTemporaryDirectory();
+    // await getTemporaryDirectory()
+    Directory tempDir = Directory.systemTemp;
     String tempPath = tempDir.path; // /tmp ?? /Library/Caches
 
 //      Directory appDocDir = await getApplicationDocumentsDirectory();
 //      String appDocPath = appDocDir.path;
 
     ByteBuffer buffer = byteData.buffer;
-    return new File(tempPath + '/' + Uuid().v4()).writeAsBytes(
+    return new File(tempPath + '/' + Uuid().v4() + '.png').writeAsBytes(
         buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
   }
 
@@ -115,7 +103,7 @@ class Utils {
     Throttling thr;
     int ms = duration.inMilliseconds;
     if (_throttleMap.containsKey(ms)) {
-      thr = _throttleMap[ms];
+      thr = _throttleMap[ms]!;
     } else {
       thr = Throttling(duration: duration);
       _throttleMap[ms] = thr;
@@ -131,7 +119,7 @@ class Utils {
     Debouncing deb;
     int ms = duration.inMilliseconds;
     if (_debounceMap.containsKey(ms)) {
-      deb = _debounceMap[ms];
+      deb = _debounceMap[ms]!;
     } else {
       deb = Debouncing(duration: duration);
       _debounceMap[ms] = deb;
@@ -140,13 +128,26 @@ class Utils {
       fn();
     });
   }
+
+  static Future<void> clearCache() async {
+    try {
+      Directory tempDir = Directory.systemTemp;
+      if (tempDir.existsSync()) {
+        tempDir.deleteSync(recursive: true);
+      }
+      SharedPreferences sp = await SharedPreferences.getInstance();
+      await sp.clear();
+    } catch (e) {
+      print(e);
+    }
+  }
 }
 
 // Custom Dialog
 // there is no show method,because allow multiple dialogs
 class MyDialog {
   MyDialog({
-    BuildContext context,
+    BuildContext? context,
     this.title = '提示',
     this.content = '弹窗内容',
     this.confirmText = '确认',
@@ -157,7 +158,8 @@ class MyDialog {
     this.onConfirm,
     this.onCancel,
   }) {
-    assert(content is String || content is InlineSpan, 'content must be string or InlineSpan');
+    assert(content is String || content is InlineSpan,
+        'content must be string or InlineSpan');
     _context = context;
     _show();
   }
@@ -171,15 +173,15 @@ class MyDialog {
   final Color confirmColor;
   final Color cancelColor;
   final bool showCancel;
-  final Function onConfirm;
-  final Function onCancel;
-  BuildContext _context;
-  OverlayEntry _currentEntry;
-  Popup _popup;
+  final Function? onConfirm;
+  final Function? onCancel;
+  BuildContext? _context;
+  OverlayEntry? _currentEntry;
+  Popup? _popup;
 
   void _show() {
-    OverlayState overlayState =
-        _context != null ? Overlay.of(_context) : globalOverlayState;
+    OverlayState? overlayState =
+        _context != null ? Overlay.of(_context!) : globalOverlayState;
     Widget titleWidget = FractionallySizedBox(
       widthFactor: 1,
       child: Padding(
@@ -213,7 +215,7 @@ class MyDialog {
           bottom: 32,
         ),
         child: Text.rich(
-          (content is String)?TextSpan(text: content):content,
+          (content is String) ? TextSpan(text: content) : content,
           // textAlign: TextAlign.justify,
           softWrap: true,
           overflow: TextOverflow.fade,
@@ -244,7 +246,7 @@ class MyDialog {
                 child: _TapEffect(
                   onTap: () async {
                     await hide();
-                    if (onCancel != null) onCancel();
+                    if (onCancel != null) onCancel!();
                   },
                   child: Center(
                     child: Text(
@@ -268,7 +270,7 @@ class MyDialog {
               child: _TapEffect(
                 onTap: () async {
                   await hide();
-                  if (onConfirm != null) onConfirm();
+                  if (onConfirm != null) onConfirm!();
                 },
                 child: Center(
                   child: Text(
@@ -319,16 +321,16 @@ class MyDialog {
     _currentEntry = OverlayEntry(
       opaque: false,
       builder: (_) {
-        return _popup;
+        return _popup!;
       },
     );
-    overlayState.insert(_currentEntry);
+    overlayState?.insert(_currentEntry!);
     _length++;
   }
 
-  Future<void> hide({ bool quick = false }) async {
-    if (_popup!=null && !quick) {
-      await _popup.hide();
+  Future<void> hide({bool quick = false}) async {
+    if (_popup != null && !quick) {
+      await _popup!.hide();
       _popup = null;
     }
     _currentEntry?.remove();
@@ -338,19 +340,19 @@ class MyDialog {
 }
 
 class Loading {
-  static OverlayEntry _currentEntry;
-  static Popup _popup;
-  static Timer _timer;
+  static OverlayEntry? _currentEntry;
+  static Popup? _popup;
+  static Timer? _timer;
 
   static void show({
-    BuildContext context,
-    String msg,
+    BuildContext? context,
+    String? msg,
     bool mask = true,
     Duration maxDuration = const Duration(seconds: 60),
   }) async {
     if (_currentEntry != null) return;
 
-    OverlayState overlayState =
+    OverlayState? overlayState =
         context != null ? Overlay.of(context) : globalOverlayState;
     _popup = Popup(
       mask: false,
@@ -361,19 +363,19 @@ class Loading {
     _currentEntry = OverlayEntry(
       opaque: false,
       builder: (_) {
-        return _popup;
+        return _popup!;
       },
     );
-    overlayState.insert(_currentEntry);
+    overlayState?.insert(_currentEntry!);
     _timer?.cancel();
     _timer = Timer(maxDuration, () {
       hide();
     });
   }
 
-  static Future<void> hide({ bool quick = false }) async {
-    if (_popup!=null && !quick) {
-      await _popup.hide();
+  static Future<void> hide({bool quick = false}) async {
+    if (_popup != null && !quick) {
+      await _popup!.hide();
       _popup = null;
     }
     _timer?.cancel();
@@ -384,19 +386,19 @@ class Loading {
 }
 
 class Toast {
-  static OverlayEntry _currentEntry;
-  static Popup _popup;
-  static Timer _timer;
+  static OverlayEntry? _currentEntry;
+  static Popup? _popup;
+  static Timer? _timer;
 
-  static void show({
-    BuildContext context,
-    @required String msg,
+  static void show(
+    String msg, {
+    BuildContext? context,
     Duration maxDuration = const Duration(milliseconds: 1200),
     ToastPosition position = ToastPosition.middle,
   }) async {
     if (_currentEntry != null) return;
 
-    OverlayState overlayState =
+    OverlayState? overlayState =
         context != null ? Overlay.of(context) : globalOverlayState;
     EdgeInsetsGeometry padding;
     MainAxisAlignment mainAxisAlignment;
@@ -422,9 +424,7 @@ class Toast {
           children: [
             Padding(
               padding: padding,
-              child: MyToast(
-                msg: msg,
-              ),
+              child: MyToast(msg),
             )
           ],
         ),
@@ -433,10 +433,10 @@ class Toast {
     _currentEntry = OverlayEntry(
       opaque: false,
       builder: (_) {
-        return _popup;
+        return _popup!;
       },
     );
-    overlayState.insert(_currentEntry);
+    overlayState?.insert(_currentEntry!);
     _timer?.cancel();
     _timer = Timer(maxDuration, () {
       hide();
@@ -444,8 +444,8 @@ class Toast {
   }
 
   static Future<void> hide() async {
-    if (_popup!=null) {
-      await _popup.hide();
+    if (_popup != null) {
+      await _popup!.hide();
       _popup = null;
     }
     _timer?.cancel();
@@ -472,7 +472,7 @@ class Throttling {
 
   Throttling({Duration duration = const Duration(seconds: 1)})
       : assert(duration is Duration && !duration.isNegative),
-        this._duration = duration ?? Duration(seconds: 1) {
+        this._duration = duration {
     this._stateSC.sink.add(true);
   }
 
@@ -504,7 +504,7 @@ class Debouncing {
     this._duration = value;
   }
 
-  Timer _waiter;
+  Timer? _waiter;
   bool _isReady = true;
   bool get isReady => isReady;
   // ignore: close_sinks
@@ -516,7 +516,7 @@ class Debouncing {
 
   Debouncing({Duration duration = const Duration(seconds: 1)})
       : assert(duration is Duration && !duration.isNegative),
-        this._duration = duration ?? Duration(seconds: 1) {
+        this._duration = duration {
     this._stateSC.sink.add(true);
   }
 
@@ -551,8 +551,8 @@ class _TapEffect extends StatefulWidget {
     this.onTap,
   });
 
-  final Widget child;
-  final GestureTapCallback onTap;
+  final Widget? child;
+  final GestureTapCallback? onTap;
 
   @override
   State<StatefulWidget> createState() => _TapEffectState();

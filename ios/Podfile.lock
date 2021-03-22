@@ -17,6 +17,11 @@ PODS:
   - Flutter (1.0.0)
   - flutter_inappwebview (0.0.1):
     - Flutter
+    - flutter_inappwebview/Core (= 0.0.1)
+    - OrderedSet (~> 5.0)
+  - flutter_inappwebview/Core (0.0.1):
+    - Flutter
+    - OrderedSet (~> 5.0)
   - flutter_orientation (0.0.1):
     - Flutter
   - fluwx_no_pay (0.0.1):
@@ -25,23 +30,28 @@ PODS:
     - Flutter
   - images_picker (0.0.1):
     - Flutter
-    - ZLPhotoBrowser (= 4.0.7)
+    - ZLPhotoBrowser (= 4.1.3)
+  - local_auth (0.0.1):
+    - Flutter
+  - Masonry (1.1.0)
   - mob (0.0.1):
     - Flutter
+    - Masonry
     - mob_secverify
     - mob_smssdk
-  - mob_secverify (3.0.4):
+  - mob_secverify (3.1.0):
     - MOBFoundation
   - mob_smssdk (3.3.1):
     - MOBFoundation
-  - MOBFoundation (3.2.24)
+  - MOBFoundation (3.2.25)
   - move_to_background (0.0.1):
     - Flutter
-  - native_pdf_renderer (1.1.0):
+  - native_pdf_renderer (1.2.0):
     - Flutter
+  - OrderedSet (5.0.0)
   - path_provider (0.0.1):
     - Flutter
-  - "permission_handler (5.0.1+1)":
+  - "permission_handler (5.1.0+2)":
     - Flutter
   - push (0.0.1):
     - Flutter
@@ -50,15 +60,17 @@ PODS:
     - Flutter
   - shared_preferences (0.0.1):
     - Flutter
-  - statusbar_util (1.0.0):
-    - Flutter
   - url_launcher (0.0.1):
+    - Flutter
+  - vibration (1.7.4-nullsafety.0):
     - Flutter
   - video_player (0.0.1):
     - Flutter
-  - ZLPhotoBrowser (4.0.7):
-    - ZLPhotoBrowser/Core (= 4.0.7)
-  - ZLPhotoBrowser/Core (4.0.7)
+  - webview_flutter (0.0.1):
+    - Flutter
+  - ZLPhotoBrowser (4.1.3):
+    - ZLPhotoBrowser/Core (= 4.1.3)
+  - ZLPhotoBrowser/Core (4.1.3)
 
 DEPENDENCIES:
   - amap_location (from `.symlinks/plugins/amap_location/ios`)
@@ -72,6 +84,7 @@ DEPENDENCIES:
   - fluwx_no_pay (from `.symlinks/plugins/fluwx_no_pay/ios`)
   - home_indicator (from `.symlinks/plugins/home_indicator/ios`)
   - images_picker (from `.symlinks/plugins/images_picker/ios`)
+  - local_auth (from `.symlinks/plugins/local_auth/ios`)
   - mob (from `.symlinks/plugins/mob/ios`)
   - move_to_background (from `.symlinks/plugins/move_to_background/ios`)
   - native_pdf_renderer (from `.symlinks/plugins/native_pdf_renderer/ios`)
@@ -80,17 +93,20 @@ DEPENDENCIES:
   - push (from `.symlinks/plugins/push/ios`)
   - scan (from `.symlinks/plugins/scan/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
-  - statusbar_util (from `.symlinks/plugins/statusbar_util/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
+  - vibration (from `.symlinks/plugins/vibration/ios`)
   - video_player (from `.symlinks/plugins/video_player/ios`)
+  - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
 
 SPEC REPOS:
   trunk:
     - AMapFoundation
     - AMapLocation
+    - Masonry
     - mob_secverify
     - mob_smssdk
     - MOBFoundation
+    - OrderedSet
     - Reachability
     - ZLPhotoBrowser
 
@@ -117,6 +133,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/home_indicator/ios"
   images_picker:
     :path: ".symlinks/plugins/images_picker/ios"
+  local_auth:
+    :path: ".symlinks/plugins/local_auth/ios"
   mob:
     :path: ".symlinks/plugins/mob/ios"
   move_to_background:
@@ -133,12 +151,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/scan/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
-  statusbar_util:
-    :path: ".symlinks/plugins/statusbar_util/ios"
   url_launcher:
     :path: ".symlinks/plugins/url_launcher/ios"
+  vibration:
+    :path: ".symlinks/plugins/vibration/ios"
   video_player:
     :path: ".symlinks/plugins/video_player/ios"
+  webview_flutter:
+    :path: ".symlinks/plugins/webview_flutter/ios"
 
 SPEC CHECKSUMS:
   amap_location: a3e2a140bb25950d4e97560ce1b00e53a121e4f4
@@ -148,29 +168,33 @@ SPEC CHECKSUMS:
   camera: a0ca5080336f7af47b88436e5e26da3dee5568f0
   connectivity: c4130b2985d4ef6fd26f9702e886bd5260681467
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
-  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
-  flutter_inappwebview: 69dfbac46157b336ffbec19ca6dfd4638c7bf189
+  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+  flutter_inappwebview: bfd58618f49dc62f2676de690fc6dcda1d6c3721
   flutter_orientation: 4fcb34769db97f3fdc294851d0786e563b2b9286
   fluwx_no_pay: 3003d5187cfd3c98712838f465960f4742b05999
   home_indicator: 60c6a4b60d17173cd164c112eb9be37055b23af8
-  images_picker: 5166ad88297acad3b6bb2b64924da8ad029f2174
-  mob: f667ce9dc54cae94e33522f8f99d973b20d3bb01
-  mob_secverify: 10a3532d6f1b50162f9e15c42d9456ebb8c73de0
+  images_picker: eb05ebd660218fba40842f7d26bc75d946c682e5
+  local_auth: 25938960984c3a7f6e3253e3f8d962fdd16852bd
+  Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+  mob: e8024172d5c0592d0a2de8cff195b94288f041e0
+  mob_secverify: b3023dcae38301044a082e6009ba2d9b6b5af8f0
   mob_smssdk: 5a4ea1a132ba9c883af1a469c49d2ceede592fef
-  MOBFoundation: 934ee1a43aed452d51942b416bc3dc4d0813ac82
+  MOBFoundation: eaeb2e9e26a4155fa931020fb275d83445da0e09
   move_to_background: 39a5b79b26d577b0372cbe8a8c55e7aa9fcd3a2d
-  native_pdf_renderer: 3e81ffe3d40668cce75694596201bb9fb0fdb6e9
+  native_pdf_renderer: 0e545bf94fb341e0fe7508bf72d4c1c42c30aa02
+  OrderedSet: aaeb196f7fef5a9edf55d89760da9176ad40b93c
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
-  permission_handler: eac8e15b4a1a3fba55b761d19f3f4e6b005d15b6
-  push: a02f9d91cfd1aa02ea7702a7a8e373b2d35d3306
+  permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
+  push: a7ba2a855499815c320afd3d78eab15c56cd8140
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   scan: aea35bb4aa59ccc8839c576a18cd57c7d492cc86
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
-  statusbar_util: 1069d2ddcdf165f9d3422fcabc7dd7530f64f553
   url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
+  vibration: 1ec279c4a1a7a646627b54039d812334b3f1114a
   video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
-  ZLPhotoBrowser: f85662753ea4cfebff08b3512b17467467634fb2
+  webview_flutter: 9f491a9b5a66f2573946a389b2677987b0ff8c0b
+  ZLPhotoBrowser: 559062abac47b41ef140cff6ea2370e73623b05f
 
 PODFILE CHECKSUM: fe0e1ee7f3d1f7d00b11b474b62dd62134535aea
 
-COCOAPODS: 1.10.0.rc.1
+COCOAPODS: 1.10.1

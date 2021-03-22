@@ -1,10 +1,7 @@
 import 'dart:math';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_play/variable.dart';
 
 class CanvasPage2 extends StatefulWidget {
   static const String name = '/canvas2';
@@ -13,7 +10,10 @@ class CanvasPage2 extends StatefulWidget {
   State<StatefulWidget> createState() => _CanvasPageState();
 }
 
-class _CanvasPageState extends State<CanvasPage2> {
+class _CanvasPageState extends State<CanvasPage2>
+    with SingleTickerProviderStateMixin {
+  AnimationController? scanController;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,14 +23,13 @@ class _CanvasPageState extends State<CanvasPage2> {
           title: Text('Canvas2'),
         ),
       ),
-      body: Container(
-        color: Colors.white,
-        width: double.infinity,
-        height: double.infinity,
-        child: Padding(
-          padding: EdgeInsets.all(bottomAreaHeight),
+      body: ClipRect(
+        child: Container(
+          color: Colors.white,
+          width: double.infinity,
+          height: double.infinity,
           child: CustomPaint(
-            painter: _Paint(),
+            painter: _Paint(context, scanController!),
           ),
         ),
       ),
@@ -39,85 +38,121 @@ class _CanvasPageState extends State<CanvasPage2> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    scanController = AnimationController(
+      duration: Duration(milliseconds: 2000),
+      vsync: this,
+    );
+    scanController!.repeat();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    scanController?.stop();
+    scanController?.dispose();
+    super.dispose();
   }
 }
 
 class _Paint extends CustomPainter {
+  _Paint(
+    this.context,
+    this.scanController, {
+    this.scanScale = 0.7,
+  }) : super(repaint: scanController);
+
+  final AnimationController scanController;
+  final BuildContext context;
+  final double scanScale;
+
   double canvasW = 0;
   double canvasH = 0;
+  Tween scanLinePositionTween = Tween(begin: 0, end: 1);
+  Animation<double>? scanLinePosition;
 
   @override
   void paint(Canvas canvas, Size size) {
     canvasW = size.width;
     canvasH = size.height;
+    // double dpr = MediaQuery.of(context).devicePixelRatio;
 
-    // 网格
-    final gridPaint = Paint();
-    gridPaint
-      ..strokeWidth = 1
+    double areaWidth = min(canvasW, canvasH) * scanScale;
+    double scanLineWidth = areaWidth * 0.8;
+    double scanLineX = (canvasW - scanLineWidth) / 2;
+    double scanLineY = (canvasH - scanLineWidth) / 2 +
+        scanLinePositionTween.evaluate(scanController) * scanLineWidth;
+    if (scanScale < 1) {
+      // 绘制scan区域透明
+      canvas.drawRect(
+          Rect.fromCenter(
+            center: Offset(canvasW / 2, canvasH / 2),
+            width: areaWidth,
+            height: areaWidth,
+          ),
+          Paint()..color = Colors.transparent);
+      // 裁剪出二维码识别区域
+      canvas.save();
+      canvas.clipRect(
+          Rect.fromCenter(
+            center: Offset(canvasW / 2, canvasH / 2),
+            width: areaWidth,
+            height: areaWidth,
+          ),
+          clipOp: ui.ClipOp.difference);
+      // 绘制mask
+      Paint maskPaint = Paint();
+      maskPaint.color = Colors.black.withOpacity(0.5);
+      maskPaint.style = PaintingStyle.fill;
+      canvas.drawRect(Rect.fromLTWH(0, 0, canvasW, canvasH), maskPaint);
+      canvas.restore();
+    }
+    // 绘制angle line
+    double angleLineWidth = areaWidth * 0.1;
+    Paint linePaint = Paint();
+    linePaint
+      ..color = Colors.green
       ..style = PaintingStyle.stroke
-      ..color = Colors.grey;
-    double gridStep = 20;
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round
+      ..strokeWidth = 3;
+    Path angleLinePath = Path();
+    angleLinePath.moveTo((canvasW - areaWidth) / 2, (canvasH - areaWidth) / 2);
+    angleLinePath.relativeLineTo(angleLineWidth, 0);
+    angleLinePath.moveTo((canvasW - areaWidth) / 2, (canvasH - areaWidth) / 2);
+    angleLinePath.relativeLineTo(0, angleLineWidth);
 
-    Path gridPath = Path();
-    for (int i = 0;i < canvasW / gridStep;i++) {
-      gridPath.moveTo(i * gridStep, 0);
-      gridPath.relativeLineTo(0, canvasH);
-    }
-    for (int i = 0;i < canvasH / gridStep;i++) {
-      gridPath.moveTo(0, i * gridStep);
-      gridPath.relativeLineTo(canvasW, 0);
-    }
-    canvas.drawPath(gridPath, gridPaint);
+    angleLinePath.moveTo(
+        canvasW - (canvasW - areaWidth) / 2, (canvasH - areaWidth) / 2);
+    angleLinePath.relativeLineTo(-angleLineWidth, 0);
+    angleLinePath.moveTo(
+        canvasW - (canvasW - areaWidth) / 2, (canvasH - areaWidth) / 2);
+    angleLinePath.relativeLineTo(0, angleLineWidth);
 
-    Path path1 = Path();
-    path1
-      ..moveTo(0, 0)
-      ..lineTo(100, 0)
-      ..lineTo(40, 40)
-      ..close();
-    canvas.drawPath(path1, Paint()..color = Colors.red);
+    angleLinePath.moveTo(canvasW - (canvasW - areaWidth) / 2,
+        canvasH - (canvasH - areaWidth) / 2);
+    angleLinePath.relativeLineTo(-angleLineWidth, 0);
+    angleLinePath.moveTo(canvasW - (canvasW - areaWidth) / 2,
+        canvasH - (canvasH - areaWidth) / 2);
+    angleLinePath.relativeLineTo(0, -angleLineWidth);
 
-    path1.reset();
-    path1
-      ..moveTo(0, 100)
-      ..relativeLineTo(100, 0)
-      ..relativeLineTo(-60, 40)
-      ..close();
-    canvas.drawPath(path1, Paint()..color = Colors.green);
-
-    path1.reset();
-    path1
-      ..moveTo(0, 200)
-      ..lineTo(100, 200)
-      ..arcTo(
-          Rect.fromCenter(center: Offset(100, 200), width: 80, height: 80),
-          0,
-          pi * 3 / 2,
-          true)
-      ..addRect(Rect.fromLTWH(100, 160, 20, 20));
-
-    canvas.drawPath(
-        path1,
-        Paint()
-          ..color = Colors.red
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 4);
-
-    canvas.drawPath(
-        path1.shift(Offset(0, 40)).transform(Matrix4.rotationZ(pi/30).storage),
-        Paint()
-          ..color = Colors.green
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 4
+    angleLinePath.moveTo(
+        (canvasW - areaWidth) / 2, canvasH - (canvasH - areaWidth) / 2);
+    angleLinePath.relativeLineTo(angleLineWidth, 0);
+    angleLinePath.moveTo(
+        (canvasW - areaWidth) / 2, canvasH - (canvasH - areaWidth) / 2);
+    angleLinePath.relativeLineTo(0, -angleLineWidth);
+    angleLinePath.close();
+    canvas.drawPath(angleLinePath, linePaint);
+    // scan动画线
+    canvas.drawLine(
+      Offset(scanLineX, scanLineY),
+      Offset(scanLineX + scanLineWidth, scanLineY),
+      linePaint,
     );
   }
 
   @override
   bool shouldRepaint(_Paint oldDelegate) {
-    // TODO: implement shouldRepaint
-    return false;
+    return oldDelegate.scanController != scanController;
   }
 }

@@ -1,23 +1,22 @@
-
 import 'package:flutter/material.dart';
 
 import '../variable.dart';
 
 class Popup extends StatefulWidget {
   Popup({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
     this.mask = true,
     this.closeOnClickMask = false,
     this.duration = const Duration(milliseconds: 200),
     this.handleHide,
-  }): super(key: key);
+  }) : super(key: key);
 
   final Widget child;
   final bool mask;
   final Duration duration;
   final bool closeOnClickMask;
-  final Function handleHide;
+  final Function? handleHide;
 
   _PopupState _state = _PopupState();
   @override
@@ -43,13 +42,13 @@ class _PopupState extends State<Popup> {
             onTap: () async {
               if (widget.closeOnClickMask) {
                 await hide();
-                if (widget.handleHide!=null) widget.handleHide();
+                if (widget.handleHide != null) widget.handleHide!();
               }
             },
             child: Container(
               width: vw,
               height: vh,
-              color: widget.mask?Colors.black.withOpacity(0.6):Colors.transparent,
+              color: widget.mask ? Colors.black.withOpacity(0.6) : Colors.transparent,
             ),
           ),
           // SizedBox(
@@ -77,8 +76,7 @@ class _PopupState extends State<Popup> {
     // TODO: implement initState
     super.initState();
 
-    WidgetsBinding.instance
-      .addPostFrameCallback((timestamp) {
+    WidgetsBinding.instance?.addPostFrameCallback((timestamp) {
       setState(() {
         _visible = true;
       });

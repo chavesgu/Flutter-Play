@@ -1,7 +1,6 @@
-
 import 'package:flutter/material.dart';
 
-class MyCircularProgressIndicator extends StatefulWidget{
+class MyCircularProgressIndicator extends StatefulWidget {
   MyCircularProgressIndicator({
     this.strokeWidth = 4.0,
   });
@@ -12,9 +11,11 @@ class MyCircularProgressIndicator extends StatefulWidget{
   State<StatefulWidget> createState() => _MyCircularProgressIndicatorState();
 }
 
-class _MyCircularProgressIndicatorState extends State<MyCircularProgressIndicator> with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
-  Animation<Color> tween;
+class _MyCircularProgressIndicatorState
+    extends State<MyCircularProgressIndicator>
+    with SingleTickerProviderStateMixin {
+  AnimationController? _animationController;
+  Animation<Color>? tween;
   @override
   Widget build(BuildContext context) {
     return CircularProgressIndicator(
@@ -26,9 +27,10 @@ class _MyCircularProgressIndicatorState extends State<MyCircularProgressIndicato
 
   @override
   void initState() {
-    _animationController = AnimationController(vsync: this, duration: Duration(seconds: 2));
-    _animationController.repeat();
-    _animationController.addListener(() {
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 2));
+    _animationController!.repeat();
+    _animationController!.addListener(() {
       setState(() => {});
     });
     tween = TweenSequence<Color>([
@@ -37,35 +39,36 @@ class _MyCircularProgressIndicatorState extends State<MyCircularProgressIndicato
         tween: ColorTween(
           begin: Colors.purple,
           end: Colors.red,
-        ),
+        ) as Tween<Color>,
       ),
       TweenSequenceItem(
         weight: 0.2,
         tween: ColorTween(
           begin: Colors.red,
           end: Colors.yellow,
-        ),
+        ) as Tween<Color>,
       ),
       TweenSequenceItem(
         weight: 0.2,
         tween: ColorTween(
           begin: Colors.yellow,
           end: Colors.blue,
-        ),
+        ) as Tween<Color>,
       ),
       TweenSequenceItem(
         weight: 0.2,
         tween: ColorTween(
           begin: Colors.blue,
           end: Colors.purple,
-        ),
+        ) as Tween<Color>,
       ),
-    ]).animate(_animationController);
+    ]).animate(_animationController!);
     super.initState();
   }
+
   @override
   void dispose() {
-    _animationController.dispose();
+    _animationController?.dispose();
     super.dispose();
   }
 }

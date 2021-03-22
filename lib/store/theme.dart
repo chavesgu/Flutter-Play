@@ -6,9 +6,9 @@ import '../variable.dart';
 
 class ThemeModel extends ChangeNotifier {
   ThemeModel({
-    bool useSystemMode,
-    ThemeMode themeMode,
-    ThemeMode systemThemeMode,
+    required bool useSystemMode,
+    required ThemeMode themeMode,
+    required ThemeMode systemThemeMode,
   }) {
     _useSystemMode = useSystemMode;
     _appThemeMode = themeMode;
@@ -16,9 +16,10 @@ class ThemeModel extends ChangeNotifier {
   }
   // 综合主题模式
   // 当前使用模式是否暗模式
-  bool get isDark => _useSystemMode?_systemThemeMode==ThemeMode.dark:_appThemeMode==ThemeMode.dark;
+  bool get isDark =>
+      _useSystemMode ? _systemThemeMode == ThemeMode.dark : _appThemeMode == ThemeMode.dark;
   // 当前的brightness
-  Brightness get brightness => isDark?Brightness.dark:Brightness.light;
+  Brightness get brightness => isDark ? Brightness.dark : Brightness.light;
 
   // 是否使用手机系统主题
   bool _useSystemMode = false;
@@ -50,8 +51,8 @@ class ThemeModel extends ChangeNotifier {
   }
 
   // 主题颜色索引
-  int _themeIndex;
-  int get themeIndex => _themeIndex;
+  int? _themeIndex;
+  int? get themeIndex => _themeIndex;
   // 改变主题颜色索引
   void changeTheme(int index) async {
     _themeIndex = index;

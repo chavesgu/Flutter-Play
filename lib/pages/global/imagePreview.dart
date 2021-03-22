@@ -8,22 +8,24 @@ import 'package:flutter_play/components/GlobalComponents.dart';
 
 class ImagePreview extends StatefulWidget {
   ImagePreview({
-    int current,
-    @required this.imageList,
-  }) {
-    _current = current??0;
-  }
+    this.current = 0,
+    required this.imageList,
+  });
 
   final List<String> imageList;
-  int _current;
+  final int current;
 
   @override
   State<StatefulWidget> createState() {
-    return _ImagePreviewState();
+    return _ImagePreviewState(current);
   }
 }
 
 class _ImagePreviewState extends State<ImagePreview> {
+  _ImagePreviewState(int current) {
+    _current = current;
+  }
+  int? _current;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,7 @@ class _ImagePreviewState extends State<ImagePreview> {
           children: <Widget>[
             ExtendedImageGesturePageView(
               physics: ClampingScrollPhysics(),
-              controller: PageController(initialPage: widget._current),
+              controller: PageController(initialPage: _current!),
               onPageChanged: _pageChange,
               children: _renderImage(widget.imageList, context),
             ),
@@ -44,7 +46,7 @@ class _ImagePreviewState extends State<ImagePreview> {
               width: vw,
               child: Center(
                 child: Text(
-                  '${widget._current+1}/${widget.imageList.length}',
+                  '${_current! + 1}/${widget.imageList.length}',
                   style: TextStyle(
                     color: Colors.white,
                   ),
@@ -59,7 +61,7 @@ class _ImagePreviewState extends State<ImagePreview> {
 
   List<Widget> _renderImage(List<String> list, context) {
     final List<Widget> res = [];
-    for(var i=0;i<list.length;i++) {
+    for (var i = 0; i < list.length; i++) {
       res.add(GestureDetector(
         onTap: () {
           Navigator.pop(context);
@@ -81,7 +83,7 @@ class _ImagePreviewState extends State<ImagePreview> {
 
   _pageChange(int index) {
     setState(() {
-      widget._current = index;
+      _current = index;
     });
   }
 }

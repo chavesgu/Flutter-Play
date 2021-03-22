@@ -1,15 +1,10 @@
-import 'dart:async';
-import 'dart:collection';
-import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_play/routerPath.dart';
+import 'package:flutter_play/router/path.dart';
 import 'package:flutter_play/variable.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_orientation/flutter_orientation.dart';
-import 'package:provider/provider.dart';
 
 import 'media/media.dart';
 import 'home/home.dart';
@@ -26,7 +21,8 @@ class EntryPage extends StatefulWidget {
   createState() => EntryPageState();
 }
 
-class EntryPageState extends State<EntryPage> with WidgetsBindingObserver {
+class EntryPageState extends State<EntryPage>
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   static GlobalKey<InnerDrawerState> drawerKey = GlobalKey<InnerDrawerState>();
 
   List<Map<String, dynamic>> _pages = [
@@ -47,10 +43,10 @@ class EntryPageState extends State<EntryPage> with WidgetsBindingObserver {
     },
   ];
   int _tab = 0;
+  PageController tabController = PageController();
 
-  final PageController tabController = PageController();
-
-//  StreamSubscription<NativeDeviceOrientation> orientationSubscribe;
+  bool get isFullScreen =>
+      MediaQuery.of(context).orientation == Orientation.landscape;
 
   @override
   Widget build(BuildContext context) {
@@ -71,22 +67,22 @@ class EntryPageState extends State<EntryPage> with WidgetsBindingObserver {
             text: '设置',
             onTap: () {
               Navigator.of(context).pushNamed(SettingPage.name);
-            }
+            },
           ),
           _renderDrawerItem(
             text: '关于我们',
             onTap: () {
-              Navigator.of(context).pushNamed('${MyWebView.name}?url=${Uri.encodeQueryComponent('https://www.chavesgu.com')}');
-            }
+              Navigator.of(context).pushNamed(
+                  '${MyWebView.name}?url=${Uri.encodeQueryComponent('https://www.chavesgu.com')}');
+            },
           ),
         ],
       ),
     );
-
     return InnerDrawer(
       key: drawerKey,
       onTapClose: true,
-      swipe: false,
+      swipe: !isFullScreen,
       leftChild: _drawer,
       backgroundDecoration: BoxDecoration(
         color: Theme.of(context).primaryColor,
@@ -94,29 +90,34 @@ class EntryPageState extends State<EntryPage> with WidgetsBindingObserver {
       scaffold: Scaffold(
         body: PageView(
           controller: tabController,
-          children: _pages.map<Widget>((e) => e["instance"]).toList(),
           onPageChanged: _pageChange,
+          children: _pages.map<Widget>((e) => e["instance"]).toList(),
           physics: NeverScrollableScrollPhysics(),
         ),
         bottomNavigationBar: Offstage(
           offstage: MediaQuery.of(context).orientation == Orientation.landscape,
-          child: MyBottomNav(
-            onTap: toggleTab,
-            currentIndex: _tab,
-            iconSize: width(46),
-            items: <MyBottomNavItem>[
-              for (var page in _pages) MyBottomNavItem(
-                icon: page["icon"],
-                title: page["title"],
-              ),
-            ],
+          child: StatefulBuilder(
+            builder: (context, stateSetter) {
+              return MyBottomNav(
+                onChange: toggleTab,
+                currentIndex: _tab,
+                iconSize: width(46),
+                items: <MyBottomNavItem>[
+                  for (var page in _pages)
+                    MyBottomNavItem(
+                      icon: page["icon"],
+                      title: page["title"],
+                    ),
+                ],
+              );
+            },
           ),
         ),
       ),
     );
   }
 
-  Widget _renderDrawerItem({ String text, Function onTap }) {
+  Widget _renderDrawerItem({required String text, Function? onTap}) {
     return GestureDetector(
       child: Container(
         height: width(100),
@@ -136,14 +137,14 @@ class EntryPageState extends State<EntryPage> with WidgetsBindingObserver {
                 color: Colors.white,
                 fontSize: width(30),
                 decoration: TextDecoration.none,
-                fontWeight: FontWeight.normal
+                fontWeight: FontWeight.normal,
               ),
             )
           ],
         ),
       ),
       onTap: () {
-        if (onTap!=null) onTap();
+        if (onTap != null) onTap();
       },
     );
   }
@@ -153,7 +154,7 @@ class EntryPageState extends State<EntryPage> with WidgetsBindingObserver {
     switch (state) {
       case AppLifecycleState.inactive: // 处于这种状态的应用程序应该假设它们可能在任何时候暂停。
         break;
-      case AppLifecycleState.resumed:// 应用程序可见，前台
+      case AppLifecycleState.resumed: // 应用程序可见，前台
         print('前台');
         if (MediaQuery.of(context).orientation == Orientation.portrait) {
           FlutterOrientation.setOrientation(DeviceOrientation.portraitUp);
@@ -173,21 +174,16 @@ class EntryPageState extends State<EntryPage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
-  void deactivate() {
-    super.deactivate();
+    WidgetsBinding.instance?.addObserver(this);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    WidgetsBinding.instance?.removeObserver(this);
     super.dispose();
   }
 
-  void toggleTab(int value)async {
+  void toggleTab(int value) async {
     tabController.jumpToPage(value);
     HapticFeedback.heavyImpact();
   }

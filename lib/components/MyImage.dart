@@ -7,8 +7,9 @@ import 'package:flutter_play/pages/global/imagePreview.dart';
 
 import '../variable.dart';
 
-class MyImage extends StatelessWidget{
-  MyImage(dynamic image, {
+class MyImage extends StatelessWidget {
+  MyImage(
+    this.image, {
     this.loadingWiget,
     this.failWidget,
     this.fit = BoxFit.fitWidth,
@@ -17,92 +18,96 @@ class MyImage extends StatelessWidget{
     this.mode = ExtendedImageMode.none,
     this.border,
     this.borderRadius,
-    this.shape,
+    this.shape = BoxShape.rectangle,
     this.loadingSize = 50,
     this.color,
     this.colorBlendMode,
     this.scale = 1.0,
     this.preview = false,
     this.gestureConfig,
-  })
-    :
-      assert(
-      image is String || image is File || image is Uint8List,
-      'param image must be String or File or Uint8List'
-      ),
-      _content = image;
+  }) : assert(image is String || image is File || image is Uint8List,
+            'param image must be String or File or Uint8List');
 
-  dynamic _content;
-  final Widget loadingWiget;
-  final Widget failWidget;
-  final BoxFit fit;
-  final double width;
-  final double height;
+  final dynamic image;
+  final Widget? loadingWiget;
+  final Widget? failWidget;
+  final BoxFit? fit;
+  final double? width;
+  final double? height;
   final ExtendedImageMode mode;
-  final BoxBorder border;
-  final BorderRadiusGeometry borderRadius;
+  final BoxBorder? border;
+  final BorderRadius? borderRadius;
   final double loadingSize;
-  final Color color;
-  final BlendMode colorBlendMode;
+  final Color? color;
+  final BlendMode? colorBlendMode;
   final double scale;
   final BoxShape shape;
-  final InitGestureConfigHandler gestureConfig;
+  final InitGestureConfigHandler? gestureConfig;
   final bool preview;
 
   @override
   Widget build(BuildContext context) {
-    ExtendedImage _imageWidget;
-    if (_content is Uint8List) {
+    ExtendedImage? _imageWidget;
+    if (image is Uint8List) {
       _imageWidget = ExtendedImage.memory(
-        _content,
+        image,
         width: width,
         height: height,
         color: color,
         scale: scale,
         shape: shape,
+        border: border,
+        borderRadius: borderRadius,
         colorBlendMode: colorBlendMode,
         loadStateChanged: _loadStateChanged,
         fit: fit,
         mode: mode,
         initGestureConfigHandler: gestureConfig ?? _gestureConfig,
       );
-    } else if (_content is File) {
+    } else if (image is File) {
       _imageWidget = ExtendedImage.file(
-        _content,
+        image,
         width: width,
         height: height,
         color: color,
         scale: scale,
         shape: shape,
+        border: border,
+        borderRadius: borderRadius,
         colorBlendMode: colorBlendMode,
         loadStateChanged: _loadStateChanged,
         fit: fit,
         mode: mode,
         initGestureConfigHandler: gestureConfig ?? _gestureConfig,
       );
-    } else if (_content is String) {
-      if (RegExp(r"^https?:\/\/\S+").hasMatch(_content)) { // network
+    } else if (image is String) {
+      if (RegExp(r"^https?:\/\/\S+").hasMatch(image)) {
+        // network
         _imageWidget = ExtendedImage.network(
-          _content,
+          image,
           width: width,
           height: height,
           color: color,
           scale: scale,
           shape: shape,
+          border: border,
+          borderRadius: borderRadius,
           colorBlendMode: colorBlendMode,
           loadStateChanged: _loadStateChanged,
           fit: fit,
           mode: mode,
           initGestureConfigHandler: gestureConfig ?? _gestureConfig,
         );
-      } else if (RegExp(r"^assets\/\S+").hasMatch(_content)) {
+      } else if (RegExp(r"^assets\/\S+").hasMatch(image)) {
         _imageWidget = ExtendedImage.asset(
-          _content,
+          image,
           width: width,
           height: height,
           color: color,
           scale: scale,
           shape: shape,
+          border: border,
+          borderRadius: borderRadius,
           colorBlendMode: colorBlendMode,
           loadStateChanged: _loadStateChanged,
           fit: fit,
@@ -111,12 +116,14 @@ class MyImage extends StatelessWidget{
         );
       } else {
         _imageWidget = ExtendedImage.file(
-          File(_content),
+          File(image),
           width: width,
           height: height,
           color: color,
           scale: scale,
           shape: shape,
+          border: border,
+          borderRadius: borderRadius,
           colorBlendMode: colorBlendMode,
           loadStateChanged: _loadStateChanged,
           fit: fit,
@@ -126,64 +133,63 @@ class MyImage extends StatelessWidget{
       }
     }
     if (preview) {
+      TapDownDetails? _details;
       return GestureDetector(
-        onTapUp: (TapUpDetails details) {
-          _previewImage(context, _content, details);
+        onTapDown: (TapDownDetails details) {
+          _details = details;
+        },
+        onTap: () {
+          _previewImage(context, image, _details!);
         },
         child: _imageWidget,
       );
     }
-    return _imageWidget;
+    return _imageWidget!;
   }
 
-  void _previewImage(BuildContext context, dynamic content, TapUpDetails details) {
-    double _x = (vw/2 - details.globalPosition.dx)/(vw/2);
-    double _y = (vh/2 - details.globalPosition.dy)/(vh/2);
+  void _previewImage(BuildContext context, dynamic content, TapDownDetails details) {
+    double _x = (vw / 2 - details.globalPosition.dx) / (vw / 2);
+    double _y = (vh / 2 - details.globalPosition.dy) / (vh / 2);
     Navigator.push(
-      context,
-      PageRouteBuilder(
-        pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
-          return ScaleTransition(
-            scale: animation,
-            alignment: Alignment(
-              -_x,
-              -_y
-            ),
-            child: ImagePreview(
-              imageList: [content, content],
+        context,
+        PageRouteBuilder(
+          pageBuilder:
+              (BuildContext context, Animation<double> animation, Animation secondaryAnimation) {
+            return ScaleTransition(
+              scale: animation,
+              alignment: Alignment(-_x, -_y),
+              child: ImagePreview(
+                imageList: [content, content],
+              ),
+            );
+          },
+          transitionDuration: Duration(milliseconds: 150),
+        ));
+  }
+
+  Widget? _loadStateChanged(ExtendedImageState state) {
+    if (state.extendedImageLoadState == LoadState.loading) {
+      return loadingWiget ??
+          Center(
+            child: SizedBox(
+              width: loadingSize,
+              height: loadingSize,
+              child: CircularProgressIndicator(),
             ),
           );
-        },
-        transitionDuration: Duration(milliseconds: 150),
-      )
-    );
-  }
-
-  Widget _loadStateChanged(ExtendedImageState state){
-    if (state.extendedImageLoadState==LoadState.loading) {
-      return loadingWiget ?? Center(
-        child: SizedBox(
-          width: loadingSize,
-          height: loadingSize,
-          child: CircularProgressIndicator(),
-        ),
-      );
     }
-    if (state.extendedImageLoadState==LoadState.failed) {
-      return failWidget ?? GestureDetector(
-        child: Icon(Icons.error),
-        onTap: () {
-          state.reLoadImage();
-        },
-      );
+    if (state.extendedImageLoadState == LoadState.failed) {
+      return failWidget ??
+          GestureDetector(
+            child: Icon(Icons.error),
+            onTap: () {
+              state.reLoadImage();
+            },
+          );
     }
   }
 
   GestureConfig _gestureConfig(ExtendedImageState state) {
-    return GestureConfig(
-      inPageView: false,
-      initialScale: 1.0,
-      cacheGesture: false
-    );
+    return GestureConfig(inPageView: false, initialScale: 1.0, cacheGesture: false);
   }
 }

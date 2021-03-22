@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CancelBubble extends StatelessWidget {
-  CancelBubble({this.child});
+  CancelBubble({required this.child});
 
   final Widget child;
 
@@ -9,7 +9,7 @@ class CancelBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return NotificationListener(
-      onNotification: (_)=>true,
+      onNotification: (_) => true,
       child: child,
     );
   }

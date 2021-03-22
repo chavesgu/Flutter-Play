@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/services.dart';
@@ -10,10 +9,10 @@ import 'package:flutter_play/variable.dart';
 import 'package:home_indicator/home_indicator.dart';
 
 class MyVideo extends StatefulWidget {
-  MyVideo({
-    @required this.url,
-    @required this.width,
-    @required this.height,
+  MyVideo(
+    this.url, {
+    required this.width,
+    required this.height,
     this.controls = true,
     this.autoplay = false,
     this.loop = false,
@@ -38,7 +37,7 @@ class MyVideo extends StatefulWidget {
   // 视频背景
   final Color background;
   // 切换横竖屏回调
-  final Function screenChange;
+  final Function? screenChange;
 
   @override
   State<MyVideo> createState() {
@@ -50,168 +49,172 @@ class _MyVideoState extends State<MyVideo> {
   // 指示video资源是否加载完成
   bool _videoInit = false;
   // video控件管理器
-  VideoPlayerController _controller;
+  VideoPlayerController? _controller;
   // 记录video播放进度
   Duration _position = Duration(seconds: 0);
   // 记录播放控件ui是否显示(进度条，播放按钮，全屏按钮等等)
-  Timer _timer;
-  bool _hidePlayControl = true;
+  Timer? _timer;
+  // bool _hidePlayControl = true;
   double _playControlOpacity = 0;
   // 记录是否全屏
-  bool get _isFullScreen => MediaQuery.of(context).orientation == Orientation.landscape;
+  bool get _isFullScreen =>
+      MediaQuery.of(context).orientation == Orientation.landscape;
 
   @override
   Widget build(BuildContext context) {
     // 全屏时显示当前时间
     DateTime now = DateTime.now();
-    String hh = now.hour<10?'0${now.hour}':'${now.hour}';
-    String mm = now.minute<10?'0${now.minute}':'${now.minute}';
+    String hh = now.hour < 10 ? '0${now.hour}' : '${now.hour}';
+    String mm = now.minute < 10 ? '0${now.minute}' : '${now.minute}';
     // 底部播放器控制栏
     Widget _bottomControl = Positioned(
       left: 0,
       bottom: 0,
-      child: Offstage(
-        offstage: _hidePlayControl,
-        child: AnimatedOpacity(
-          opacity: _playControlOpacity,
-          duration: Duration(milliseconds: 300),
-          child: Container(
-            width: widget.width,
-            height: _isFullScreen?60:40,
-            padding: _isFullScreen?EdgeInsets.only(bottom: 20,left: 20,right: 20):EdgeInsets.zero,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-                colors: [Color.fromRGBO(0, 0, 0, .7), Color.fromRGBO(0, 0, 0, .1)],
-              ),
-            ),
-            child: _videoInit?Row(
-              children: <Widget>[
-                IconButton(
-                  padding: EdgeInsets.zero,
-                  iconSize: 26,
-                  icon: Icon(
-                    _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-                    color: Colors.white,
-                  ),
-                  onPressed: (){
-                    setState(() {
-                      _controller.value.isPlaying
-                        ? _controller.pause()
-                        : _controller.play();
-                      _startPlayControlTimer();
-                    });
-                  },
-                ),
-                Expanded(
-                  child: _VideoProgressIndicator(
-                    _controller,
-                    padding: EdgeInsets.all(0),
-                    colors: VideoProgressColors(
-                      playedColor: Colors.red,
-                      bufferedColor: Color.fromRGBO(255, 255, 255, .5),
-                      backgroundColor: Color.fromRGBO(255, 255, 255, .2),
-                    ),
-                    updatingHandler: _startPlayControlTimer,
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(left: 10),
-                  child: Text(
-                    durationToTime(_position)+'/'+durationToTime(_controller.value.duration),
-                    style: TextStyle(
-                      color: Colors.white
-                    ),
-                  ),
-                ),
-                IconButton(
-                  padding: EdgeInsets.zero,
-                  iconSize: 26,
-                  icon: Icon(
-                    _isFullScreen?Icons.fullscreen_exit:Icons.fullscreen,
-                    color: Colors.white,
-                  ),
-                  onPressed: (){
-                    _toggleFullScreen();
-                  },
-                ),
-              ],
-            ):Container(),
+      child: Container(
+        width: widget.width,
+        height: _isFullScreen ? 40 + MediaQuery.of(context).padding.bottom : 40,
+        padding: _isFullScreen
+            ? EdgeInsets.only(
+                bottom: MediaQuery.of(context).padding.bottom,
+                left: MediaQuery.of(context).padding.left,
+                right: MediaQuery.of(context).padding.right,
+              )
+            : EdgeInsets.zero,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.bottomCenter,
+            end: Alignment.topCenter,
+            colors: [Color.fromRGBO(0, 0, 0, .7), Color.fromRGBO(0, 0, 0, .1)],
           ),
         ),
+        child: _videoInit
+            ? Row(
+                children: <Widget>[
+                  IconButton(
+                    padding: EdgeInsets.zero,
+                    iconSize: 26,
+                    icon: Icon(
+                      _controller!.value.isPlaying
+                          ? Icons.pause
+                          : Icons.play_arrow,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _controller!.value.isPlaying
+                            ? _controller!.pause()
+                            : _controller!.play();
+                        _startPlayControlTimer();
+                      });
+                    },
+                  ),
+                  Expanded(
+                    child: _VideoProgressIndicator(
+                      _controller!,
+                      padding: EdgeInsets.all(0),
+                      colors: VideoProgressColors(
+                        playedColor: Colors.red,
+                        bufferedColor: Color.fromRGBO(255, 255, 255, .5),
+                        backgroundColor: Color.fromRGBO(255, 255, 255, .2),
+                      ),
+                      updatingHandler: _startPlayControlTimer,
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left: 10),
+                    child: Text(
+                      durationToTime(_position) +
+                          ' / ' +
+                          durationToTime(_controller!.value.duration),
+                      style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                            color: Colors.white,
+                            height: 1,
+                          ),
+                    ),
+                  ),
+                  IconButton(
+                    padding: EdgeInsets.zero,
+                    iconSize: 26,
+                    icon: Icon(
+                      _isFullScreen ? Icons.fullscreen_exit : Icons.fullscreen,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      _toggleFullScreen();
+                    },
+                  ),
+                ],
+              )
+            : Container(),
       ),
     );
 
     Widget _topControl = Positioned(
       left: 0,
       top: 0,
-      child: Offstage(
-        offstage: _hidePlayControl,
-        child: AnimatedOpacity(
-          opacity: _playControlOpacity,
-          duration: Duration(milliseconds: 300),
-          child: Container(
-            width: widget.width,
-            height: _isFullScreen?60:40,
-            padding: _isFullScreen?EdgeInsets.only(left: 20,right: 20):EdgeInsets.zero,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color.fromRGBO(0, 0, 0, .7), Color.fromRGBO(0, 0, 0, .1)],
-              ),
-            ),
-            child: Column(
-              children: <Widget>[
-                Offstage(
-                  offstage: !_isFullScreen,
-                  child: Container(
-                    height: 20,
-                    child: Center(
-                      child: Text(
-                        '$hh:$mm',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
+      child: Container(
+        width: widget.width,
+        height: _isFullScreen ? 60 : 40,
+        padding: _isFullScreen
+            ? EdgeInsets.only(
+                left: MediaQuery.of(context).padding.left,
+                right: MediaQuery.of(context).padding.right,
+              )
+            : EdgeInsets.zero,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color.fromRGBO(0, 0, 0, .7), Color.fromRGBO(0, 0, 0, .1)],
+          ),
+        ),
+        child: Column(
+          children: <Widget>[
+            if (_isFullScreen)
+              Container(
+                height: 20,
+                child: Center(
+                  child: Text(
+                    '$hh:$mm',
+                    style: TextStyle(
+                      color: Colors.white,
                     ),
                   ),
                 ),
-                Container(
-                  height: 40,
-                  child: Row(
-                    children: <Widget>[
-                      Offstage(
-                        offstage: !_isFullScreen,
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.arrow_back,
-                            color: Colors.white,
-                          ),
-                          onPressed: () {
-                            _toggleFullScreen();
-                          },
+              ),
+            Container(
+              height: 40,
+              child: Row(
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      if (_isFullScreen) {
+                        _toggleFullScreen();
+                      } else {
+                        Navigator.of(context).pop();
+                      }
+                    },
+                  ),
+                  Flexible(
+                    child: Container(
+                      padding: EdgeInsets.only(left: 20, right: 20),
+                      child: Text(
+                        widget.title,
+                        style: TextStyle(
+                          color: Colors.white,
+//                              fontSize: 20,
                         ),
                       ),
-                      Flexible(
-                        child: Container(
-                          padding: EdgeInsets.only(left: 20, right: 20),
-                          child: Text(
-                            widget.title,
-                            style: TextStyle(
-                              color: Colors.white,
-//                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ],
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -220,43 +223,59 @@ class _MyVideoState extends State<MyVideo> {
       width: widget.width,
       height: widget.height,
       color: widget.background,
-      child: widget.url!=null?Stack(
-        children: <Widget>[
-          GestureDetector(
-            onTap: () {
-              _togglePlayControl();
-            },
-            child: _videoInit?
-            Center(
-              child: AspectRatio(
-                aspectRatio: _controller.value.aspectRatio,
-                child: VideoPlayer(_controller),
-              ),
-            ):
-            Center(
-              child: SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: width(2.0),
+      child: widget.url != ''
+          ? Stack(
+              children: <Widget>[
+                GestureDetector(
+                  onTap: () {
+                    _togglePlayControl();
+                  },
+                  child: _videoInit
+                      ? Container(
+                          padding: EdgeInsets.only(
+                            left: MediaQuery.of(context).padding.left,
+                            right: MediaQuery.of(context).padding.right,
+                          ),
+                          child: Center(
+                            child: AspectRatio(
+                              aspectRatio: _controller!.value.aspectRatio,
+                              child: VideoPlayer(_controller!),
+                            ),
+                          ),
+                        )
+                      : Center(
+                          child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: width(2.0),
+                            ),
+                          ),
+                        ),
                 ),
+                IgnorePointer(
+                  ignoring: _playControlOpacity == 0,
+                  child: AnimatedOpacity(
+                    opacity: _playControlOpacity,
+                    duration: Duration(milliseconds: 300),
+                    child: Stack(
+                      children: [
+                        _topControl,
+                        _bottomControl,
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            )
+          : Center(
+              child: Text(
+                '暂无视频信息',
+                style: TextStyle(color: Colors.white),
               ),
             ),
-          ),
-          _bottomControl,
-          _topControl,
-        ],
-      ):Center(
-        child: Text(
-          '暂无视频信息',
-          style: TextStyle(
-            color: Colors.white
-          ),
-        ),
-      ),
     );
   }
-
 
   @override
   void initState() {
@@ -273,27 +292,18 @@ class _MyVideoState extends State<MyVideo> {
   }
 
   @override
-  void deactivate() {
-    super.deactivate();
-  }
-
-  @override
   void dispose() {
-    if (_controller!=null) {
-      _controller.removeListener(_videoListener);
-      _controller.dispose();
-    }
+    _controller?.removeListener(_videoListener);
+    _controller?.dispose();
+    _timer?.cancel();
     super.dispose();
   }
 
   void _urlChange() {
-    if (widget.url==null || widget.url=='') return;
-    if (_controller!=null) {
-      _controller.removeListener(_videoListener);
-      _controller.dispose();
-    }
+    if (widget.url == '') return;
+    _controller?.removeListener(_videoListener);
+    _controller?.dispose();
     setState(() {
-      _hidePlayControl = true;
       _playControlOpacity = 0;
       _videoInit = false;
       _position = Duration(seconds: 0);
@@ -310,25 +320,25 @@ class _MyVideoState extends State<MyVideo> {
           _controller = VideoPlayerController.file(File(widget.url));
           break;
       }
-    } catch(e) {
+    } catch (e) {
       print(e);
     }
-    _controller.initialize().then((_) {
-      _controller.setVolume(1);
-      _controller.setLooping(widget.loop);
-      _controller.addListener(_videoListener);
+    _controller!.initialize().then((_) {
+      _controller!.setVolume(1);
+      _controller!.setLooping(widget.loop);
+      _controller!.addListener(_videoListener);
       setState(() {
         _videoInit = true;
-        if (widget.autoplay) _controller.play();
+        if (widget.autoplay) _controller!.play();
       });
     });
   }
 
   void _videoListener() async {
-    Duration res = await _controller.position;
-    if (!widget.loop && res >= _controller.value.duration) {
-      _controller.pause();
-      _controller.seekTo(Duration(seconds: 0));
+    Duration res = (await _controller!.position)!;
+    if (!widget.loop && res >= _controller!.value.duration) {
+      _controller!.pause();
+      _controller!.seekTo(Duration(seconds: 0));
     }
     setState(() {
       _position = res;
@@ -338,71 +348,68 @@ class _MyVideoState extends State<MyVideo> {
   void _togglePlayControl() {
     if (widget.controls) {
       setState(() {
-        if (_hidePlayControl) {
-          _hidePlayControl = false;
+        if (_playControlOpacity == 0) {
           _playControlOpacity = 1;
           _startPlayControlTimer();
         } else {
-          if (_timer!=null) _timer.cancel();
+          _timer?.cancel();
           _playControlOpacity = 0;
-          Future.delayed(Duration(milliseconds: 300)).whenComplete(() {
-            _hidePlayControl = true;
-          });
         }
       });
     }
   }
 
   void _startPlayControlTimer() {
-    if (_timer!=null) _timer.cancel();
+    _timer?.cancel();
     _timer = Timer(Duration(seconds: 3), () {
       setState(() {
         _playControlOpacity = 0;
-        Future.delayed(Duration(milliseconds: 300)).whenComplete(() {
-          _hidePlayControl = true;
-        });
       });
     });
   }
 
   void _toggleFullScreen() {
     setState(() {
-      if (_isFullScreen) { // 设置竖屏
+      if (_isFullScreen) {
+        // 设置竖屏
         FlutterOrientation.setOrientation(DeviceOrientation.portraitUp);
         // iphoneX底部横条
         HomeIndicator.deferScreenEdges([]);
-      } else { // 设置横屏
+        SystemUiOverlayStyle systemUiOverlayStyle =
+            SystemUiOverlayStyle(statusBarColor: Colors.transparent);
+        SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
+      } else {
+        // 设置横屏
         FlutterOrientation.setOrientation(DeviceOrientation.landscapeRight);
         HomeIndicator.deferScreenEdges([ScreenEdge.bottom]);
+        SystemChrome.setEnabledSystemUIOverlays([]);
       }
       _startPlayControlTimer();
-      if (widget.screenChange!=null) widget.screenChange();
+      if (widget.screenChange != null) widget.screenChange!();
     });
   }
 
   String getVideoOrigin(String url) {
     if (RegExp(r"^https?:\/\/\S+").hasMatch(url)) {
       return 'network';
-    } else if(RegExp(r"^assets\/\S+").hasMatch(url)) {
+    } else if (RegExp(r"^assets\/\S+").hasMatch(url)) {
       return 'assets';
     }
     return 'file';
   }
 }
 
-
-
 // 播放进度手势操作和进度ui
 class _VideoScrubber extends StatefulWidget {
   _VideoScrubber({
-    @required this.child,
-    @required this.controller,
+    required this.child,
+    required this.controller,
     this.updatingHandler,
   });
 
   final Widget child;
   final VideoPlayerController controller;
-  final Function updatingHandler;
+  final Function? updatingHandler;
 
   @override
   _VideoScrubberState createState() => _VideoScrubberState();
@@ -416,8 +423,8 @@ class _VideoScrubberState extends State<_VideoScrubber> {
   @override
   Widget build(BuildContext context) {
     void seekToRelativePosition(Offset globalPosition) {
-      final RenderBox box = context.findRenderObject();
-      final Offset tapPos = box.globalToLocal(globalPosition);
+      final RenderObject? box = context.findRenderObject();
+      final Offset tapPos = (box as RenderBox).globalToLocal(globalPosition);
       final double relative = tapPos.dx / box.size.width;
       final Duration position = controller.value.duration * relative;
       controller.seekTo(position);
@@ -427,7 +434,7 @@ class _VideoScrubberState extends State<_VideoScrubber> {
       behavior: HitTestBehavior.opaque,
       child: widget.child,
       onHorizontalDragStart: (DragStartDetails details) {
-        if (!controller.value.initialized) {
+        if (!controller.value.isInitialized) {
           return;
         }
         _controllerWasPlaying = controller.value.isPlaying;
@@ -436,11 +443,11 @@ class _VideoScrubberState extends State<_VideoScrubber> {
         }
       },
       onHorizontalDragUpdate: (DragUpdateDetails details) {
-        if (!controller.value.initialized) {
+        if (!controller.value.isInitialized) {
           return;
         }
         seekToRelativePosition(details.globalPosition);
-        if (widget.updatingHandler!=null) widget.updatingHandler();
+        if (widget.updatingHandler != null) widget.updatingHandler!();
       },
       onHorizontalDragEnd: (DragEndDetails details) {
         if (_controllerWasPlaying) {
@@ -448,11 +455,11 @@ class _VideoScrubberState extends State<_VideoScrubber> {
         }
       },
       onTapDown: (TapDownDetails details) {
-        if (!controller.value.initialized) {
+        if (!controller.value.isInitialized) {
           return;
         }
         seekToRelativePosition(details.globalPosition);
-        if (widget.updatingHandler!=null) widget.updatingHandler();
+        if (widget.updatingHandler != null) widget.updatingHandler!();
       },
     );
   }
@@ -468,19 +475,19 @@ class _VideoScrubberState extends State<_VideoScrubber> {
 class _VideoProgressIndicator extends StatefulWidget {
   _VideoProgressIndicator(
     this.controller, {
-      VideoProgressColors colors,
-      this.allowScrubbing = true,
-      this.padding = const EdgeInsets.all(0),
-      this.height = 5.0,
-      this.updatingHandler,
-    }) : colors = colors ?? VideoProgressColors();
+    VideoProgressColors? colors,
+    this.allowScrubbing = true,
+    this.padding = const EdgeInsets.all(0),
+    this.height = 5.0,
+    this.updatingHandler,
+  }) : colors = colors ?? VideoProgressColors();
 
   final VideoPlayerController controller;
   final VideoProgressColors colors;
   final bool allowScrubbing;
   final EdgeInsets padding;
   final double height;
-  final Function updatingHandler;
+  final Function? updatingHandler;
 
   @override
   createState() => _VideoProgressIndicatorState();
@@ -493,7 +500,7 @@ class _VideoProgressIndicatorState extends State<_VideoProgressIndicator> {
     };
   }
 
-  VoidCallback listener;
+  VoidCallback? listener;
 
   VideoPlayerController get controller => widget.controller;
 
@@ -502,19 +509,19 @@ class _VideoProgressIndicatorState extends State<_VideoProgressIndicator> {
   @override
   void initState() {
     super.initState();
-    controller.addListener(listener);
+    controller.addListener(listener!);
   }
 
   @override
   void deactivate() {
-    controller.removeListener(listener);
+    controller.removeListener(listener!);
     super.deactivate();
   }
 
   @override
   Widget build(BuildContext context) {
     Widget progressIndicator;
-    if (controller.value.initialized) {
+    if (controller.value.isInitialized) {
       final int duration = controller.value.duration.inMilliseconds;
       final int position = controller.value.position.inMilliseconds;
 
@@ -536,7 +543,8 @@ class _VideoProgressIndicatorState extends State<_VideoProgressIndicator> {
               children: <Widget>[
                 LinearProgressIndicator(
                   value: maxBuffering / duration,
-                  valueColor: AlwaysStoppedAnimation<Color>(colors.bufferedColor),
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(colors.bufferedColor),
                   backgroundColor: colors.backgroundColor,
                 ),
                 LinearProgressIndicator(

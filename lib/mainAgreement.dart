@@ -8,10 +8,10 @@ import 'package:flutter_play/variable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MainAgreement extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: LayoutBuilder(
         builder: (ctx, _) {
           uiInit(ctx, _);
@@ -43,38 +43,48 @@ class MainAgreement extends StatelessWidget {
                         children: [
                           Container(
                             margin: EdgeInsets.only(right: 20),
-                            child: FlatButton(
+                            child: TextButton(
                               child: Text('同意'),
-                              color: Colors.blue,
-                              textColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(width(16))
+                              style: TextButton.styleFrom(
+                                backgroundColor: Colors.blue,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.circular(width(16))),
+                                textStyle: TextStyle(
+                                  color: Colors.white,
+                                ),
                               ),
                               onPressed: () async {
-                                SharedPreferences sp = await SharedPreferences.getInstance();
+                                SharedPreferences sp =
+                                    await SharedPreferences.getInstance();
                                 sp.setBool('agree', true);
                                 // main
                                 startApp();
                               },
                             ),
                           ),
-                          FlatButton(
+                          TextButton(
                             child: Text('不同意'),
-                            color: Colors.black12,
-                            textColor: Colors.grey,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(width(16))
+                            style: TextButton.styleFrom(
+                              backgroundColor: Colors.black12,
+                              textStyle: TextStyle(
+                                color: Colors.grey,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(width(16))),
                             ),
                             onPressed: () {
                               MyDialog(
-                                content: '如果不同意隐私协议，FlutterPlay将无法为您提供服务',
-                                showCancel: true,
-                                cancelText: '退出应用',
-                                confirmText: '再看看',
-                                onCancel: () {
-                                  Platform.isIOS ? exit(0) : SystemNavigator.pop();
-                                }
-                              );
+                                  content: '如果不同意隐私协议，FlutterPlay将无法为您提供服务',
+                                  showCancel: true,
+                                  cancelText: '退出应用',
+                                  confirmText: '再看看',
+                                  onCancel: () {
+                                    Platform.isIOS
+                                        ? exit(0)
+                                        : SystemNavigator.pop();
+                                  });
                             },
                           ),
                         ],

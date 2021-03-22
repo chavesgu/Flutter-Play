@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>MOBNetLater</key>
-	<integer>2</integer>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>zh_CN</string>
 	<key>CFBundleDisplayName</key>
@@ -16,9 +14,8 @@
 	<string>6.0</string>
 	<key>CFBundleLocalizations</key>
 	<array>
-		<string>zh</string>
-		<string>en</string>
 		<string>zh_CN</string>
+		<string>en</string>
 	</array>
 	<key>CFBundleName</key>
 	<string>Flutter Play</string>
@@ -56,6 +53,8 @@
 	<string>307b80801f92e</string>
 	<key>MOBAppSecret</key>
 	<string>9dbc60bb0ca85e7842650b918eb79694</string>
+	<key>MOBNetLater</key>
+	<integer>2</integer>
 	<key>NSAllowsArbitraryLoads</key>
 	<false/>
 	<key>NSAppTransportSecurity</key>
@@ -103,6 +102,8 @@
 			<true/>
 		</dict>
 	</dict>
+	<key>NSFaceIDUsageDescription</key>
+	<string>获取Face Id来提供身份认证</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>获取您的位置已推荐合适的服务</string>
 	<key>NSMicrophoneUsageDescription</key>
@@ -122,6 +123,7 @@
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>audio</string>
 		<string>fetch</string>
 		<string>processing</string>
 		<string>remote-notification</string>

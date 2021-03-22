@@ -10,7 +10,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.chavesgu.push.PushPlugin;
-//import com.tencent.bugly.crashreport.CrashReport;
 
 import org.json.JSONObject;
 import org.json.JSONStringer;
@@ -21,11 +20,13 @@ import java.util.Map;
 import java.util.Objects;
 
 //import io.flutter.app.FlutterActivity;
+//import io.flutter.app.FlutterFragmentActivity;
+import io.flutter.embedding.android.FlutterFragmentActivity;
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugins.GeneratedPluginRegistrant;
 
-public class MainActivity extends FlutterActivity {
+public class MainActivity extends FlutterFragmentActivity {
 
   @Override
   public void configureFlutterEngine(FlutterEngine flutterEngine) {
@@ -36,9 +37,6 @@ public class MainActivity extends FlutterActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-//    GeneratedPluginRegistrant.registerWith(this);
-
-//    CrashReport.initCrashReport(getApplicationContext(), "22481154f7", true);
 
     Intent intent = getIntent();
     String data = getPushMsg(intent);
@@ -47,19 +45,21 @@ public class MainActivity extends FlutterActivity {
 
   @Override
   protected void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
     if (PushPlugin.launchMsg.containsKey("msg")) return;
     String data = getPushMsg(intent);
-    if (data!=null) {
+    if (data != null) {
       final Map<String, String> msg = new HashMap<>();
       msg.put("msg", data);
-      if (PushPlugin.appOnForeground()){ // app在前台
+      if (PushPlugin.appOnForeground()) { // app在前台
 //        PushPlugin._channel.invokeMethod("onMessage", msg);
       } else { // app在后台
         PushPlugin.moveTaskToFront();
 //        PushPlugin._channel.invokeMethod("onResume", msg);
       }
       PushPlugin._channel.invokeMethod("onMessage", msg);
-    };
+    }
+    ;
   }
 
   @Override

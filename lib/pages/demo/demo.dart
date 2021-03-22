@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_orientation/flutter_orientation.dart';
 import 'package:device_info/device_info.dart';
@@ -12,21 +12,25 @@ import 'package:flutter_play/components/GlobalComponents.dart';
 import 'package:flutter_play/store/model.dart';
 
 import 'package:images_picker/images_picker.dart';
+import 'package:local_auth/auth_strings.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:local_auth/error_codes.dart' as authError;
 import 'package:provider/provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:amap_location/amap_location.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:uuid/uuid.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/status.dart' as status;
-// import 'package:qiniu_manager/qiniu_manager.dart';
+import 'package:vibration/vibration.dart';
 import 'package:push/push.dart';
 import 'package:mob/mob.dart';
 import 'package:fluwx_no_pay/fluwx_no_pay.dart';
 
 import 'package:flutter_play/utils/utils.dart';
 import 'package:flutter_play/variable.dart';
-import 'package:flutter_play/service.dart';
-import 'package:flutter_play/routerPath.dart';
+import 'package:flutter_play/service/service.dart';
+import 'package:flutter_play/router/path.dart';
 
 class DemoPage extends StatefulWidget {
   static const String title = 'demo';
@@ -36,7 +40,7 @@ class DemoPage extends StatefulWidget {
     this.drawerKey,
   });
 
-  final GlobalKey<InnerDrawerState> drawerKey;
+  final GlobalKey<InnerDrawerState>? drawerKey;
 
   @override
   State<StatefulWidget> createState() {
@@ -45,11 +49,11 @@ class DemoPage extends StatefulWidget {
 }
 
 class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
-  IOWebSocketChannel channel;
+  IOWebSocketChannel? channel;
   String _data = '';
 
   dynamic _image;
-  String url;
+  String? url;
 
   double progress = 0;
 
@@ -63,96 +67,96 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      appBar: AppBar(title: Text('Demo'), toolbarHeight: 50, actions: [
-        IconButton(
-          icon: Icon(const IconData(0xe610, fontFamily: 'iconfont')),
-          onPressed: () {
-            HapticFeedback.heavyImpact();
-            goScan();
-          },
-        )
-      ]),
+      appBar: AppBar(
+        title: Text('Demo'),
+        toolbarHeight: 50,
+        automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            icon: Icon(IconFont.scan),
+            onPressed: () {
+              HapticFeedback.vibrate();
+              goScan();
+            },
+          ),
+        ],
+      ),
       body: ListView(
         children: <Widget>[
           Wrap(
             spacing: 20,
             children: <Widget>[
-              RaisedButton(
+              ElevatedButton(
                 onPressed: () {
                   widget.drawerKey?.currentState?.open();
                 },
                 child: Text('open drawer'),
               ),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: () {
                   _getDeviceInfo();
                 },
                 child: Text('get device info'),
               ),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: () {
                   openAppSettings();
                 },
                 child: Text('open app setting'),
               ),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: _getPosition,
                 child: Text('get position'),
               ),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: _dialog,
                 child: Text('dialog'),
               ),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: _toast,
                 child: Text('toast'),
               ),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: _loading,
                 child: Text('3s loading'),
               ),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: _launchURL,
                 child: Text('launch url'),
               ),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: () {
                   chooseImageSource();
                 },
                 child: Text('take photo'),
               ),
-              RaisedButton(
+              ElevatedButton(
                 child: Text('init Push'),
                 onPressed: () {
                   initPush();
                 },
               ),
-              RaisedButton(
-                child: Text('test fixed'),
-                onPressed: () {
-                  Navigator.of(context).pushNamed(TestFixedPage.name);
-                },
-              ),
-              RaisedButton(
-                child: Text('test ocr'),
-                onPressed: () {
-                  goOCR();
-                },
-              ),
-              RaisedButton(
+              ElevatedButton(
                 child: Text('view pdf'),
                 onPressed: () {
                   Navigator.of(context).pushNamed(
                       '${PDFView.name}?url=${Uri.encodeComponent('https://cdn.chavesgu.com/profile.pdf')}');
                 },
               ),
-              RaisedButton(
-                  child: Text('view webview'),
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(
-                        '${MyWebView.name}?url=${Uri.encodeQueryComponent('https://www.chavesgu.com/webview/')}');
-                  }),
-              RaisedButton(
+              ElevatedButton(
+                child: Text('view webview'),
+                onPressed: () {
+                  Navigator.of(context).pushNamed(
+                      '${MyWebView.name}?url=${Uri.encodeQueryComponent('https://www.chavesgu.com/webview/')}');
+                },
+              ),
+              ElevatedButton(
+                child: Text('view download webview'),
+                onPressed: () {
+                  _downloadWebView();
+                },
+              ),
+              ElevatedButton(
                 child: Text('test fullscreen'),
                 onPressed: () {
                   Orientation current = MediaQuery.of(context).orientation;
@@ -165,36 +169,36 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
                   }
                 },
               ),
-              RaisedButton(
+              ElevatedButton(
                 child: Text('random username'),
                 onPressed: () {
                   var setName = context.read<UserModel>().setUserName;
                   setName(Random().nextInt(100).toString());
                 },
               ),
-              RaisedButton(
+              ElevatedButton(
                 child: Text('phone login'),
                 onPressed: () {
-                  Mob.login();
+                  _mobLogin();
                 },
               ),
-              RaisedButton(
-                child: Text('phone sms'),
-                onPressed: () {
-                  // Mob.sendSMS('17621106537');
-                },
-              ),
-              RaisedButton(
-                child: Text('verify sms'),
-                onPressed: () {
-                  // Mob.verifySMS('17621106537', '998495').then((value) {
-                  //   print('verify success');
-                  // }).catchError((e) {
-                  //   print('verify fail: ${e.message}');
-                  // });
-                },
-              ),
-              RaisedButton(
+              // ElevatedButton(
+              //   child: Text('phone sms'),
+              //   onPressed: () {
+              //     Mob.sendSMS('17621106537');
+              //   },
+              // ),
+              // ElevatedButton(
+              //   child: Text('verify sms'),
+              //   onPressed: () {
+              //     Mob.verifySMS('17621106537', '998495').then((value) {
+              //       print('verify success');
+              //     }).catchError((e) {
+              //       print('verify fail: ${e.message}');
+              //     });
+              //   },
+              // ),
+              ElevatedButton(
                 child: Text('custom page'),
                 onPressed: () {
                   Navigator.of(context).push(CustomRouteBuilder(
@@ -202,70 +206,87 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
                   ));
                 },
               ),
-              RaisedButton(
+              ElevatedButton(
                 child: Text('canvas1'),
                 onPressed: () {
                   Navigator.of(context).pushNamed(CanvasPage.name);
                 },
               ),
-              RaisedButton(
+              ElevatedButton(
                 child: Text('canvas2'),
                 onPressed: () {
                   Navigator.of(context).pushNamed(CanvasPage2.name);
                 },
               ),
-              RaisedButton(
+              ElevatedButton(
                 child: Text('close app'),
                 onPressed: () {
                   Platform.isIOS ? exit(0) : SystemNavigator.pop();
                 },
               ),
-              RaisedButton.icon(
-                icon: Icon(const IconData(0xe65c, fontFamily: 'iconfont')),
+              ElevatedButton.icon(
+                icon: Icon(IconFont.wechat),
                 label: Text('wechat login'),
                 onPressed: () {
                   _wxLogin();
                 },
               ),
-              RaisedButton.icon(
-                icon: Icon(const IconData(0xe65c, fontFamily: 'iconfont')),
+              ElevatedButton.icon(
+                icon: Icon(IconFont.wechat),
                 label: Text('wechat share'),
                 onPressed: () {
                   _wxShare();
                 },
               ),
-              RaisedButton(
+              ElevatedButton(
                 child: Text('set clipboard'),
                 onPressed: () async {
                   await Clipboard.setData(ClipboardData(text: '测试 copy'));
-                  Toast.show(msg: 'copy success');
+                  Toast.show('copy success');
                 },
               ),
-              RaisedButton(
+              ElevatedButton(
                 child: Text('get clipboard'),
                 onPressed: () async {
-                  ClipboardData data =
+                  ClipboardData? data =
                       await Clipboard.getData(Clipboard.kTextPlain);
-                  Toast.show(msg: '剪贴板内容: ${data.text}');
+                  Toast.show('剪贴板内容: ${data?.text}');
+                },
+              ),
+              ElevatedButton(
+                child: Text('faceid or fingerprint'),
+                onPressed: () {
+                  _localAuth();
+                },
+              ),
+              ElevatedButton(
+                child: Text('HapticFeedback'),
+                onPressed: () async {
+                  Vibration.vibrate(duration: 10);
+                },
+              ),
+              ElevatedButton(
+                child: Text('chart demo'),
+                onPressed: () {
+                  Navigator.of(context).pushNamed(ChartDemo.name);
                 },
               ),
             ],
           ),
           SelectableText(deviceToken),
           Text(message),
-          Row(
-            children: <Widget>[
-              _image != null
-                  ? Container(
-                      width: width(500),
-                      height: width(500),
-                      child: MyImage(
-                        _image,
-                      ),
-                    )
-                  : Container(),
-            ],
-          ),
+          if (_image != null)
+            Row(
+              children: [
+                SizedBox(
+                  width: width(500),
+                  height: width(500),
+                  child: MyImage(
+                    _image,
+                  ),
+                ),
+              ],
+            ),
         ],
       ),
     );
@@ -308,10 +329,9 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
         context: context,
         title: '提示',
         content: 'name: ${info.name},\n'
-            'uuid: ${info.identifierForVendor},\n'
             'localizedModel: ${info.localizedModel},\n'
-            'model: ${info.model}',
-        confirmText: '确认',
+            'version: ${info.systemVersion},\n'
+            'uuid: ${info.identifierForVendor}',
       );
     }
     if (Platform.isAndroid) {
@@ -320,25 +340,16 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
         context: context,
         title: '提示',
         content: 'brand: ${info.brand},\n'
-            'hardware: ${info.hardware},\n'
-            'product: ${info.product},\n'
             'manufacturer: ${info.manufacturer},\n'
-            'model: ${info.model},\n'
+            'version: ${info.version.release},\n'
             'androidId: ${info.androidId}',
-        confirmText: '确认',
       );
     }
   }
 
   _getPosition() async {
     String res = '';
-    PermissionStatus permissionStatus = await Permission.location.status;
-    bool hasPermission = permissionStatus.isGranted;
-    bool unknown =
-        (permissionStatus.isUndetermined) || (permissionStatus.isDenied);
-    if (unknown) {
-      hasPermission = await Permission.location.request().isGranted;
-    }
+    bool hasPermission = await Permission.location.request().isGranted;
     if (hasPermission) {
       AMapLocation location = await AMapLocationClient.getLocation(true);
       if (location.success) {
@@ -355,7 +366,6 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
         context: context,
         title: '位置提示',
         content: res,
-        confirmText: '确认',
       );
     } else {
       MyDialog(
@@ -376,10 +386,7 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
         WidgetSpan(
           child: GestureDetector(
             onTap: () {
-              MyDialog(
-                context: context,
-                content: 'twice dialog'
-              );
+              MyDialog(context: context, content: 'twice dialog');
             },
             child: MyImage(
               'https://cdn.chavesgu.com/avatar.jpg',
@@ -395,7 +402,7 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
 
   _toast() {
     Toast.show(
-      msg: "这是一个toast",
+      "这是一个toast",
       // maxDuration: Duration(seconds: 20),
       // position: ToastPosition.top,
     );
@@ -419,9 +426,9 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
   }
 
   _addWS() {
-    channel.sink.add('/cancel?qid=1');
+    channel?.sink.add('/cancel?qid=1');
     final code = Uri.encodeFull("X\$BTC");
-    channel.sink
+    channel?.sink
         .add('/quote/stkdata?obj=$code&field=ZuiXinJia,ZhangFu&sub=1&qid=1');
   }
 
@@ -431,41 +438,44 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
         builder: (BuildContext context) {
           return Container(
             width: double.infinity,
-            height: 100 + bottomAreaHeight,
+            height: 120 + bottomAreaHeight,
             padding: EdgeInsets.only(bottom: bottomAreaHeight),
             color: Colors.white,
             child: Column(
               children: <Widget>[
-                ButtonTheme(
-                  minWidth: double.infinity,
-                  height: 50,
-                  child: FlatButton(
-                    onPressed: () {
-                      Navigator.pop(context, SourceType.camera);
-                    },
-                    child: Text('拍照'),
+                Expanded(
+                  child: SizedBox.expand(
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.pop(context, SourceType.camera);
+                      },
+                      child: Text('拍照'),
+                    ),
                   ),
                 ),
-                ButtonTheme(
-                  minWidth: double.infinity,
-                  height: 50,
-                  child: FlatButton(
-                    onPressed: () {
-                      Navigator.pop(context, SourceType.gallery);
-                    },
-                    child: Text('相册'),
+                Divider(height: 1),
+                Expanded(
+                  child: SizedBox.expand(
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.pop(context, SourceType.gallery);
+                      },
+                      child: Text('相册'),
+                    ),
                   ),
                 ),
               ],
             ),
           );
         }).then((popValue) {
-      if (popValue is SourceType) getImage(popValue);
+      SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
+        if (popValue is SourceType) getImage(popValue);
+      });
     });
   }
 
   getImage(SourceType source) async {
-    List<Media> images = await Utils.imagePicker(
+    List<Media>? images = await Utils.imagePicker(
       source: source,
       count: 2,
       // pickType: PickType.all,
@@ -487,8 +497,8 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
       isPush = await Permission.notification.request().isGranted;
     }
     if (isPush || Platform.isAndroid) {
-      String type;
-      AppConfig app;
+      String? type;
+      AppConfig? app;
       if (Platform.isAndroid) {
         DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
         AndroidDeviceInfo info = await deviceInfo.androidInfo;
@@ -499,41 +509,39 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
         // appKey = "03345fa08814e7d2d81329da87def92cd101da1b12558765b1aabfd216868956";
       } else if (type == "XIAOMI") {
         app = XIAOMI(appId: "2882303761518975690", appKey: "5401897576690");
-      } else if (type=="OPPO"||type=="REALME"||type=="ONEPLUS") {
-        app = OPPO(appKey: "1e72718f848f49b78a39ea1305c13e4c", appSecret: "18eb6e4b9e8243a1985832b92b63e5af");
-      } else if (type=="MEIZU") {
-        app = MEIZU(appId: "138382", appKey: "08eaa9c39ffe48b5b2f63e9d7cc6866c");
+      } else if (type == "OPPO" || type == "REALME" || type == "ONEPLUS") {
+        app = OPPO(
+            appKey: "1e72718f848f49b78a39ea1305c13e4c",
+            appSecret: "18eb6e4b9e8243a1985832b92b63e5af");
+      } else if (type == "MEIZU") {
+        app =
+            MEIZU(appId: "138382", appKey: "08eaa9c39ffe48b5b2f63e9d7cc6866c");
       }
       Push.init(
-        app: app,
-        type: type,
-        getToken: (_token) {
-          deviceToken = _token;
-          setState(() {});
-        },
-        onLaunch: (Map<String, dynamic> _message) {
-          message = 'onLaunch: ${_message.toString()}';
-          setState(() {});
-        },
-        onMessage: (Map<String, dynamic> _message) {
-          message = 'onMessage: ${_message.toString()}';
-          setState(() {});
-        },
-        onResume: (Map<String, dynamic> _message) {
-          message = 'onResume: ${_message.toString()}';
-          setState(() {});
-        },
-        onError: (e) {
-          MyDialog(
-            content: e,
-          );
-        }
-      );
+          app: app,
+          type: type,
+          getToken: (_token) {
+            deviceToken = _token;
+            setState(() {});
+          },
+          onLaunch: (Map<String, dynamic> _message) {
+            message = 'onLaunch: ${_message.toString()}';
+            setState(() {});
+          },
+          onMessage: (Map<String, dynamic> _message) {
+            message = 'onMessage: ${_message.toString()}';
+            setState(() {});
+          },
+          onResume: (Map<String, dynamic> _message) {
+            message = 'onResume: ${_message.toString()}';
+            setState(() {});
+          },
+          onError: (e) {
+            MyDialog(
+              content: e,
+            );
+          });
     }
-  }
-
-  void goOCR() async {
-    Navigator.of(context).pushNamed(TestOCR.name);
   }
 
   void throttle() {
@@ -551,47 +559,111 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
   }
 
   void goScan() async {
-    PermissionStatus permissionStatus = (await Permission.camera.status);
-    bool hasPermission = permissionStatus == PermissionStatus.granted;
-    bool unknown =
-        (permissionStatus.isUndetermined) || (permissionStatus.isDenied);
-    if (unknown) {
-      hasPermission = await Permission.camera.request().isGranted;
-    }
+    bool hasPermission = await Permission.camera.request().isGranted;
     if (hasPermission) {
       Navigator.of(context).pushNamed(ScanPage.name);
     } else {
       MyDialog(
-          context: context,
-          title: '扫码提示',
-          content: '扫码需要允许相机权限',
-          confirmText: '前往设置',
-          onConfirm: () {
-            openAppSettings();
-          });
+        context: context,
+        title: '扫码提示',
+        content: '扫码需要允许相机权限',
+        confirmText: '前往设置',
+        onConfirm: () {
+          openAppSettings();
+        },
+      );
+    }
+  }
+
+  void _mobLogin() async {
+    if (await Mob.isSupportLogin) {
+      Mob.login(success: (res) {
+        Toast.show(res.token!);
+      });
+    } else {
+      Toast.show('暂不支持一键登录');
     }
   }
 
   void _wxLogin() async {
     sendWeChatAuth(scope: "snsapi_userinfo", state: "login_test");
-    StreamSubscription subscription;
+    StreamSubscription? subscription;
     subscription = weChatResponseEventHandler.listen((res) {
       if (res is WeChatAuthResponse) {
         subscription?.cancel();
-        Toast.show(msg: '获取code: ${res.code}');
+        Toast.show('获取code: ${res.code}');
       }
     });
   }
 
   void _wxShare() async {
-    shareToWeChat(WeChatShareWebPageModel('https://www.chavesgu.com',
-        scene: WeChatScene.SESSION));
-    StreamSubscription subscription;
+    shareToWeChat(WeChatShareMiniProgramModel(
+      webPageUrl: 'https://www.chavesgu.com',
+      userName: 'gh_0d6dcb6a7b49',
+      path: 'pages/index/index',
+      thumbnail: WeChatImage.network('https://cdn.chavesgu.com/logo.png'),
+    ));
+    StreamSubscription? subscription;
     subscription = weChatResponseEventHandler.listen((res) {
       if (res is WeChatShareResponse) {
         subscription?.cancel();
-        Toast.show(msg: '分享完成');
+        Toast.show('分享完成');
       }
     });
+  }
+
+  void _localAuth() async {
+    LocalAuthentication localAuth = LocalAuthentication();
+    List<BiometricType> list = await localAuth.getAvailableBiometrics();
+    print(list);
+    String errorText = '';
+    if (list.isEmpty) {
+      errorText = '该设备不支持生物认证';
+      MyDialog(
+        content: errorText,
+      );
+      return;
+    }
+    String type = list.contains(BiometricType.fingerprint) ? '指纹' : '面容';
+    try {
+      bool allow = await localAuth.authenticate(
+          biometricOnly: true,
+          localizedReason: "身份认证",
+          stickyAuth: true,
+          useErrorDialogs: false,
+          androidAuthStrings: AndroidAuthMessages(
+              biometricHint: '$type认证', cancelButton: '取消'));
+      errorText = allow ? '认证成功' : '认证失败';
+    } on PlatformException catch (e) {
+      print(e);
+      switch (e.code) {
+        case authError.passcodeNotSet:
+        case authError.notEnrolled:
+          errorText = '该设备未设置$type';
+          break;
+        case authError.notAvailable:
+          errorText = '该设备不支持生物认证';
+          break;
+      }
+    }
+    MyDialog(
+      content: errorText,
+    );
+  }
+
+  void _downloadWebView() async {
+    Loading.show();
+    Directory tempDir = Directory.systemTemp;
+    String tempPath =
+        tempDir.path + '/webview/download-demo.html'; // /tmp ?? /Library/Caches
+    try {
+      await Service.download("https://www.chavesgu.com/demo.html", tempPath);
+      print(tempPath);
+      await Loading.hide();
+      Navigator.of(context).pushNamed(
+          '${MyWebView.name}?url=${Uri.encodeQueryComponent('file://$tempPath')}');
+    } catch (e) {
+      print(e);
+    }
   }
 }

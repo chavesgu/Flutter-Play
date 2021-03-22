@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 
 class MyBrightness extends StatelessWidget {
   MyBrightness({
-    @required this.brightness,
-    @required this.child,
+    required this.brightness,
+    required this.child,
   });
 
   final Brightness brightness;
@@ -15,7 +15,7 @@ class MyBrightness extends StatelessWidget {
   Widget build(BuildContext context) {
     final SystemUiOverlayStyle style = SystemUiOverlayStyle(
       statusBarBrightness: brightness,
-      statusBarIconBrightness: brightness==Brightness.light?Brightness.dark:Brightness.light,
+      statusBarIconBrightness: brightness == Brightness.light ? Brightness.dark : Brightness.light,
       statusBarColor: Colors.transparent,
     );
     return AnnotatedRegion<SystemUiOverlayStyle>(

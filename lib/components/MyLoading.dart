@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +9,7 @@ class MyLoading extends StatefulWidget {
     this.msg,
   });
 
-  final String msg;
+  final String? msg;
 
   @override
   State<StatefulWidget> createState() => _MyLoadingState();
@@ -41,21 +40,23 @@ class _MyLoadingState extends State<MyLoading> {
               //   radius: 50,
               // ),
             ),
-            widget.msg==null?SizedBox.shrink():Container(
-              margin: EdgeInsets.only(top: width(50)),
-              child: Text(
-                widget.msg,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  height: 1.2,
-                  fontSize: width(30),
-                  color: Colors.white,
-                  decoration: TextDecoration.none,
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
-            ),
+            widget.msg == null
+                ? SizedBox.shrink()
+                : Container(
+                    margin: EdgeInsets.only(top: width(50)),
+                    child: Text(
+                      widget.msg!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        height: 1.2,
+                        fontSize: width(30),
+                        color: Colors.white,
+                        decoration: TextDecoration.none,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ),
           ],
         ),
       ),

@@ -8,7 +8,7 @@ import 'package:flutter_play/utils/utils.dart';
 class ScanPage extends StatefulWidget {
   static const name = '/scan';
   @override
-  createState()=>_ScanPageState();
+  createState() => _ScanPageState();
 }
 
 class _ScanPageState extends State<ScanPage> {
@@ -17,35 +17,33 @@ class _ScanPageState extends State<ScanPage> {
   bool _isFlashOn = false;
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       extendBodyBehindAppBar: true,
-      backgroundColor: Colors.white24,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(50),
-        child: AppBar(
-          backgroundColor: Colors.transparent,
-          iconTheme: IconThemeData(
-            color: Color.fromRGBO(244, 244, 244, 1),
-          ),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.photo),
-              color: Color.fromRGBO(244, 244, 244, 1),
-              onPressed: () async {
-                List<Media> res = await Utils.imagePicker();
-                if (res!=null) {
-                  String code = await Scan.parse(res[0].path);
-                  MyDialog(
-                    context: context,
-                    title: '扫码结果',
-                    content: code,
-                  );
-                }
-              },
-            )
-          ]
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        brightness: Brightness.dark,
+        toolbarHeight: 50,
+        backgroundColor: Colors.transparent,
+        iconTheme: IconThemeData(
+          color: Color.fromRGBO(244, 244, 244, 1),
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.photo),
+            color: Color.fromRGBO(244, 244, 244, 1),
+            onPressed: () async {
+              List<Media>? res = await Utils.imagePicker();
+              if (res != null) {
+                String code = await Scan.parse(res[0].path!);
+                MyDialog(
+                  context: context,
+                  title: '扫码结果',
+                  content: code,
+                );
+              }
+            },
+          ),
+        ],
       ),
       body: Column(
         children: <Widget>[
@@ -54,6 +52,7 @@ class _ScanPageState extends State<ScanPage> {
               Container(
                 height: vh,
                 child: ScanView(
+                  // scanAreaScale: 1,
                   controller: scanController,
                   onCapture: (data) {
                     MyDialog(
@@ -69,9 +68,9 @@ class _ScanPageState extends State<ScanPage> {
                 left: 0,
                 right: 0,
                 child: IconButton(
-                  icon: Icon(_isFlashOn?Icons.flash_off:Icons.flash_on),
+                  icon: Icon(_isFlashOn ? Icons.flash_off : Icons.flash_on),
                   color: Colors.white,
-                  onPressed: (){
+                  onPressed: () {
                     setState(() {
                       scanController.toggleTorchMode();
                       _isFlashOn = !_isFlashOn;

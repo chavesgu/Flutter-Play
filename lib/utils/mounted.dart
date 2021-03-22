@@ -5,8 +5,7 @@ mixin MountedMixin<T extends StatefulWidget> on State<T> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance
-      .addPostFrameCallback((_) => afterMounted(context));
+    WidgetsBinding.instance?.addPostFrameCallback((_) => afterMounted(context));
   }
 
 //  @mustCallSuper
