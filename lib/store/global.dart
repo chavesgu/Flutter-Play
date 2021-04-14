@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:ui';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_play/generated/l10n.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -48,7 +47,7 @@ class GlobalModel extends ChangeNotifier {
     if (_data73.isNotEmpty) return;
     try {
       _data73 = await Service.getHuoLi73Data();
-    } on DioError catch (e) {
+    } catch (e) {
       _data73 = [];
     }
     notifyListeners();

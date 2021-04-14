@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,8 +15,9 @@ class ThemeModel extends ChangeNotifier {
   }
   // 综合主题模式
   // 当前使用模式是否暗模式
-  bool get isDark =>
-      _useSystemMode ? _systemThemeMode == ThemeMode.dark : _appThemeMode == ThemeMode.dark;
+  bool get isDark => _useSystemMode
+      ? _systemThemeMode == ThemeMode.dark
+      : _appThemeMode == ThemeMode.dark;
   // 当前的brightness
   Brightness get brightness => isDark ? Brightness.dark : Brightness.light;
 

@@ -47,10 +47,10 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
-  /// `intl_en`
+  /// `en`
   String get _locale {
     return Intl.message(
-      'intl_en',
+      'en',
       name: '_locale',
       desc: '',
       args: [],

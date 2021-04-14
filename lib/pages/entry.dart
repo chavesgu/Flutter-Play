@@ -7,7 +7,6 @@ import 'package:flutter_play/variable.dart';
 import 'package:flutter_orientation/flutter_orientation.dart';
 
 import 'media/media.dart';
-import 'home/home.dart';
 import 'user/userCenter.dart';
 import 'demo/demo.dart';
 

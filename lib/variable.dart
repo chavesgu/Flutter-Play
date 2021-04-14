@@ -24,9 +24,14 @@ double vw = MediaQueryData.fromWindow(window).size.width;
 
 double vh = MediaQueryData.fromWindow(window).size.height;
 
-bool isSystemDark = MediaQueryData.fromWindow(window).platformBrightness == Brightness.dark;
+bool isSystemDark =
+    MediaQueryData.fromWindow(window).platformBrightness == Brightness.dark;
 
-final List<ThemeMode> themeModeList = [ThemeMode.system, ThemeMode.light, ThemeMode.dark];
+final List<ThemeMode> themeModeList = [
+  ThemeMode.system,
+  ThemeMode.light,
+  ThemeMode.dark
+];
 
 final List<Color> themeList = [
   Color(0xff99CCFF),
@@ -94,5 +99,6 @@ void uiInit(BuildContext context, BoxConstraints boxConstraints) {
 
   globalOverlayState = Overlay.of(context);
 
-  ScreenUtil.init(boxConstraints, Orientation.portrait, designSize: Size(750, 1134));
+  ScreenUtil.init(boxConstraints,
+      orientation: Orientation.portrait, designSize: Size(750, 1134));
 }

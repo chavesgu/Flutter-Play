@@ -129,9 +129,6 @@
               android:name="android.support.FILE_PROVIDER_PATHS"
               android:resource="@xml/provider_paths" />
         </provider>
-        <meta-data
-          android:name="com.amap.api.v2.apikey"
-          android:value="798d80979d68058e033d8d403145ba0d"/>
 
         <!-- vivo -->
         <meta-data

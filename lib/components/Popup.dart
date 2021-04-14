@@ -18,7 +18,7 @@ class Popup extends StatefulWidget {
   final bool closeOnClickMask;
   final Function? handleHide;
 
-  _PopupState _state = _PopupState();
+  final _PopupState _state = _PopupState();
   @override
   State<StatefulWidget> createState() => _state;
 
@@ -41,14 +41,15 @@ class _PopupState extends State<Popup> {
             behavior: HitTestBehavior.opaque,
             onTap: () async {
               if (widget.closeOnClickMask) {
-                await hide();
                 if (widget.handleHide != null) widget.handleHide!();
               }
             },
             child: Container(
               width: vw,
               height: vh,
-              color: widget.mask ? Colors.black.withOpacity(0.6) : Colors.transparent,
+              color: widget.mask
+                  ? Colors.black.withOpacity(0.6)
+                  : Colors.transparent,
             ),
           ),
           // SizedBox(

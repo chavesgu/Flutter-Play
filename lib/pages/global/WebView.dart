@@ -50,7 +50,7 @@ class _WebViewState extends State<MyWebView> {
         builder: (BuildContext context) {
           return SafeArea(
             top: false,
-            bottom: false,
+            bottom: true,
             child: Stack(
               children: <Widget>[
                 Container(
@@ -63,6 +63,7 @@ class _WebViewState extends State<MyWebView> {
                       supportZoom: false,
                       mediaPlaybackRequiresUserGesture: false,
                       transparentBackground: true,
+                      disableHorizontalScroll: true,
                       // javaScriptCanOpenWindowsAutomatically: true,
                     ),
                     android: AndroidInAppWebViewOptions(
@@ -75,6 +76,7 @@ class _WebViewState extends State<MyWebView> {
                       disallowOverScroll: false,
                       allowsInlineMediaPlayback: true,
                       alwaysBounceVertical: true,
+                      suppressesIncrementalRendering: true,
                     ),
                   ),
                   onWebViewCreated: (InAppWebViewController c) {

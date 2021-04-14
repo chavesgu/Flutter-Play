@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:flutter_play/variable.dart';
 import '../entry.dart';
 
-
 class Splash extends StatefulWidget {
-
   @override
   State<StatefulWidget> createState() {
     return SplashState();
@@ -18,7 +15,6 @@ class SplashState extends State {
 
   @override
   Widget build(BuildContext context) {
-    // ScreenUtil.init(context, width: 750, height: 1334);
     return Container(
       width: vw,
       height: vh,
@@ -57,11 +53,8 @@ class SplashState extends State {
                       decoration: TextDecoration.none,
                     ),
                   ),
-                  OutlineButton(
+                  OutlinedButton(
                     onPressed: _goEntry,
-                    borderSide: BorderSide(
-                      color: Colors.black,
-                    ),
                     child: Text('立即体验'),
                   ),
                 ],
@@ -90,15 +83,15 @@ class SplashState extends State {
 
   List<Widget> _renderIndicator() {
     List<Widget> res = [];
-    for (var i=0;i<3;i++) {
+    for (var i = 0; i < 3; i++) {
       res.add(Container(
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: i==current?Colors.black:Colors.white,
+          color: i == current ? Colors.black : Colors.white,
         ),
         width: 10,
         height: 10,
-        margin: EdgeInsets.only(left: 5,right: 5),
+        margin: EdgeInsets.only(left: 5, right: 5),
       ));
     }
     return res;
@@ -107,7 +100,8 @@ class SplashState extends State {
   _goEntry() {
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
-        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation){
+        pageBuilder: (BuildContext context, Animation<double> animation,
+            Animation<double> secondaryAnimation) {
           return FadeTransition(
             opacity: animation,
             child: EntryPage(),

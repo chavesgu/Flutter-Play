@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_play/generated/l10n.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter_play/store/model.dart';
@@ -63,6 +66,16 @@ class UserCenterState extends State<UserCenter>
                     selector: (context, model) => model.title,
                     builder: (context, value, child) {
                       return Text(value);
+                    },
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Selector<GlobalModel, Locale>(
+                    selector: (context, model) => model.lang!,
+                    builder: (context, value, child) {
+                      return Text('当前语言: $value');
                     },
                   ),
                 ],

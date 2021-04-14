@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../variable.dart';
-
 abstract class MyTheme {
   static ThemeData light(Color themeColor) {
     return ThemeData(

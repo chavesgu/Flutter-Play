@@ -17,7 +17,7 @@ import 'package:local_auth/local_auth.dart';
 import 'package:local_auth/error_codes.dart' as authError;
 import 'package:provider/provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:amap_location/amap_location.dart';
+import 'package:flutter_amap/flutter_amap.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 import 'package:web_socket_channel/io.dart';
@@ -75,7 +75,7 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
           IconButton(
             icon: Icon(IconFont.scan),
             onPressed: () {
-              HapticFeedback.vibrate();
+              HapticFeedback.heavyImpact();
               goScan();
             },
           ),
@@ -294,11 +294,11 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
 
   @override
   void initState() {
-    AMapLocationClient.startup(AMapLocationOption(
-      desiredAccuracy: CLLocationAccuracy.kCLLocationAccuracyHundredMeters,
-    ));
-    // ios高德
-    AMapLocationClient.setApiKey("bfea8a8172612b2f2de52e256fcdbc66");
+    Amap.setKey(
+      androidKey: '798d80979d68058e033d8d403145ba0d',
+      iosKey: 'bfea8a8172612b2f2de52e256fcdbc66',
+    );
+    Amap.init(AMapLocationOption());
 //    final token = generateToken(
 //      'fe5756a59abc11e8a7830242ac640015',
 //      '0oLcr8AsoQmq',
@@ -315,9 +315,8 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
 
   @override
   void dispose() {
-    AMapLocationClient.shutdown();
 //    channel.sink.close();
-//    audioPlayer.dispose();
+    Amap.dispose();
     super.dispose();
   }
 
@@ -351,17 +350,19 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
     String res = '';
     bool hasPermission = await Permission.location.request().isGranted;
     if (hasPermission) {
-      AMapLocation location = await AMapLocationClient.getLocation(true);
-      if (location.success) {
-        res = '纬度:${location.latitude},\n'
-            '经度: ${location.longitude}\n'
-            'city: ${location.city}\n'
-            'country: ${location.country}\n'
-            'street: ${location.street}\n'
-            'formattedAddress: ${location.formattedAddress}';
-      } else {
-        res = '定位失败-${location.code}，原因: ${location.description}';
+      Loading.show(msg: '获取定位中');
+      try {
+        AMapLocation? position = await Amap.getLocation();
+        // Map address = await Service.geoCoder(longitude: position.longitude, latitude: position.latitude!);
+        if (position!.success) {
+          res = position.formattedAddress ?? '';
+        } else {
+          res = '定位失败: ${position.code},${position.description}';
+        }
+      } catch (e) {
+        res = '定位失败: $e';
       }
+      await Loading.hide();
       MyDialog(
         context: context,
         title: '位置提示',
@@ -369,13 +370,14 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
       );
     } else {
       MyDialog(
-          context: context,
-          title: '位置提示',
-          content: '需要允许访问位置,"设置-隐私-位置"',
-          confirmText: '前往设置',
-          onConfirm: () {
-            openAppSettings();
-          });
+        context: context,
+        title: '位置提示',
+        content: '需要允许访问位置,"设置-隐私-位置"',
+        confirmText: '前往设置',
+        onConfirm: () {
+          openAppSettings();
+        },
+      );
     }
   }
 
@@ -468,9 +470,7 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
             ),
           );
         }).then((popValue) {
-      SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
-        if (popValue is SourceType) getImage(popValue);
-      });
+      if (popValue is SourceType) getImage(popValue);
     });
   }
 
@@ -482,10 +482,10 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
       // quality: .5,
       // maxSize: 600,
       cropOpt: CropOption(),
+      language: Language.System,
     );
     if (images != null) {
       setState(() {
-        print(images.first.size);
         _image = images.first.path;
       });
     }

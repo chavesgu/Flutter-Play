@@ -30,11 +30,11 @@ class _AudioListState extends State<AudioList>
         completeText: '刷新数据成功',
         failedText: '刷新数据失败',
       ),
-      controller: _refreshController,
+      controller: _refreshController!,
       // enablePullDown: !_isFullScreen,
       onRefresh: _refresh,
       child: ListView.separated(
-        cacheExtent: 1.5,
+        cacheExtent: 2,
         itemCount: music.length,
         itemBuilder: (context, index) {
           return GestureDetector(
@@ -46,7 +46,9 @@ class _AudioListState extends State<AudioList>
             behavior: HitTestBehavior.opaque,
             child: Container(
               padding: EdgeInsets.symmetric(
-                  horizontal: width(30), vertical: width(24)),
+                horizontal: width(30),
+                vertical: width(24),
+              ),
               child: Row(
                 children: [
                   Container(
@@ -65,6 +67,7 @@ class _AudioListState extends State<AudioList>
                         children: [
                           MyImage(
                             music[index]['al']['picUrl'],
+                            loadingSize: width(40),
                           ),
                           Container(
                             color: Colors.black.withOpacity(0.1),

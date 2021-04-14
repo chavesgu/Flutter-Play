@@ -115,6 +115,7 @@
 # gd定位
 -keep class com.amap.api.location.**{*;}
 -keep class com.amap.api.fence.**{*;}
+-keep class com.loc.**{*;}
 -keep class com.autonavi.aps.amapapi.model.**{*;}
 
 #关闭某个运营商功能时编译通不过可以加上下面的代码

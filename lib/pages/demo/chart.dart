@@ -225,7 +225,7 @@ class ChartDemoState extends State<ChartDemo> {
   saveImage() async {
     Loading.show();
     RenderRepaintBoundary boundary =
-        chartKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+        chartKey.currentContext!.findRenderObject()! as RenderRepaintBoundary;
     ui.Image image = await boundary.toImage(pixelRatio: dpr);
     ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
     File file = await Utils.bytesToFile(byteData!);

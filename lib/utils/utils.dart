@@ -1,13 +1,9 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
 import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_play/components/MyCircularProgressIndicator.dart';
-import 'package:flutter_play/components/MyLoading.dart';
-import 'package:flutter_play/components/MyToast.dart';
-import 'package:flutter_play/components/Popup.dart';
+import 'package:flutter_play/components/GlobalComponents.dart';
 import 'package:flutter_play/variable.dart';
 import 'package:images_picker/images_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -27,6 +23,7 @@ class Utils {
     CropOption? cropOpt,
     double? quality,
     int? maxSize,
+    Language language = Language.System,
   }) async {
     String permissionReason = '';
     bool hasPermission = false;
@@ -55,6 +52,7 @@ class Utils {
             cropOpt: cropOpt,
             maxSize: maxSize,
             quality: quality,
+            language: language,
           );
         }
         if (source == SourceType.camera) {
@@ -63,6 +61,7 @@ class Utils {
             cropOpt: cropOpt,
             maxSize: maxSize,
             quality: quality,
+            language: language,
           );
         }
       } catch (e) {
@@ -145,6 +144,8 @@ class Utils {
 
 // Custom Dialog
 // there is no show method,because allow multiple dialogs
+int _dialog_len = 0;
+
 class MyDialog {
   MyDialog({
     BuildContext? context,
@@ -157,14 +158,13 @@ class MyDialog {
     this.showCancel = false,
     this.onConfirm,
     this.onCancel,
+    this.closeOnClickMask = false,
   }) {
     assert(content is String || content is InlineSpan,
         'content must be string or InlineSpan');
     _context = context;
     _show();
   }
-
-  static int _length = 0;
 
   final String title;
   final dynamic content;
@@ -173,6 +173,7 @@ class MyDialog {
   final Color confirmColor;
   final Color cancelColor;
   final bool showCancel;
+  final bool closeOnClickMask;
   final Function? onConfirm;
   final Function? onCancel;
   BuildContext? _context;
@@ -290,7 +291,8 @@ class MyDialog {
       ),
     );
     _popup = Popup(
-      // mask: _length == 0,
+      // mask: _dialog_len == 0,
+      mask: true,
       child: Container(
         width: vw - width(100),
         margin: EdgeInsets.only(
@@ -315,8 +317,9 @@ class MyDialog {
         ),
       ),
       handleHide: () {
-        hide(quick: true);
+        hide();
       },
+      closeOnClickMask: closeOnClickMask,
     );
     _currentEntry = OverlayEntry(
       opaque: false,
@@ -325,17 +328,17 @@ class MyDialog {
       },
     );
     overlayState?.insert(_currentEntry!);
-    _length++;
+    _dialog_len++;
   }
 
-  Future<void> hide({bool quick = false}) async {
-    if (_popup != null && !quick) {
+  Future<void> hide() async {
+    if (_popup != null) {
       await _popup!.hide();
       _popup = null;
     }
     _currentEntry?.remove();
     _currentEntry = null;
-    _length--;
+    _dialog_len--;
   }
 }
 
@@ -373,8 +376,8 @@ class Loading {
     });
   }
 
-  static Future<void> hide({bool quick = false}) async {
-    if (_popup != null && !quick) {
+  static Future<void> hide() async {
+    if (_popup != null) {
       await _popup!.hide();
       _popup = null;
     }
@@ -506,7 +509,7 @@ class Debouncing {
 
   Timer? _waiter;
   bool _isReady = true;
-  bool get isReady => isReady;
+  bool get isReady => _isReady;
   // ignore: close_sinks
   StreamController<dynamic> _resultSC =
       new StreamController<dynamic>.broadcast();

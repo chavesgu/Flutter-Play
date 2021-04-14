@@ -13,7 +13,6 @@ class ScanPage extends StatefulWidget {
 
 class _ScanPageState extends State<ScanPage> {
   ScanController scanController = ScanController();
-  String _scanData = '';
   bool _isFlashOn = false;
   @override
   Widget build(BuildContext context) {

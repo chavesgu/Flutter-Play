@@ -147,24 +147,26 @@ class MyImage extends StatelessWidget {
     return _imageWidget!;
   }
 
-  void _previewImage(BuildContext context, dynamic content, TapDownDetails details) {
+  void _previewImage(
+      BuildContext context, dynamic content, TapDownDetails details) {
     double _x = (vw / 2 - details.globalPosition.dx) / (vw / 2);
     double _y = (vh / 2 - details.globalPosition.dy) / (vh / 2);
     Navigator.push(
-        context,
-        PageRouteBuilder(
-          pageBuilder:
-              (BuildContext context, Animation<double> animation, Animation secondaryAnimation) {
-            return ScaleTransition(
-              scale: animation,
-              alignment: Alignment(-_x, -_y),
-              child: ImagePreview(
-                imageList: [content, content],
-              ),
-            );
-          },
-          transitionDuration: Duration(milliseconds: 150),
-        ));
+      context,
+      PageRouteBuilder(
+        pageBuilder: (BuildContext context, Animation<double> animation,
+            Animation secondaryAnimation) {
+          return ScaleTransition(
+            scale: animation,
+            alignment: Alignment(-_x, -_y),
+            child: ImagePreview(
+              imageList: [content, content],
+            ),
+          );
+        },
+        transitionDuration: Duration(milliseconds: 150),
+      ),
+    );
   }
 
   Widget? _loadStateChanged(ExtendedImageState state) {
@@ -190,6 +192,7 @@ class MyImage extends StatelessWidget {
   }
 
   GestureConfig _gestureConfig(ExtendedImageState state) {
-    return GestureConfig(inPageView: false, initialScale: 1.0, cacheGesture: false);
+    return GestureConfig(
+        inPageView: false, initialScale: 1.0, cacheGesture: false);
   }
 }

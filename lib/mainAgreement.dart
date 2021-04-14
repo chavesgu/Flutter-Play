@@ -46,12 +46,11 @@ class MainAgreement extends StatelessWidget {
                             child: TextButton(
                               child: Text('同意'),
                               style: TextButton.styleFrom(
+                                primary: Colors.white,
                                 backgroundColor: Colors.blue,
                                 shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.circular(width(16))),
-                                textStyle: TextStyle(
-                                  color: Colors.white,
+                                  borderRadius:
+                                      BorderRadius.circular(width(16)),
                                 ),
                               ),
                               onPressed: () async {
@@ -66,13 +65,11 @@ class MainAgreement extends StatelessWidget {
                           TextButton(
                             child: Text('不同意'),
                             style: TextButton.styleFrom(
+                              primary: Colors.grey,
                               backgroundColor: Colors.black12,
-                              textStyle: TextStyle(
-                                color: Colors.grey,
-                              ),
                               shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.circular(width(16))),
+                                borderRadius: BorderRadius.circular(width(16)),
+                              ),
                             ),
                             onPressed: () {
                               MyDialog(

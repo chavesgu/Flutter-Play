@@ -27,7 +27,7 @@ class _VideoListState extends State<VideoList>
         completeText: '刷新数据成功',
         failedText: '刷新数据失败',
       ),
-      controller: _refreshController,
+      controller: _refreshController!,
       // enablePullDown: !_isFullScreen,
       onRefresh: _refresh,
       child: ListView.separated(

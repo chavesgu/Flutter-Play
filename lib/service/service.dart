@@ -12,12 +12,29 @@ abstract class Service {
     api = createApi(baseUrl: 'https://api.chavesgu.com');
   }
 
+  static Future<Map<String, dynamic>> geoCoder(
+      {required double longitude, required double latitude}) async {
+    try {
+      Response res = await api!.get(
+          '/getLocation/?key=MXKBZ-4Z7CU-AAHVO-2IZNV-M2OLF-4YBCJ&location=$latitude,$longitude');
+      return {
+        'address': res.data.address,
+        'address_component': res.data.address_component,
+        'format_address':
+            res.data.formatted_addresses?.recommend ?? res.data.address,
+      };
+    } catch (e) {
+      return {};
+    }
+  }
+
   // music list  /song/url
   static Future<List> getHotMusic() async {
     try {
       Response res1 = await api!.get('/music/playlist/detail?id=3778678');
       List<dynamic> tracks = res1.data['playlist']['trackIds'];
-      List res2 = await getMusicDetail(tracks.map<int>((e) => e["id"]).toList());
+      List res2 =
+          await getMusicDetail(tracks.map<int>((e) => e["id"]).toList());
       return res2;
     } catch (e) {
       return [];
@@ -26,7 +43,8 @@ abstract class Service {
 
   static Future<List> getMusicDetail(List<int> list) async {
     try {
-      Response res2 = await api!.get('/music/song/detail?ids=${list.join(',')}');
+      Response res2 =
+          await api!.get('/music/song/detail?ids=${list.join(',')}');
       return res2.data['songs'];
     } catch (e) {
       return [];
