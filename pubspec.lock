@@ -294,6 +294,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.2.0"
+  get:
+    dependency: "direct main"
+    description:
+      name: get
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "4.1.4"
   home_indicator:
     dependency: "direct main"
     description:
@@ -552,7 +559,7 @@ packages:
       path: "../flutter-plugin/scan"
       relative: true
     source: path
-    version: "1.0.2"
+    version: "1.1.0"
   shared_preferences:
     dependency: "direct main"
     description:
