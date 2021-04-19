@@ -26,7 +26,6 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-  intl: ^0.17.0
   cupertino_icons: ^1.0.2
 
 #  null safety
@@ -35,6 +34,7 @@ dependencies:
   url_launcher: ^6.0.2
   crypto: ^3.0.0
   get: ^4.1.4
+  get_storage: ^2.0.2
   provider: ^5.0.0
   uuid: ^3.0.1
   path_provider: ^2.0.1
@@ -87,10 +87,10 @@ dependencies:
 
   pull_to_refresh:
     path: ../flutter-plugin/flutter_pulltorefresh-nullsafety
-  ##  qiniu_manager:
-  ##    git:
-  ##      url: https://github.com/chavesgu/flutter_qiniu_manager.git
-  ##      ref: 3fe0b591dfc710bbc78d2dc4b9e5ff2c6e0aa313
+#  images_picker:
+#    git:
+#      url: https://github.com/flutter-package/images_picker.git
+#      ref: 451131c
 
 # no null safety
 #  flutter_swiper: ^1.1.6
@@ -148,5 +148,3 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-flutter_intl:
-  enabled: true

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter_orientation/flutter_orientation.dart';
 import 'package:flutter_play/variable.dart';
@@ -195,7 +196,7 @@ class _MyVideoState extends State<MyVideo> {
                       if (_isFullScreen) {
                         _toggleFullScreen();
                       } else {
-                        Navigator.of(context).pop();
+                        Get.back();
                       }
                     },
                   ),

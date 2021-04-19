@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_play/main.dart';
 import 'package:flutter_play/utils/utils.dart';
 import 'package:flutter_play/variable.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MainAgreement extends StatelessWidget {
@@ -54,9 +55,8 @@ class MainAgreement extends StatelessWidget {
                                 ),
                               ),
                               onPressed: () async {
-                                SharedPreferences sp =
-                                    await SharedPreferences.getInstance();
-                                sp.setBool('agree', true);
+                                GetStorage storage = GetStorage();
+                                storage.write('agree', true);
                                 // main
                                 startApp();
                               },

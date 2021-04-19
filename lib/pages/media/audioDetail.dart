@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class AudioDetailPage extends StatefulWidget {
   static const String name = '/audio-detail';
 
-  AudioDetailPage(
-    this.list, {
-    this.current = 0,
-  });
-
-  final int current;
-  final List list;
+  AudioDetailPage();
 
   @override
   State<StatefulWidget> createState() => _AudioDetailState();
 }
 
 class _AudioDetailState extends State<AudioDetailPage> {
+  List get list => Get.arguments['list'];
   int? index;
 
   @override
@@ -28,7 +24,7 @@ class _AudioDetailState extends State<AudioDetailPage> {
 
   @override
   void initState() {
-    index = widget.current;
+    index = Get.arguments['current'] ?? 0;
     super.initState();
   }
 }

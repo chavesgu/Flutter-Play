@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_orientation/flutter_orientation.dart';
 import 'package:device_info/device_info.dart';
@@ -11,11 +10,11 @@ import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_play/components/GlobalComponents.dart';
 import 'package:flutter_play/store/model.dart';
 
+import 'package:get/get.dart';
 import 'package:images_picker/images_picker.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:local_auth/error_codes.dart' as authError;
-import 'package:provider/provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_amap/flutter_amap.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -139,21 +138,15 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
               ElevatedButton(
                 child: Text('view pdf'),
                 onPressed: () {
-                  Navigator.of(context).pushNamed(
+                  Get.toNamed(
                       '${PDFView.name}?url=${Uri.encodeComponent('https://cdn.chavesgu.com/profile.pdf')}');
                 },
               ),
               ElevatedButton(
                 child: Text('view webview'),
                 onPressed: () {
-                  Navigator.of(context).pushNamed(
+                  Get.toNamed(
                       '${MyWebView.name}?url=${Uri.encodeQueryComponent('https://www.chavesgu.com/webview/')}');
-                },
-              ),
-              ElevatedButton(
-                child: Text('view download webview'),
-                onPressed: () {
-                  _downloadWebView();
                 },
               ),
               ElevatedButton(
@@ -172,8 +165,9 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
               ElevatedButton(
                 child: Text('random username'),
                 onPressed: () {
-                  var setName = context.read<UserModel>().setUserName;
-                  setName(Random().nextInt(100).toString());
+                  UserModel userModel = Get.find<UserModel>();
+                  userModel.title.value =
+                      'chavesgu-${Random().nextInt(100).toString()}';
                 },
               ),
               ElevatedButton(
@@ -201,7 +195,7 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
               ElevatedButton(
                 child: Text('custom page'),
                 onPressed: () {
-                  Navigator.of(context).push(CustomRouteBuilder(
+                  navigator?.push(CustomRouteBuilder(
                     enterWidget: TestFixedPage(),
                   ));
                 },
@@ -209,13 +203,7 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
               ElevatedButton(
                 child: Text('canvas1'),
                 onPressed: () {
-                  Navigator.of(context).pushNamed(CanvasPage.name);
-                },
-              ),
-              ElevatedButton(
-                child: Text('canvas2'),
-                onPressed: () {
-                  Navigator.of(context).pushNamed(CanvasPage2.name);
+                  Get.toNamed(CanvasPage.name);
                 },
               ),
               ElevatedButton(
@@ -268,7 +256,7 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
               ElevatedButton(
                 child: Text('chart demo'),
                 onPressed: () {
-                  Navigator.of(context).pushNamed(ChartDemo.name);
+                  Get.toNamed(ChartDemo.name);
                 },
               ),
             ],
@@ -561,7 +549,7 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
   void goScan() async {
     bool hasPermission = await Permission.camera.request().isGranted;
     if (hasPermission) {
-      Navigator.of(context).pushNamed(ScanPage.name);
+      Get.toNamed(ScanPage.name);
     } else {
       MyDialog(
         context: context,
@@ -649,21 +637,5 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
     MyDialog(
       content: errorText,
     );
-  }
-
-  void _downloadWebView() async {
-    Loading.show();
-    Directory tempDir = Directory.systemTemp;
-    String tempPath =
-        tempDir.path + '/webview/download-demo.html'; // /tmp ?? /Library/Caches
-    try {
-      await Service.download("https://www.chavesgu.com/demo.html", tempPath);
-      print(tempPath);
-      await Loading.hide();
-      Navigator.of(context).pushNamed(
-          '${MyWebView.name}?url=${Uri.encodeQueryComponent('file://$tempPath')}');
-    } catch (e) {
-      print(e);
-    }
   }
 }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 import '../variable.dart';
 
-class ThemeModel extends ChangeNotifier {
+class ThemeModel extends GetxController {
   ThemeModel({
     required bool useSystemMode,
     required ThemeMode themeMode,
@@ -26,9 +27,9 @@ class ThemeModel extends ChangeNotifier {
   bool get useSystemMode => _useSystemMode;
   void toggleUseSystemMode(bool isUse) async {
     _useSystemMode = isUse;
-    SharedPreferences sp = await SharedPreferences.getInstance();
-    await sp.setBool('useSystemMode', isUse);
-    notifyListeners();
+    GetStorage storage = GetStorage();
+    await storage.write('useSystemMode', isUse);
+    update();
   }
 
   // app内部主题模式
@@ -37,9 +38,9 @@ class ThemeModel extends ChangeNotifier {
   void toggleAppThemeMode(ThemeMode mode) async {
     _appThemeMode = mode;
     int index = themeModeList.indexOf(mode);
-    SharedPreferences sp = await SharedPreferences.getInstance();
-    await sp.setInt('appThemeMode', index);
-    notifyListeners();
+    GetStorage storage = GetStorage();
+    await storage.write('appThemeMode', index);
+    update();
   }
 
   // app系统主题模式
@@ -47,7 +48,7 @@ class ThemeModel extends ChangeNotifier {
   ThemeMode get systemThemeMode => _systemThemeMode;
   void toggleSystemThemeMode(ThemeMode mode) async {
     _systemThemeMode = mode;
-    notifyListeners();
+    update();
   }
 
   // 主题颜色索引
@@ -56,8 +57,8 @@ class ThemeModel extends ChangeNotifier {
   // 改变主题颜色索引
   void changeTheme(int index) async {
     _themeIndex = index;
-    SharedPreferences sp = await SharedPreferences.getInstance();
-    await sp.setInt('themeIndex', index);
-    notifyListeners();
+    GetStorage storage = GetStorage();
+    await storage.write('themeIndex', index);
+    update();
   }
 }

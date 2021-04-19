@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_play/components/GlobalComponents.dart';
+import 'package:flutter_play/pages/media/audioDetail.dart';
 import 'package:flutter_play/service/service.dart';
 import 'package:flutter_play/variable.dart';
+import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class AudioList extends StatefulWidget {
@@ -40,8 +42,13 @@ class _AudioListState extends State<AudioList>
           return GestureDetector(
             onTap: () {
               List<int> ids = music.map<int>((e) => e["id"]).toList();
-              Navigator.of(context).pushNamed(
-                  '/audio-detail?list=${jsonEncode(ids)}&current=$index');
+              Get.toNamed(
+                AudioDetailPage.name,
+                arguments: {
+                  "list": ids,
+                  "current": index,
+                },
+              );
             },
             behavior: HitTestBehavior.opaque,
             child: Container(

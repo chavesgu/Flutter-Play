@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_play/components/GlobalComponents.dart';
 import 'package:flutter_play/store/global.dart';
 import 'package:flutter_play/variable.dart';
-import 'package:provider/provider.dart';
 
 class VideoDetailPage extends StatefulWidget {
   static const String name = '/video-detail';
@@ -11,9 +10,11 @@ class VideoDetailPage extends StatefulWidget {
   State<StatefulWidget> createState() => _VideoDetailPageState();
 }
 
-class _VideoDetailPageState extends State<VideoDetailPage> with TickerProviderStateMixin {
+class _VideoDetailPageState extends State<VideoDetailPage>
+    with TickerProviderStateMixin {
 // https://cdn.chavesgu.com/SampleVideo.mp4
-  bool get isFullScreen => MediaQuery.of(context).orientation == Orientation.landscape;
+  bool get isFullScreen =>
+      MediaQuery.of(context).orientation == Orientation.landscape;
   TabController? tabController;
 
   @override
@@ -24,14 +25,9 @@ class _VideoDetailPageState extends State<VideoDetailPage> with TickerProviderSt
         children: [
           Offstage(
             offstage: isFullScreen,
-            child: Selector<GlobalModel, bool>(
-              selector: (_, model) => model.isFullScreen,
-              builder: (_, b, child) {
-                return Container(
-                  height: statusBarHeight,
-                  color: Colors.black,
-                );
-              },
+            child: Container(
+              height: statusBarHeight,
+              color: Colors.black,
             ),
           ),
           MyVideo(

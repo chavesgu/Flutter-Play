@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_play/router/path.dart';
 import 'package:flutter_play/variable.dart';
 import 'package:flutter_orientation/flutter_orientation.dart';
+import 'package:get/get.dart';
 
 import 'media/media.dart';
 import 'user/userCenter.dart';
@@ -65,13 +66,13 @@ class EntryPageState extends State<EntryPage>
           _renderDrawerItem(
             text: '设置',
             onTap: () {
-              Navigator.of(context).pushNamed(SettingPage.name);
+              Get.toNamed(SettingPage.name);
             },
           ),
           _renderDrawerItem(
             text: '关于我们',
             onTap: () {
-              Navigator.of(context).pushNamed(
+              Get.toNamed(
                   '${MyWebView.name}?url=${Uri.encodeQueryComponent('https://www.chavesgu.com')}');
             },
           ),

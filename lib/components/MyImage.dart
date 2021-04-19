@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter_play/pages/global/imagePreview.dart';
+import 'package:get/get.dart';
 
 import '../variable.dart';
 
@@ -151,22 +152,19 @@ class MyImage extends StatelessWidget {
       BuildContext context, dynamic content, TapDownDetails details) {
     double _x = (vw / 2 - details.globalPosition.dx) / (vw / 2);
     double _y = (vh / 2 - details.globalPosition.dy) / (vh / 2);
-    Navigator.push(
-      context,
-      PageRouteBuilder(
-        pageBuilder: (BuildContext context, Animation<double> animation,
-            Animation secondaryAnimation) {
-          return ScaleTransition(
-            scale: animation,
-            alignment: Alignment(-_x, -_y),
-            child: ImagePreview(
-              imageList: [content, content],
-            ),
-          );
-        },
-        transitionDuration: Duration(milliseconds: 150),
-      ),
-    );
+    navigator?.push(PageRouteBuilder(
+      pageBuilder: (BuildContext context, Animation<double> animation,
+          Animation secondaryAnimation) {
+        return ScaleTransition(
+          scale: animation,
+          alignment: Alignment(-_x, -_y),
+          child: ImagePreview(
+            imageList: [content, content],
+          ),
+        );
+      },
+      transitionDuration: Duration(milliseconds: 150),
+    ));
   }
 
   Widget? _loadStateChanged(ExtendedImageState state) {

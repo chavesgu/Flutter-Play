@@ -5,6 +5,7 @@ import 'package:extended_image/extended_image.dart';
 
 import 'package:flutter_play/variable.dart';
 import 'package:flutter_play/components/GlobalComponents.dart';
+import 'package:get/get.dart';
 
 class ImagePreview extends StatefulWidget {
   ImagePreview({
@@ -64,7 +65,7 @@ class _ImagePreviewState extends State<ImagePreview> {
     for (var i = 0; i < list.length; i++) {
       res.add(GestureDetector(
         onTap: () {
-          Navigator.pop(context);
+          Get.back();
         },
         child: Container(
           width: vw,

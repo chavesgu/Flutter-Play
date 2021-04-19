@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'package:flutter_play/variable.dart';
 import 'package:flutter_play/store/model.dart';
+import 'package:get/get.dart';
 
 class SettingPage extends StatefulWidget {
   static const name = '/setting';
@@ -25,14 +25,12 @@ class SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(50),
-        child: AppBar(
-          title: Text('设置'),
-        ),
+      appBar: AppBar(
+        title: Text('设置'),
+        toolbarHeight: 50,
       ),
-      body: Consumer<ThemeModel>(
-        builder: (context, model, child) {
+      body: GetBuilder<ThemeModel>(
+        builder: (model) {
           widgetList = _buildWidgetList(model);
           _toggleAnimate(model);
           return AnimatedList(
@@ -55,9 +53,8 @@ class SettingPageState extends State<SettingPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    ThemeModel model = context.read<ThemeModel>();
+    ThemeModel model = Get.find<ThemeModel>();
     listControl.add(0);
     if (!model.useSystemMode) listControl.add(1);
     listControl.add(2);

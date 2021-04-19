@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
@@ -12,9 +13,7 @@ import '../../variable.dart';
 class PDFView extends StatefulWidget {
   static const name = '/pdfView';
 
-  PDFView(this.url);
-
-  final String url;
+  PDFView();
 
   @override
   State<StatefulWidget> createState() => PDFViewState();
@@ -71,11 +70,13 @@ class PDFViewState extends State<PDFView> {
   }
 
   void _urlChange() async {
+    String? url = Get.parameters['url'];
+    if (url == null) return;
     Directory tempDir = Directory.systemTemp;
     String tempPath =
         tempDir.path + '/' + Uuid().v4() + '.pdf'; // /tmp ?? /Library/Caches
     try {
-      await Service.download(widget.url, tempPath);
+      await Service.download(url, tempPath);
     } catch (e) {
       print(e);
     }

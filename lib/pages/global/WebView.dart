@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 // import 'package:webview_flutter/webview_flutter.dart';
 
@@ -7,9 +8,7 @@ import '../../variable.dart';
 class MyWebView extends StatefulWidget {
   static const name = '/webview';
 
-  MyWebView(this.url);
-
-  final String url;
+  MyWebView();
 
   @override
   createState() => _WebViewState();
@@ -22,7 +21,7 @@ class _WebViewState extends State<MyWebView> {
   StateSetter titleStateSetter = (VoidCallback fn) {};
   StateSetter progressStateSetter = (VoidCallback fn) {};
 
-  get url => widget.url;
+  get url => Get.parameters['url'] ?? '';
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +40,7 @@ class _WebViewState extends State<MyWebView> {
             if (controller != null && await controller!.canGoBack()) {
               controller!.goBack();
             } else {
-              Navigator.of(context).pop();
+              Get.back();
             }
           },
         ),
@@ -85,7 +84,7 @@ class _WebViewState extends State<MyWebView> {
                     controller!.addJavaScriptHandler(
                         handlerName: 'push',
                         callback: (arguments) {
-                          Navigator.of(context).pushNamed(
+                          Get.toNamed(
                               '${MyWebView.name}?url=${Uri.encodeQueryComponent(arguments.first)}');
                         });
                   },

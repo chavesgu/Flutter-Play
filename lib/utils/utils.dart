@@ -7,8 +7,7 @@ import 'package:flutter_play/components/GlobalComponents.dart';
 import 'package:flutter_play/variable.dart';
 import 'package:images_picker/images_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:uuid/uuid.dart';
 
 // 工具类
@@ -134,8 +133,8 @@ class Utils {
       if (tempDir.existsSync()) {
         tempDir.deleteSync(recursive: true);
       }
-      SharedPreferences sp = await SharedPreferences.getInstance();
-      await sp.clear();
+      GetStorage storage = GetStorage();
+      await storage.erase();
     } catch (e) {
       print(e);
     }

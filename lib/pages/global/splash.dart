@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_play/variable.dart';
+import 'package:get/get.dart';
 import '../entry.dart';
 
 class Splash extends StatefulWidget {
@@ -98,17 +99,6 @@ class SplashState extends State {
   }
 
   _goEntry() {
-    Navigator.of(context).pushReplacement(
-      PageRouteBuilder(
-        pageBuilder: (BuildContext context, Animation<double> animation,
-            Animation<double> secondaryAnimation) {
-          return FadeTransition(
-            opacity: animation,
-            child: EntryPage(),
-          );
-        },
-        transitionDuration: Duration(milliseconds: 500),
-      ),
-    );
+    Get.toNamed(EntryPage.name);
   }
 }

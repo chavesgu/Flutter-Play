@@ -1,14 +1,10 @@
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_play/generated/l10n.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 
 import 'package:flutter_play/store/model.dart';
 import 'package:flutter_play/components/GlobalComponents.dart';
 import 'package:flutter_play/variable.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class UserCenter extends StatefulWidget {
@@ -28,6 +24,7 @@ class UserCenterState extends State<UserCenter>
 
   Widget build(BuildContext context) {
     super.build(context);
+    GetStorage storage = GetStorage();
     return SmartRefresher(
       header: MaterialClassicHeader(),
       controller: _refreshController,
@@ -35,12 +32,7 @@ class UserCenterState extends State<UserCenter>
       child: CustomScrollView(
         slivers: [
           SliverAppBar(
-            title: Selector<GlobalModel, Locale>(
-              builder: (context, locale, child) {
-                return Text(S.of(context).user);
-              },
-              selector: (context, model) => model.lang!,
-            ),
+            title: Text('userCenter'.tr),
             centerTitle: true,
             pinned: true,
             toolbarHeight: 50,
@@ -62,22 +54,7 @@ class UserCenterState extends State<UserCenter>
                     shape: BoxShape.circle,
                     preview: true,
                   ),
-                  Selector<UserModel, String>(
-                    selector: (context, model) => model.title,
-                    builder: (context, value, child) {
-                      return Text(value);
-                    },
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Selector<GlobalModel, Locale>(
-                    selector: (context, model) => model.lang!,
-                    builder: (context, value, child) {
-                      return Text('当前语言: $value');
-                    },
-                  ),
+                  Obx(() => Text(Get.find<UserModel>().title.value)),
                 ],
               ),
               Row(
@@ -85,17 +62,17 @@ class UserCenterState extends State<UserCenter>
                   ElevatedButton(
                     child: Text('切换en'),
                     onPressed: () {
-                      context
-                          .read<GlobalModel>()
-                          .changeLocale(Locale.fromSubtags(languageCode: 'en'));
+                      Get.updateLocale(Locale('en'));
+                      storage.write('languageCode', 'en');
+                      storage.write('countryCode', '');
                     },
                   ),
                   ElevatedButton(
                     child: Text('切换zh'),
                     onPressed: () {
-                      context.read<GlobalModel>().changeLocale(
-                          Locale.fromSubtags(
-                              languageCode: 'zh', scriptCode: 'Hans'));
+                      Get.updateLocale(Locale('zh', 'CN'));
+                      storage.write('languageCode', 'zh');
+                      storage.write('countryCode', 'CN');
                     },
                   ),
                 ],
