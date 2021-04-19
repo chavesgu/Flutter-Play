@@ -4,6 +4,11 @@ import 'path.dart';
 
 List<GetPage> routes = [
   GetPage(
+    name: SplashBanner.name,
+    page: () => SplashBanner(),
+    transition: Transition.fadeIn,
+  ),
+  GetPage(
     name: EntryPage.name,
     page: () => EntryPage(),
     transition: Transition.fadeIn,

@@ -1,5 +1,6 @@
 library router_path;
 
+export 'package:flutter_play/pages/global/splashBanner.dart';
 export 'package:flutter_play/pages/entry.dart';
 export 'package:flutter_play/pages/global/WebView.dart';
 export 'package:flutter_play/pages/home/search.dart';

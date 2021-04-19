@@ -12,6 +12,8 @@ import 'package:flutter_play/store/model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashBanner extends StatefulWidget {
+  static const String name = '/splash';
+
   @override
   State<StatefulWidget> createState() {
     return SplashBannerState();
@@ -85,6 +87,9 @@ class SplashBannerState extends State<SplashBanner> {
     _timer?.cancel();
     GetStorage storage = GetStorage();
     storage.write("splash", true);
-    Get.offAllNamed(EntryPage.name);
+    Get.offAll(
+      EntryPage(),
+      transition: Transition.fadeIn,
+    );
   }
 }

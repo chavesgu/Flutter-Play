@@ -1,7 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_play/components/GlobalComponents.dart';
+import 'package:flutter_play/router/path.dart';
 import 'package:flutter_play/store/global.dart';
 import 'package:flutter_play/variable.dart';
+import 'package:get/get.dart';
 
 class VideoDetailPage extends StatefulWidget {
   static const String name = '/video-detail';
@@ -80,6 +83,20 @@ class _VideoDetailPageState extends State<VideoDetailPage>
                         Text(
                           'desc',
                           style: Theme.of(context).textTheme.caption,
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Get.toNamed(SettingPage.name);
+                            // navigator?.push(CupertinoPageRoute(builder: (_) {
+                            //   return Scaffold(
+                            //     appBar: AppBar(
+                            //       title: Text('test'),
+                            //     ),
+                            //   );
+                            // }));
+                            // navigator?.pushNamed(SettingPage.name);
+                          },
+                          child: Text('test'),
                         ),
                       ],
                     ),
