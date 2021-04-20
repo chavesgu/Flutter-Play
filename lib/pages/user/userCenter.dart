@@ -63,16 +63,20 @@ class UserCenterState extends State<UserCenter>
                     child: Text('切换en'),
                     onPressed: () {
                       Get.updateLocale(Locale('en'));
-                      storage.write('languageCode', 'en');
-                      storage.write('countryCode', '');
+                      storage.write('locale', {
+                        'languageCode': 'en',
+                        'countryCode': '',
+                      });
                     },
                   ),
                   ElevatedButton(
                     child: Text('切换zh'),
                     onPressed: () {
                       Get.updateLocale(Locale('zh', 'CN'));
-                      storage.write('languageCode', 'zh');
-                      storage.write('countryCode', 'CN');
+                      storage.write('locale', {
+                        'languageCode': 'zh',
+                        'countryCode': 'CN',
+                      });
                     },
                   ),
                 ],

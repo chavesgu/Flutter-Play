@@ -63,9 +63,9 @@ void main() async {
 Future<void> startApp() async {
   // init wx
   registerWxApi(
-          appId: 'wx9819a39d04a4253f',
-          universalLink: 'https://applink.chavesgu.com/flutter/')
-      .then((value) {
+    appId: 'wx9819a39d04a4253f',
+    universalLink: 'https://applink.chavesgu.com/flutter/',
+  ).then((value) {
     // print(value);
   });
   // mob server init
@@ -79,14 +79,17 @@ Future<void> startApp() async {
   // 获取缓存的内部主题模式
   int themeModeIndex = await getThemeMode();
   // 获取缓存语言
-  String languageCode = storage.read('languageCode') ?? 'zh';
-  String countryCode = storage.read('countryCode') ?? 'CN';
+  Map<String, String> locale = storage.read('locale') ??
+      {
+        'languageCode': 'zh',
+        'countryCode': 'CN',
+      };
   runApp(MyApp(
     splashed: storage.read("splash") ?? false,
     useSystemMode: themeModeIndex == 0,
     themeMode: themeModeList[themeModeIndex],
     themeIndex: themeIndex,
-    locale: Locale(languageCode, countryCode),
+    locale: Locale(locale['languageCode']!, locale['countryCode']),
   ));
 }
 
@@ -141,6 +144,7 @@ class MyApp extends StatelessWidget {
           darkTheme: MyTheme.dark(themeColor),
           themeMode:
               model.useSystemMode ? ThemeMode.system : model.appThemeMode,
+          initialRoute: splashed ? EntryPage.name : SplashBanner.name,
           getPages: routes,
           navigatorObservers: <NavigatorObserver>[
             MyRouteObserve(),
@@ -153,22 +157,7 @@ class MyApp extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
           ],
-          home: WillPopScope(
-            onWillPop: () async {
-              bool canPop = navigator!.canPop();
-              if (canPop) return true;
-              if (Platform.isAndroid) {
-                MoveBg.run();
-              }
-              return false;
-            },
-            child: LayoutBuilder(
-              builder: (_context, _constraints) {
-                uiInit(_context, _constraints);
-                return splashed ? EntryPage() : SplashBanner();
-              },
-            ),
-          ),
+          // home: EntryPage(),
         );
       },
     );

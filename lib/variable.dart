@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 export './iconfont.dart';
 
 GlobalKey rootKey = GlobalKey();
@@ -75,7 +76,7 @@ double height(num h) {
   return ScreenUtil().setHeight(h).toDouble();
 }
 
-void uiInit(BuildContext context, BoxConstraints boxConstraints) {
+void uiInit(BuildContext context) {
   final BuildContext _context = context;
 
   final Orientation currentOrientation = MediaQuery.of(_context).orientation;
@@ -95,10 +96,18 @@ void uiInit(BuildContext context, BoxConstraints boxConstraints) {
   isSystemDark = MediaQuery.of(_context).platformBrightness == Brightness.dark;
 
   //
-  globalContext = context;
+  globalContext = _context;
 
-  globalOverlayState = Overlay.of(context);
+  globalOverlayState = Overlay.of(_context);
 
-  ScreenUtil.init(boxConstraints,
-      orientation: Orientation.portrait, designSize: Size(750, 1134));
+  ScreenUtil.init(
+    BoxConstraints(
+      minWidth: MediaQuery.of(_context).size.width,
+      maxWidth: MediaQuery.of(_context).size.width,
+      minHeight: MediaQuery.of(_context).size.height,
+      maxHeight: MediaQuery.of(_context).size.height,
+    ),
+    orientation: Orientation.portrait,
+    designSize: Size(750, 1134),
+  );
 }

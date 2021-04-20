@@ -6,7 +6,6 @@ import 'package:flutter_play/main.dart';
 import 'package:flutter_play/utils/utils.dart';
 import 'package:flutter_play/variable.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class MainAgreement extends StatelessWidget {
   @override
@@ -15,7 +14,7 @@ class MainAgreement extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: LayoutBuilder(
         builder: (ctx, _) {
-          uiInit(ctx, _);
+          uiInit(ctx);
           return Container(
             color: Colors.white,
             child: SafeArea(

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_play/router/path.dart';
 import 'package:flutter_play/variable.dart';
 import 'package:flutter_orientation/flutter_orientation.dart';
 import 'package:get/get.dart';
+import 'package:move_bg/move_bg.dart';
 
 import 'media/media.dart';
 import 'user/userCenter.dart';
@@ -50,6 +52,9 @@ class EntryPageState extends State<EntryPage>
 
   @override
   Widget build(BuildContext context) {
+    //
+    uiInit(context);
+    //
     Widget _drawer = Container(
       padding: EdgeInsets.only(
         top: statusBarHeight + width(40),
@@ -79,38 +84,49 @@ class EntryPageState extends State<EntryPage>
         ],
       ),
     );
-    return InnerDrawer(
-      key: drawerKey,
-      onTapClose: true,
-      swipe: !isFullScreen,
-      leftChild: _drawer,
-      backgroundDecoration: BoxDecoration(
-        color: Theme.of(context).primaryColor,
-      ),
-      scaffold: Scaffold(
-        body: PageView(
-          controller: tabController,
-          onPageChanged: _pageChange,
-          children: _pages.map<Widget>((e) => e["instance"]).toList(),
-          physics: NeverScrollableScrollPhysics(),
+    return WillPopScope(
+      onWillPop: () async {
+        bool canPop = navigator!.canPop();
+        if (canPop) return true;
+        if (Platform.isAndroid) {
+          MoveBg.run();
+        }
+        return false;
+      },
+      child: InnerDrawer(
+        key: drawerKey,
+        onTapClose: true,
+        swipe: !isFullScreen,
+        leftChild: _drawer,
+        backgroundDecoration: BoxDecoration(
+          color: Theme.of(context).primaryColor,
         ),
-        bottomNavigationBar: Offstage(
-          offstage: MediaQuery.of(context).orientation == Orientation.landscape,
-          child: StatefulBuilder(
-            builder: (context, stateSetter) {
-              return MyBottomNav(
-                onChange: toggleTab,
-                currentIndex: _tab,
-                iconSize: width(46),
-                items: <MyBottomNavItem>[
-                  for (var page in _pages)
-                    MyBottomNavItem(
-                      icon: page["icon"],
-                      title: page["title"],
-                    ),
-                ],
-              );
-            },
+        scaffold: Scaffold(
+          body: PageView(
+            controller: tabController,
+            onPageChanged: _pageChange,
+            children: _pages.map<Widget>((e) => e["instance"]).toList(),
+            physics: NeverScrollableScrollPhysics(),
+          ),
+          bottomNavigationBar: Offstage(
+            offstage:
+                MediaQuery.of(context).orientation == Orientation.landscape,
+            child: StatefulBuilder(
+              builder: (context, stateSetter) {
+                return MyBottomNav(
+                  onChange: toggleTab,
+                  currentIndex: _tab,
+                  iconSize: width(46),
+                  items: <MyBottomNavItem>[
+                    for (var page in _pages)
+                      MyBottomNavItem(
+                        icon: page["icon"],
+                        title: page["title"],
+                      ),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),

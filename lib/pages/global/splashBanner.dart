@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:fluro/fluro.dart';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_play/router/path.dart';
@@ -9,7 +9,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:flutter_play/components/GlobalComponents.dart';
 import 'package:flutter_play/variable.dart';
 import 'package:flutter_play/store/model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:move_bg/move_bg.dart';
 
 class SplashBanner extends StatefulWidget {
   static const String name = '/splash';
@@ -26,46 +26,59 @@ class SplashBannerState extends State<SplashBanner> {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ThemeModel>(
-      builder: (model) {
-        return MyBrightness(
-          brightness: model.brightness,
-          child: Container(
-            width: vw,
-            height: vh,
-            color: Theme.of(context).primaryColor,
-            child: Stack(
-              children: <Widget>[
-                Center(
-                  child: Text(
-                    '启动广告',
-                    style: TextStyle(
-                      decoration: TextDecoration.none,
-                      color: Colors.white,
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: height(200),
-                  right: width(60),
-                  child: GestureDetector(
+    //
+    uiInit(context);
+    //
+    return WillPopScope(
+      onWillPop: () async {
+        bool canPop = navigator!.canPop();
+        if (canPop) return true;
+        if (Platform.isAndroid) {
+          MoveBg.run();
+        }
+        return false;
+      },
+      child: GetBuilder<ThemeModel>(
+        builder: (model) {
+          return MyBrightness(
+            brightness: model.brightness,
+            child: Container(
+              width: vw,
+              height: vh,
+              color: Theme.of(context).primaryColor,
+              child: Stack(
+                children: <Widget>[
+                  Center(
                     child: Text(
-                      '跳过 ${count.toString()}',
+                      '启动广告',
                       style: TextStyle(
                         decoration: TextDecoration.none,
                         color: Colors.white,
                         fontSize: 20,
                       ),
                     ),
-                    onTap: _goEntry,
                   ),
-                )
-              ],
+                  Positioned(
+                    bottom: height(200),
+                    right: width(60),
+                    child: GestureDetector(
+                      child: Text(
+                        '跳过 ${count.toString()}',
+                        style: TextStyle(
+                          decoration: TextDecoration.none,
+                          color: Colors.white,
+                          fontSize: 20,
+                        ),
+                      ),
+                      onTap: _goEntry,
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 
@@ -87,9 +100,6 @@ class SplashBannerState extends State<SplashBanner> {
     _timer?.cancel();
     GetStorage storage = GetStorage();
     storage.write("splash", true);
-    Get.offAll(
-      EntryPage(),
-      transition: Transition.fadeIn,
-    );
+    Get.offAllNamed(EntryPage.name);
   }
 }
