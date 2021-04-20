@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../variable.dart';
@@ -29,6 +31,7 @@ class Popup extends StatefulWidget {
 
 class _PopupState extends State<Popup> {
   bool _visible = false;
+  Completer<bool> completer = Completer();
 
   @override
   Widget build(BuildContext context) {
@@ -52,17 +55,6 @@ class _PopupState extends State<Popup> {
                   : Colors.transparent,
             ),
           ),
-          // SizedBox(
-          //   width: vw,
-          //   height: vh,
-          //   child: Column(
-          //     mainAxisAlignment: MainAxisAlignment.center,
-          //     crossAxisAlignment: CrossAxisAlignment.center,
-          //     children: [
-          //       Flexible(child: widget.child),
-          //     ],
-          //   ),
-          // ),
           Center(
             child: widget.child,
           )
@@ -78,6 +70,7 @@ class _PopupState extends State<Popup> {
     super.initState();
 
     WidgetsBinding.instance?.addPostFrameCallback((timestamp) {
+      completer.complete(true);
       setState(() {
         _visible = true;
       });
@@ -85,6 +78,9 @@ class _PopupState extends State<Popup> {
   }
 
   Future<void> hide() async {
+    if (!mounted) {
+      await completer.future;
+    }
     setState(() {
       _visible = false;
     });

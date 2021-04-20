@@ -259,6 +259,15 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
                   Get.toNamed(ChartDemo.name);
                 },
               ),
+              ElevatedButton(
+                child: Text('clear storage'),
+                onPressed: () async {
+                  Loading.show();
+                  await Utils.clearCache();
+                  await Loading.hide();
+                  Toast.show('clear success');
+                },
+              ),
             ],
           ),
           SelectableText(deviceToken),

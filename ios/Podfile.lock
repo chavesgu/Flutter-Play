@@ -58,8 +58,6 @@ PODS:
   - Reachability (3.2)
   - scan (0.0.1):
     - Flutter
-  - shared_preferences (0.0.1):
-    - Flutter
   - url_launcher (0.0.1):
     - Flutter
   - vibration (1.7.4-nullsafety.0):
@@ -90,7 +88,6 @@ DEPENDENCIES:
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
   - push (from `.symlinks/plugins/push/ios`)
   - scan (from `.symlinks/plugins/scan/ios`)
-  - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
   - vibration (from `.symlinks/plugins/vibration/ios`)
   - video_player (from `.symlinks/plugins/video_player/ios`)
@@ -146,8 +143,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/push/ios"
   scan:
     :path: ".symlinks/plugins/scan/ios"
-  shared_preferences:
-    :path: ".symlinks/plugins/shared_preferences/ios"
   url_launcher:
     :path: ".symlinks/plugins/url_launcher/ios"
   vibration:
@@ -183,7 +178,6 @@ SPEC CHECKSUMS:
   push: a7ba2a855499815c320afd3d78eab15c56cd8140
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   scan: aea35bb4aa59ccc8839c576a18cd57c7d492cc86
-  shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
   vibration: 1ec279c4a1a7a646627b54039d812334b3f1114a
   video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e

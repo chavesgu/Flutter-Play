@@ -31,6 +31,7 @@ class _ScanPageState extends State<ScanPage> {
             icon: Icon(Icons.photo),
             color: Color.fromRGBO(244, 244, 244, 1),
             onPressed: () async {
+              scanController.pause();
               List<Media>? res = await Utils.imagePicker();
               if (res != null) {
                 String code = await Scan.parse(res[0].path!);
@@ -39,6 +40,8 @@ class _ScanPageState extends State<ScanPage> {
                   title: '扫码结果',
                   content: code,
                 );
+              } else {
+                scanController.resume();
               }
             },
           ),

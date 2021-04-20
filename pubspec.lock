@@ -531,7 +531,7 @@ packages:
       path: "../flutter-plugin/scan"
       relative: true
     source: path
-    version: "1.1.0"
+    version: "1.1.1"
   sky_engine:
     dependency: transitive
     description: flutter
