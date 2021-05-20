@@ -27,7 +27,7 @@ class _MyLoadingState extends State<MyLoading> {
           left: width(20),
           right: width(20),
         ),
-        color: Color.fromRGBO(0, 0, 0, .7),
+        color: Color.fromRGBO(0, 0, 0, .8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,

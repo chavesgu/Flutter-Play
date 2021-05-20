@@ -9,7 +9,7 @@ Dio? api;
 abstract class Service {
   static init() {
     simple = createApi();
-    api = createApi(baseUrl: 'https://api.chavesgu.com');
+    api = createApi(baseUrl: 'https://api.chavesgu.com', http2: true);
   }
 
   static Future<Map<String, dynamic>> geoCoder(

@@ -48,13 +48,6 @@ final List<Color> darkThemeList = [
   Color(0xff660000),
 ];
 
-String durationToTime(Duration duration) {
-  int h = duration.inHours;
-  int m = duration.inMinutes.remainder(60);
-  int s = duration.inSeconds.remainder(60);
-  return '${h > 0 ? h.toString() + ':' : ''}${m < 10 ? '0' + m.toString() : m}:${s < 10 ? '0' + s.toString() : s}';
-}
-
 String generateToken(String appid, String secretKey, String shortid) {
   int expiredTime = DateTime(2019, 7, 13).millisecondsSinceEpoch ~/ 100;
   final rawMask = '${appid}_${expiredTime}_$secretKey';
@@ -101,11 +94,9 @@ void uiInit(BuildContext context) {
   globalOverlayState = Overlay.of(_context);
 
   ScreenUtil.init(
-    BoxConstraints(
-      minWidth: MediaQuery.of(_context).size.width,
-      maxWidth: MediaQuery.of(_context).size.width,
-      minHeight: MediaQuery.of(_context).size.height,
-      maxHeight: MediaQuery.of(_context).size.height,
+    BoxConstraints.tightFor(
+      width: MediaQuery.of(_context).size.width,
+      height: MediaQuery.of(_context).size.height,
     ),
     orientation: Orientation.portrait,
     designSize: Size(750, 1134),

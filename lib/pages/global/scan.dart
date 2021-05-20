@@ -32,13 +32,13 @@ class _ScanPageState extends State<ScanPage> {
             color: Color.fromRGBO(244, 244, 244, 1),
             onPressed: () async {
               scanController.pause();
-              List<Media>? res = await Utils.imagePicker();
-              if (res != null) {
-                String code = await Scan.parse(res[0].path!);
+              List<Media>? pics = await Utils.imagePicker();
+              if (pics != null) {
+                String? data = await Scan.parse(pics[0].path);
                 MyDialog(
                   context: context,
                   title: '扫码结果',
-                  content: code,
+                  content: data,
                 );
               } else {
                 scanController.resume();
@@ -47,40 +47,37 @@ class _ScanPageState extends State<ScanPage> {
           ),
         ],
       ),
-      body: Column(
+      body: Stack(
         children: <Widget>[
-          Stack(
-            children: <Widget>[
-              Container(
-                height: vh,
-                child: ScanView(
-                  // scanAreaScale: 1,
-                  controller: scanController,
-                  onCapture: (data) {
-                    MyDialog(
-                      context: context,
-                      title: '扫码结果',
-                      content: data,
-                    );
-                  },
-                ),
-              ),
-              Positioned(
-                bottom: bottomAreaHeight,
-                left: 0,
-                right: 0,
-                child: IconButton(
-                  icon: Icon(_isFlashOn ? Icons.flash_off : Icons.flash_on),
-                  color: Colors.white,
-                  onPressed: () {
-                    setState(() {
-                      scanController.toggleTorchMode();
-                      _isFlashOn = !_isFlashOn;
-                    });
-                  },
-                ),
-              ),
-            ],
+          Container(
+            height: vh,
+            child: ScanView(
+              // scanAreaScale: 1,
+              controller: scanController,
+              scanLineColor: Colors.blue,
+              onCapture: (data) {
+                MyDialog(
+                  context: context,
+                  title: '扫码结果',
+                  content: data,
+                );
+              },
+            ),
+          ),
+          Positioned(
+            bottom: bottomAreaHeight,
+            left: 0,
+            right: 0,
+            child: IconButton(
+              icon: Icon(_isFlashOn ? Icons.flash_off : Icons.flash_on),
+              color: Colors.white,
+              onPressed: () {
+                setState(() {
+                  scanController.toggleTorchMode();
+                  _isFlashOn = !_isFlashOn;
+                });
+              },
+            ),
           ),
         ],
       ),

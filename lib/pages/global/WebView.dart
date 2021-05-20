@@ -14,7 +14,8 @@ class MyWebView extends StatefulWidget {
   createState() => _WebViewState();
 }
 
-class _WebViewState extends State<MyWebView> {
+class _WebViewState extends State<MyWebView>
+    with SingleTickerProviderStateMixin {
   InAppWebViewController? controller;
   int _progress = 0;
   String _windowTitle = 'WebView';
@@ -62,7 +63,6 @@ class _WebViewState extends State<MyWebView> {
                       supportZoom: false,
                       mediaPlaybackRequiresUserGesture: false,
                       transparentBackground: true,
-                      disableHorizontalScroll: true,
                       // javaScriptCanOpenWindowsAutomatically: true,
                     ),
                     android: AndroidInAppWebViewOptions(
@@ -76,6 +76,7 @@ class _WebViewState extends State<MyWebView> {
                       allowsInlineMediaPlayback: true,
                       alwaysBounceVertical: true,
                       suppressesIncrementalRendering: true,
+                      limitsNavigationsToAppBoundDomains: true,
                     ),
                   ),
                   onWebViewCreated: (InAppWebViewController c) {
@@ -116,17 +117,15 @@ class _WebViewState extends State<MyWebView> {
                   progressStateSetter = _setState;
                   return _progress != 100
                       ? Positioned(
-                          child: GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            child: Center(
-                              child: Container(
-                                width: width(100),
-                                height: width(100),
-                                child: CircularProgressIndicator(
-                                  value: _progress / 100,
-                                ),
-                              ),
-                            ),
+                          width: vw,
+                          top: 0,
+                          left: 0,
+                          child: LinearProgressIndicator(
+                            value: _progress / 100,
+                            backgroundColor: Colors.transparent,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Color(0xff07c160)),
+                            minHeight: 2,
                           ),
                         )
                       : SizedBox.shrink();

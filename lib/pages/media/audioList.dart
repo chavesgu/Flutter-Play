@@ -36,7 +36,7 @@ class _AudioListState extends State<AudioList>
       // enablePullDown: !_isFullScreen,
       onRefresh: _refresh,
       child: ListView.separated(
-        cacheExtent: 2,
+        cacheExtent: vh,
         itemCount: music.length,
         itemBuilder: (context, index) {
           return GestureDetector(

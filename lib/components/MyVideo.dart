@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter_orientation/flutter_orientation.dart';
 import 'package:flutter_play/variable.dart';
-import 'package:home_indicator/home_indicator.dart';
 
 class MyVideo extends StatefulWidget {
   MyVideo(
@@ -374,16 +373,9 @@ class _MyVideoState extends State<MyVideo> {
       if (_isFullScreen) {
         // 设置竖屏
         FlutterOrientation.setOrientation(DeviceOrientation.portraitUp);
-        // iphoneX底部横条
-        HomeIndicator.deferScreenEdges([]);
-        SystemUiOverlayStyle systemUiOverlayStyle =
-            SystemUiOverlayStyle(statusBarColor: Colors.transparent);
-        SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
       } else {
         // 设置横屏
         FlutterOrientation.setOrientation(DeviceOrientation.landscapeRight);
-        HomeIndicator.deferScreenEdges([ScreenEdge.bottom]);
-        SystemChrome.setEnabledSystemUIOverlays([]);
       }
       _startPlayControlTimer();
       if (widget.screenChange != null) widget.screenChange!();
@@ -397,6 +389,13 @@ class _MyVideoState extends State<MyVideo> {
       return 'assets';
     }
     return 'file';
+  }
+
+  String durationToTime(Duration duration) {
+    int h = duration.inHours;
+    int m = duration.inMinutes % 60;
+    int s = duration.inSeconds % 60;
+    return '${h > 0 ? h.toString() + ':' : ''}${m < 10 ? '0' + m.toString() : m}:${s < 10 ? '0' + s.toString() : s}';
   }
 }
 
@@ -579,4 +578,18 @@ class _VideoProgressIndicatorState extends State<_VideoProgressIndicator> {
       return paddedProgressIndicator;
     }
   }
+}
+
+class VideoProgressColors {
+  const VideoProgressColors({
+    this.playedColor = const Color.fromRGBO(255, 0, 0, 0.7),
+    this.bufferedColor = const Color.fromRGBO(50, 50, 200, 0.4),
+    this.backgroundColor = const Color.fromRGBO(200, 200, 200, 0.5),
+  });
+
+  final Color playedColor;
+
+  final Color bufferedColor;
+
+  final Color backgroundColor;
 }

@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_play/components/GlobalComponents.dart';
 import 'package:flutter_play/pages/media/videoDetail.dart';
@@ -31,61 +32,62 @@ class _VideoListState extends State<VideoList>
       controller: _refreshController!,
       // enablePullDown: !_isFullScreen,
       onRefresh: _refresh,
-      child: ListView.separated(
-        itemCount: 10,
-        itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () {
-              goDetail(index);
-            },
-            behavior: HitTestBehavior.opaque,
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                  horizontal: width(30), vertical: width(24)),
-              child: Row(
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(right: width(30)),
-                    child: Container(
-                      width: width(160),
-                      height: width(160),
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.all(Radius.circular(width(16))),
-                      ),
-                      clipBehavior: Clip.hardEdge,
-                      child: Stack(
-                        fit: StackFit.expand,
-                        alignment: Alignment.center,
-                        children: [
-                          MyImage(
-                            'https://cdn.chavesgu.com/avatar.jpg',
-                          ),
-                          Container(
-                            color: Colors.black.withOpacity(0.3),
-                            child: Icon(
-                              IconFont.play,
-                              color: Colors.white,
+      child: CustomScrollView(
+        slivers: [
+          SliverList(
+            delegate: SliverChildListDelegate([
+              for (int index = 0; index < 10; index++)
+                GestureDetector(
+                  onTap: () {
+                    goDetail(index);
+                  },
+                  behavior: HitTestBehavior.opaque,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: width(30), vertical: width(24)),
+                    child: Row(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(right: width(30)),
+                          child: Container(
+                            width: width(160),
+                            height: width(160),
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(width(16))),
+                            ),
+                            clipBehavior: Clip.hardEdge,
+                            child: Stack(
+                              fit: StackFit.expand,
+                              alignment: Alignment.center,
+                              children: [
+                                MyImage(
+                                  'https://cdn.chavesgu.com/avatar.jpg',
+                                ),
+                                Container(
+                                  color: Colors.black.withOpacity(0.3),
+                                  child: Icon(
+                                    IconFont.play,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                        Column(
+                          children: [
+                            Text('标题$index'),
+                            Text('描述$index'),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                  Column(
-                    children: [
-                      Text('标题$index'),
-                      Text('描述$index'),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-        separatorBuilder: (context, index) {
-          return Divider();
-        },
+                ),
+            ]),
+          ),
+        ],
       ),
     );
   }

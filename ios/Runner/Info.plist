@@ -148,5 +148,9 @@
 	<true/>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
+	<key>WKAppBoundDomains</key>
+	<array>
+		<string>chavesgu.com</string>
+	</array>
 </dict>
 </plist>

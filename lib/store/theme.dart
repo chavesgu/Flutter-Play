@@ -8,17 +8,16 @@ class ThemeModel extends GetxController {
   ThemeModel({
     required bool useSystemMode,
     required ThemeMode themeMode,
-    required ThemeMode systemThemeMode,
+    required int themeIndex,
   }) {
     _useSystemMode = useSystemMode;
     _appThemeMode = themeMode;
-    _systemThemeMode = systemThemeMode;
+    _themeIndex = themeIndex;
   }
   // 综合主题模式
   // 当前使用模式是否暗模式
-  bool get isDark => _useSystemMode
-      ? _systemThemeMode == ThemeMode.dark
-      : _appThemeMode == ThemeMode.dark;
+  bool get isDark =>
+      _useSystemMode ? isSystemDark : _appThemeMode == ThemeMode.dark;
   // 当前的brightness
   Brightness get brightness => isDark ? Brightness.dark : Brightness.light;
 
@@ -40,14 +39,6 @@ class ThemeModel extends GetxController {
     int index = themeModeList.indexOf(mode);
     GetStorage storage = GetStorage();
     await storage.write('appThemeMode', index);
-    update();
-  }
-
-  // app系统主题模式
-  ThemeMode _systemThemeMode = ThemeMode.light;
-  ThemeMode get systemThemeMode => _systemThemeMode;
-  void toggleSystemThemeMode(ThemeMode mode) async {
-    _systemThemeMode = mode;
     update();
   }
 

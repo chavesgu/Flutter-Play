@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_play/utils/utils.dart';
 import 'package:get/get.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
 import 'package:path_provider/path_provider.dart';
@@ -26,7 +26,6 @@ class PDFViewState extends State<PDFView> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(50),
@@ -65,25 +64,31 @@ class PDFViewState extends State<PDFView> {
                 });
               },
             )
-          : Container(),
+          : SizedBox.shrink(),
     );
   }
 
   void _urlChange() async {
-    String? url = Get.parameters['url'];
-    if (url == null) return;
-    Directory tempDir = Directory.systemTemp;
-    String tempPath =
-        tempDir.path + '/' + Uuid().v4() + '.pdf'; // /tmp ?? /Library/Caches
-    try {
-      await Service.download(url, tempPath);
-    } catch (e) {
-      print(e);
-    }
-    _pdfController = PdfController(
-      document: PdfDocument.openFile(tempPath),
-    );
-    setState(() {});
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) async {
+      Loading.show();
+      String? url = Get.parameters['url'];
+      if (url == null) return;
+      Directory appDir = await getApplicationDocumentsDirectory();
+      String tempPath = appDir.path + '/pdf/chavesgu-profile.pdf';
+      try {
+        if (!File(tempPath).existsSync()) {
+          print('download pdf');
+          await Service.download(url, tempPath);
+        }
+      } catch (e) {
+        print(e);
+      }
+      _pdfController = PdfController(
+        document: PdfDocument.openFile(tempPath),
+      );
+      await Loading.hide();
+      setState(() {});
+    });
   }
 
   @override

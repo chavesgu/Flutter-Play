@@ -3,16 +3,18 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:flutter_play/pages/global/imagePreview.dart';
 import 'package:get/get.dart';
+import 'package:animations/animations.dart';
 
+import 'MyBrightness.dart';
 import '../variable.dart';
+import './Blur.dart';
 
 class MyImage extends StatelessWidget {
   MyImage(
     this.image, {
-    this.loadingWiget,
-    this.failWidget,
+    this.loadingWidget,
+    this.failedWidget,
     this.fit = BoxFit.fitWidth,
     this.width,
     this.height,
@@ -26,25 +28,31 @@ class MyImage extends StatelessWidget {
     this.scale = 1.0,
     this.preview = false,
     this.gestureConfig,
+    this.cacheName = CACHE_NAME,
+    this.cacheLocal = false,
   }) : assert(image is String || image is File || image is Uint8List,
             'param image must be String or File or Uint8List');
 
+  static const CACHE_NAME = 'image_cache';
+
   final dynamic image;
-  final Widget? loadingWiget;
-  final Widget? failWidget;
+  final Widget? loadingWidget;
+  final double loadingSize;
+  final Widget? failedWidget;
   final BoxFit? fit;
   final double? width;
   final double? height;
   final ExtendedImageMode mode;
   final BoxBorder? border;
   final BorderRadius? borderRadius;
-  final double loadingSize;
   final Color? color;
   final BlendMode? colorBlendMode;
   final double scale;
   final BoxShape shape;
   final InitGestureConfigHandler? gestureConfig;
   final bool preview;
+  final String cacheName;
+  final bool cacheLocal;
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +72,7 @@ class MyImage extends StatelessWidget {
         fit: fit,
         mode: mode,
         initGestureConfigHandler: gestureConfig ?? _gestureConfig,
+        imageCacheName: cacheName,
       );
     } else if (image is File) {
       _imageWidget = ExtendedImage.file(
@@ -80,10 +89,10 @@ class MyImage extends StatelessWidget {
         fit: fit,
         mode: mode,
         initGestureConfigHandler: gestureConfig ?? _gestureConfig,
+        imageCacheName: cacheName,
       );
     } else if (image is String) {
       if (RegExp(r"^https?:\/\/\S+").hasMatch(image)) {
-        // network
         _imageWidget = ExtendedImage.network(
           image,
           width: width,
@@ -98,6 +107,8 @@ class MyImage extends StatelessWidget {
           fit: fit,
           mode: mode,
           initGestureConfigHandler: gestureConfig ?? _gestureConfig,
+          cache: cacheLocal,
+          imageCacheName: cacheName,
         );
       } else if (RegExp(r"^assets\/\S+").hasMatch(image)) {
         _imageWidget = ExtendedImage.asset(
@@ -114,6 +125,7 @@ class MyImage extends StatelessWidget {
           fit: fit,
           mode: mode,
           initGestureConfigHandler: gestureConfig ?? _gestureConfig,
+          imageCacheName: cacheName,
         );
       } else {
         _imageWidget = ExtendedImage.file(
@@ -130,46 +142,30 @@ class MyImage extends StatelessWidget {
           fit: fit,
           mode: mode,
           initGestureConfigHandler: gestureConfig ?? _gestureConfig,
+          imageCacheName: cacheName,
         );
       }
     }
     if (preview) {
-      TapDownDetails? _details;
-      return GestureDetector(
-        onTapDown: (TapDownDetails details) {
-          _details = details;
-        },
-        onTap: () {
-          _previewImage(context, image, _details!);
-        },
-        child: _imageWidget,
+      return OpenContainer(
+        clipBehavior: Clip.hardEdge,
+        transitionDuration: Duration(milliseconds: 400),
+        closedElevation: 0,
+        openElevation: 0,
+        closedColor: Colors.transparent,
+        openColor: Colors.transparent,
+        closedBuilder: (_, action) => _imageWidget!,
+        openBuilder: (_, action) => ImagePreview(
+          imageList: [image, image],
+        ),
       );
     }
     return _imageWidget!;
   }
 
-  void _previewImage(
-      BuildContext context, dynamic content, TapDownDetails details) {
-    double _x = (vw / 2 - details.globalPosition.dx) / (vw / 2);
-    double _y = (vh / 2 - details.globalPosition.dy) / (vh / 2);
-    navigator?.push(PageRouteBuilder(
-      pageBuilder: (BuildContext context, Animation<double> animation,
-          Animation secondaryAnimation) {
-        return ScaleTransition(
-          scale: animation,
-          alignment: Alignment(-_x, -_y),
-          child: ImagePreview(
-            imageList: [content, content],
-          ),
-        );
-      },
-      transitionDuration: Duration(milliseconds: 150),
-    ));
-  }
-
   Widget? _loadStateChanged(ExtendedImageState state) {
     if (state.extendedImageLoadState == LoadState.loading) {
-      return loadingWiget ??
+      return loadingWidget ??
           Center(
             child: SizedBox(
               width: loadingSize,
@@ -179,7 +175,7 @@ class MyImage extends StatelessWidget {
           );
     }
     if (state.extendedImageLoadState == LoadState.failed) {
-      return failWidget ??
+      return failedWidget ??
           GestureDetector(
             child: Icon(Icons.error),
             onTap: () {
@@ -191,6 +187,95 @@ class MyImage extends StatelessWidget {
 
   GestureConfig _gestureConfig(ExtendedImageState state) {
     return GestureConfig(
-        inPageView: false, initialScale: 1.0, cacheGesture: false);
+      inPageView: false,
+      initialScale: 1.0,
+      cacheGesture: false,
+    );
+  }
+
+  static void clear([String cacheName = CACHE_NAME]) {
+    clearMemoryImageCache(cacheName);
+  }
+}
+
+class ImagePreview extends StatefulWidget {
+  ImagePreview({
+    this.current = 0,
+    required this.imageList,
+  });
+
+  final List<String> imageList;
+  final int current;
+
+  @override
+  State<StatefulWidget> createState() {
+    return _ImagePreviewState(current);
+  }
+}
+
+class _ImagePreviewState extends State<ImagePreview> {
+  _ImagePreviewState(int current) {
+    _current = current;
+  }
+  int? _current;
+
+  @override
+  Widget build(BuildContext context) {
+    // 指定状态栏白色文字
+    return MyBrightness(
+      brightness: Brightness.dark,
+      child: Scaffold(
+        body: Stack(
+          children: <Widget>[
+            ExtendedImageGesturePageView(
+              physics: ClampingScrollPhysics(),
+              controller: PageController(initialPage: _current!),
+              onPageChanged: _pageChange,
+              children: _renderImage(widget.imageList, context),
+            ),
+            Positioned(
+              top: 20 + statusBarHeight,
+              width: vw,
+              child: Center(
+                child: Text(
+                  '${_current! + 1}/${widget.imageList.length}',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  List<Widget> _renderImage(List<String> list, context) {
+    final List<Widget> res = [];
+    for (var i = 0; i < list.length; i++) {
+      res.add(GestureDetector(
+        onTap: () {
+          Get.back();
+        },
+        child: Container(
+          width: vw,
+          height: vh,
+          color: Colors.black,
+          child: MyImage(
+            list[i],
+            mode: ExtendedImageMode.gesture,
+            preview: false,
+          ),
+        ),
+      ));
+    }
+    return res;
+  }
+
+  _pageChange(int index) {
+    setState(() {
+      _current = index;
+    });
   }
 }

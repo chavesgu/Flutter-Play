@@ -3,6 +3,7 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_http2_adapter/dio_http2_adapter.dart';
 
 Dio createApi({
   String? method,
@@ -21,6 +22,7 @@ Dio createApi({
   int maxRedirects = 5,
   RequestEncoder? requestEncoder,
   ResponseDecoder? responseDecoder,
+  bool http2 = false,
 }) {
   BaseOptions baseOptions = BaseOptions(
     method: method,
@@ -41,6 +43,9 @@ Dio createApi({
     responseDecoder: responseDecoder,
   );
   final Dio dio = Dio(baseOptions);
+  if (http2) {
+    dio.httpClientAdapter = Http2Adapter(ConnectionManager(idleTimeout: 60000));
+  }
   (dio.transformer as DefaultTransformer).jsonDecodeCallback = parseJson;
   // (api.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (client) {
   //   client.findProxy = (uri) {
@@ -49,13 +54,13 @@ Dio createApi({
   //   // you can also create a new HttpClient to dio
   //   // return new HttpClient();
   // };
-  dio.interceptors.add(LogInterceptor(
-    request: false,
-    requestHeader: false,
-    requestBody: false,
-    responseHeader: false,
-    responseBody: false,
-  )); //开启请求日志
+  // dio.interceptors.add(LogInterceptor(
+  //   request: false,
+  //   requestHeader: false,
+  //   requestBody: false,
+  //   responseHeader: false,
+  //   responseBody: false,
+  // )); //开启请求日志
   dio.interceptors.add(CookieManager(CookieJar()));
   return dio;
 }

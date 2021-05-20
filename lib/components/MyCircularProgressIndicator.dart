@@ -37,29 +37,29 @@ class _MyCircularProgressIndicatorState
       TweenSequenceItem(
         weight: 0.2,
         tween: _ColorTween(
-          begin: Colors.purple,
-          end: Colors.red,
+          begin: Color(0xff4284F4),
+          end: Color(0xffEA4336),
         ),
       ),
       TweenSequenceItem(
         weight: 0.2,
         tween: _ColorTween(
-          begin: Colors.red,
-          end: Colors.yellow,
+          begin: Color(0xffEA4336),
+          end: Color(0xffFABD05),
         ),
       ),
       TweenSequenceItem(
         weight: 0.2,
         tween: _ColorTween(
-          begin: Colors.yellow,
-          end: Colors.blue,
+          begin: Color(0xffFABD05),
+          end: Color(0xff33A853),
         ),
       ),
       TweenSequenceItem(
         weight: 0.2,
         tween: _ColorTween(
-          begin: Colors.blue,
-          end: Colors.purple,
+          begin: Color(0xff33A853),
+          end: Color(0xff4284F4),
         ),
       ),
     ]).animate(_animationController!);

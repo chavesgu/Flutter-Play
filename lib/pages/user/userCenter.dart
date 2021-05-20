@@ -6,6 +6,7 @@ import 'package:flutter_play/components/GlobalComponents.dart';
 import 'package:flutter_play/variable.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:animations/animations.dart';
 
 class UserCenter extends StatefulWidget {
   static const String title = 'user';
@@ -98,10 +99,26 @@ class UserCenterState extends State<UserCenter>
   List<Widget> buildList() {
     final List<Widget> list = [];
     for (int i = 0; i < 20; i++) {
-      list.add(ListTile(
-        title: Text('chaves'),
-        subtitle: Text('$i'),
-        trailing: Icon(IconFont.right_arrow),
+      list.add(OpenContainer(
+        clipBehavior: Clip.hardEdge,
+        transitionDuration: Duration(seconds: 1),
+        closedBuilder: (_, action) {
+          return ListTile(
+            title: Text('chaves'),
+            subtitle: Text('$i'),
+            trailing: Icon(IconFont.right_arrow),
+          );
+        },
+        openBuilder: (_, action) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('open container'),
+            ),
+            body: Center(
+              child: Text('$i'),
+            ),
+          );
+        },
       ));
     }
     return list;

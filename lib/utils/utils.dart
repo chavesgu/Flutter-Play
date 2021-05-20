@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_play/components/GlobalComponents.dart';
 import 'package:flutter_play/variable.dart';
+import 'package:get/get.dart';
 import 'package:images_picker/images_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:get_storage/get_storage.dart';
@@ -12,6 +13,14 @@ import 'package:uuid/uuid.dart';
 
 // 工具类
 class Utils {
+  // 选择相册和拍照
+  static Future<SourceType?> chooseImageSource([BuildContext? context]) async {
+    return await bottomPopup<SourceType>(items: {
+      '相册': SourceType.gallery,
+      '拍照': SourceType.camera,
+    });
+  }
+
   // 选取照片
   static Future<List<Media>?> imagePicker({
     BuildContext? context,
@@ -83,7 +92,7 @@ class Utils {
 
 // 二进制转file
   static Future<File> bytesToFile(ByteData byteData) async {
-    // await getTemporaryDirectory()
+    // await getTemporaryDirectory();
     Directory tempDir = Directory.systemTemp;
     String tempPath = tempDir.path; // /tmp ?? /Library/Caches
 
@@ -127,18 +136,137 @@ class Utils {
     });
   }
 
-  static Future<void> clearCache() async {
+  static Future<bool> clearCache() async {
     try {
-      Directory tempDir = Directory.systemTemp;
-      if (tempDir.existsSync()) {
-        tempDir.deleteSync(recursive: true);
-      }
+      Directory appDir = await getApplicationDocumentsDirectory();
+      Directory tmpDir = Directory.systemTemp;
+      await Future.wait([
+        ...tmpDir
+            .listSync()
+            .where((FileSystemEntity file) => file.existsSync())
+            .map((FileSystemEntity file) => file.delete(recursive: true)),
+        ...appDir
+            .listSync()
+            .where((FileSystemEntity file) => file.existsSync())
+            .map((FileSystemEntity file) => file.delete(recursive: true)),
+      ]);
       GetStorage storage = GetStorage();
       await storage.erase();
+      return true;
     } catch (e) {
       print(e);
+      return false;
     }
   }
+}
+
+Future<T?> bottomPopup<T>({
+  BuildContext? context,
+  required Map<String, T> items,
+  String? title,
+}) async {
+  return await showCupertinoModalPopup<T>(
+    context: context ?? globalContext!,
+    barrierColor: Colors.black.withOpacity(.6),
+    builder: (BuildContext context) {
+      List<Widget> buildItems() {
+        List<Widget> res = [];
+        items.forEach((String key, T value) {
+          res.add(Divider(
+            height: 1,
+            color: Colors.black.withOpacity(.1),
+          ));
+          res.add(_TapEffect(
+            child: Container(
+              height: width(112),
+              padding: EdgeInsets.only(
+                left: width(32),
+                right: width(32),
+              ),
+              child: Center(
+                child: Text(
+                  key,
+                  style: TextStyle(
+                    color: Colors.black.withOpacity(.9),
+                    fontSize: 17,
+                    fontWeight: FontWeight.normal,
+                    decoration: TextDecoration.none,
+                  ),
+                ),
+              ),
+            ),
+            onTap: () {
+              Get.back(result: value);
+            },
+          ));
+        });
+        return res;
+      }
+
+      Widget cancel = _TapEffect(
+        child: Container(
+          height: width(112) + bottomAreaHeight,
+          padding: EdgeInsets.only(
+            bottom: bottomAreaHeight,
+            left: width(32),
+            right: width(32),
+          ),
+          child: Center(
+            child: Text(
+              '取消',
+              style: TextStyle(
+                color: Colors.black.withOpacity(.9),
+                fontSize: 17,
+                fontWeight: FontWeight.normal,
+                decoration: TextDecoration.none,
+              ),
+            ),
+          ),
+        ),
+        onTap: () {
+          Get.back();
+        },
+      );
+      return Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Color(0xfff7f7f7),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(width(24)),
+            topRight: Radius.circular(width(24)),
+          ),
+        ),
+        clipBehavior: Clip.hardEdge,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (title != null)
+              Container(
+                height: width(112),
+                color: Colors.white,
+                child: Center(
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      color: Colors.black.withOpacity(.5),
+                      fontSize: 12,
+                      fontWeight: FontWeight.normal,
+                      decoration: TextDecoration.none,
+                    ),
+                  ),
+                ),
+              ),
+            ...buildItems(),
+            Divider(
+              height: width(16),
+              color: Colors.transparent,
+            ),
+            cancel,
+          ],
+        ),
+      );
+    },
+  );
 }
 
 // Custom Dialog
@@ -149,7 +277,7 @@ class MyDialog {
   MyDialog({
     BuildContext? context,
     this.title = '提示',
-    this.content = '弹窗内容',
+    this.content,
     this.confirmText = '确认',
     this.cancelText = '取消',
     this.confirmColor = const Color(0xff576b95),
@@ -158,10 +286,12 @@ class MyDialog {
     this.onConfirm,
     this.onCancel,
     this.closeOnClickMask = false,
+    this.maxHeight,
   }) {
-    assert(content is String || content is InlineSpan,
+    assert(content == null || content is String || content is InlineSpan,
         'content must be string or InlineSpan');
     _context = context;
+    _content = content ?? 'null';
     _show();
   }
 
@@ -175,8 +305,10 @@ class MyDialog {
   final bool closeOnClickMask;
   final Function? onConfirm;
   final Function? onCancel;
+  final double? maxHeight;
   BuildContext? _context;
   OverlayEntry? _currentEntry;
+  dynamic _content;
   Popup? _popup;
 
   void _show() {
@@ -214,17 +346,19 @@ class MyDialog {
         margin: EdgeInsets.only(
           bottom: 32,
         ),
-        child: Text.rich(
-          (content is String) ? TextSpan(text: content) : content,
-          // textAlign: TextAlign.justify,
-          softWrap: true,
-          overflow: TextOverflow.fade,
-          style: TextStyle(
-            color: Colors.black.withOpacity(0.5),
-            fontSize: width(34),
-            fontWeight: FontWeight.normal,
-            height: 1.4,
-            decoration: TextDecoration.none,
+        child: SingleChildScrollView(
+          child: Text.rich(
+            (_content is String) ? TextSpan(text: _content) : _content,
+            // textAlign: TextAlign.justify,
+            softWrap: true,
+            overflow: TextOverflow.fade,
+            style: TextStyle(
+              color: Colors.black.withOpacity(0.5),
+              fontSize: width(34),
+              fontWeight: FontWeight.normal,
+              height: 1.4,
+              decoration: TextDecoration.none,
+            ),
           ),
         ),
       ),
@@ -299,7 +433,7 @@ class MyDialog {
           right: width(50),
         ),
         constraints: BoxConstraints(
-          maxHeight: vh * 0.9,
+          maxHeight: maxHeight ?? (vh * 0.8),
         ),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -310,7 +444,9 @@ class MyDialog {
           mainAxisSize: MainAxisSize.min,
           children: [
             titleWidget,
-            contentWidget,
+            Flexible(
+              child: contentWidget,
+            ),
             controlWidget,
           ],
         ),
@@ -584,13 +720,9 @@ class _TapEffectState extends State<_TapEffect> {
           isTap = false;
         });
       },
-      child: FractionallySizedBox(
-        widthFactor: 1,
-        heightFactor: 1,
-        child: Container(
-          color: isTap ? Color.fromRGBO(236, 236, 236, 1) : Colors.white,
-          child: widget.child,
-        ),
+      child: Container(
+        color: isTap ? Color.fromRGBO(236, 236, 236, 1) : Colors.white,
+        child: widget.child,
       ),
     );
   }

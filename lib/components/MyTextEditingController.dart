@@ -3,14 +3,22 @@ import 'package:flutter/material.dart';
 class MyTextEditingController extends TextEditingController {
   MyTextEditingController({
     String? text,
-    TextStyle editingTextStyle = const TextStyle(backgroundColor: Colors.black12),
+    TextStyle editingTextStyle =
+        const TextStyle(backgroundColor: Colors.black12),
   })  : _editingTextStyle = editingTextStyle,
         super(text: text);
 
   TextStyle _editingTextStyle;
 
   @override
-  TextSpan buildTextSpan({TextStyle? style, required bool withComposing}) {
+  TextSpan buildTextSpan({
+    required BuildContext context,
+    TextStyle? style,
+    required bool withComposing,
+  }) {
+    assert(!value.composing.isValid ||
+        !withComposing ||
+        value.isComposingRangeValid);
     if (!value.composing.isValid || !withComposing) {
       return TextSpan(style: style, text: text);
     }

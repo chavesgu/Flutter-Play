@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_orientation/flutter_orientation.dart';
 import 'package:device_info/device_info.dart';
@@ -81,7 +83,37 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
         ],
       ),
       body: ListView(
+        padding: EdgeInsets.only(left: 15, right: 15),
         children: <Widget>[
+          // Container(
+          //   decoration: BoxDecoration(
+          //     color: Colors.white,
+          //     boxShadow: [
+          //       BoxShadow(
+          //         color: Colors.grey.withOpacity(0.5),
+          //         spreadRadius: 2,
+          //         blurRadius: 4, // changes position of shadow
+          //       )
+          //     ],
+          //   ),
+          //   child: CarouselSlider(
+          //     options: CarouselOptions(
+          //       height: 150.0,
+          //       // aspectRatio: 16 / 9,
+          //       viewportFraction: 1,
+          //       autoPlay: false,
+          //       autoPlayInterval: Duration(seconds: 2),
+          //       autoPlayAnimationDuration: Duration(milliseconds: 300),
+          //       enlargeCenterPage: false,
+          //     ),
+          //     items: [
+          //       MyImage(
+          //           'https://asset.txqn.huohua.cn/assets/5dd0de26-ed8b-4261-bff5-02db442c8195.png'),
+          //       MyImage(
+          //           'https://asset.txqn.huohua.cn/assets/5dd0de26-ed8b-4261-bff5-02db442c8195.png'),
+          //     ],
+          //   ),
+          // ),
           Wrap(
             spacing: 20,
             children: <Widget>[
@@ -125,7 +157,7 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
               ),
               ElevatedButton(
                 onPressed: () {
-                  chooseImageSource();
+                  getImage();
                 },
                 child: Text('take photo'),
               ),
@@ -139,14 +171,14 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
                 child: Text('view pdf'),
                 onPressed: () {
                   Get.toNamed(
-                      '${PDFView.name}?url=${Uri.encodeComponent('https://cdn.chavesgu.com/profile.pdf')}');
+                      '${PDFView.name}?url=${Uri.encodeComponent('https://oss.chavesgu.com/learn/CSS.pdf')}');
                 },
               ),
               ElevatedButton(
                 child: Text('view webview'),
                 onPressed: () {
                   Get.toNamed(
-                      '${MyWebView.name}?url=${Uri.encodeQueryComponent('https://www.chavesgu.com/webview/')}');
+                      '${MyWebView.name}?url=${Uri.encodeComponent('https://www.chavesgu.com/webview/')}');
                 },
               ),
               ElevatedButton(
@@ -206,12 +238,6 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
                   Get.toNamed(CanvasPage.name);
                 },
               ),
-              ElevatedButton(
-                child: Text('close app'),
-                onPressed: () {
-                  Platform.isIOS ? exit(0) : SystemNavigator.pop();
-                },
-              ),
               ElevatedButton.icon(
                 icon: Icon(IconFont.wechat),
                 label: Text('wechat login'),
@@ -248,12 +274,6 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
                 },
               ),
               ElevatedButton(
-                child: Text('HapticFeedback'),
-                onPressed: () async {
-                  Vibration.vibrate(duration: 10);
-                },
-              ),
-              ElevatedButton(
                 child: Text('chart demo'),
                 onPressed: () {
                   Get.toNamed(ChartDemo.name);
@@ -266,6 +286,14 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
                   await Utils.clearCache();
                   await Loading.hide();
                   Toast.show('clear success');
+                },
+              ),
+              ElevatedButton(
+                child: Text('test'),
+                onPressed: () async {
+                  bottomPopup(
+                    items: {'item1': '1'},
+                  );
                 },
               ),
             ],
@@ -291,6 +319,12 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
 
   @override
   void initState() {
+    // rootBundle.loadString('AssetManifest.json').then((manifestContent) {
+    //   final Map<String, dynamic> manifestMap = json.decode(manifestContent);
+    //   final imagePaths =
+    //       manifestMap.keys.where((str) => str.contains('assets/images'));
+    //   print(imagePaths);
+    // });
     Amap.setKey(
       androidKey: '798d80979d68058e033d8d403145ba0d',
       iosKey: 'bfea8a8172612b2f2de52e256fcdbc66',
@@ -380,12 +414,11 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
 
   _dialog() {
     MyDialog(
-      context: context,
       content: TextSpan(children: [
         WidgetSpan(
           child: GestureDetector(
             onTap: () {
-              MyDialog(context: context, content: 'twice dialog');
+              MyDialog(content: 'twice dialog');
             },
             child: MyImage(
               'https://cdn.chavesgu.com/avatar.jpg',
@@ -394,7 +427,7 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
             ),
           ),
         ),
-        TextSpan(text: '      ← try click')
+        TextSpan(text: '      ← try click'),
       ]),
     );
   }
@@ -431,47 +464,9 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
         .add('/quote/stkdata?obj=$code&field=ZuiXinJia,ZhangFu&sub=1&qid=1');
   }
 
-  chooseImageSource() {
-    showCupertinoModalPopup(
-        context: context,
-        builder: (BuildContext context) {
-          return Container(
-            width: double.infinity,
-            height: 120 + bottomAreaHeight,
-            padding: EdgeInsets.only(bottom: bottomAreaHeight),
-            color: Colors.white,
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: SizedBox.expand(
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.pop(context, SourceType.camera);
-                      },
-                      child: Text('拍照'),
-                    ),
-                  ),
-                ),
-                Divider(height: 1),
-                Expanded(
-                  child: SizedBox.expand(
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.pop(context, SourceType.gallery);
-                      },
-                      child: Text('相册'),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        }).then((popValue) {
-      if (popValue is SourceType) getImage(popValue);
-    });
-  }
-
-  getImage(SourceType source) async {
+  getImage() async {
+    SourceType? source = await Utils.chooseImageSource();
+    if (source == null) return;
     List<Media>? images = await Utils.imagePicker(
       source: source,
       count: 2,
@@ -489,10 +484,7 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
   }
 
   initPush() async {
-    bool isPush = await Permission.notification.status.isGranted;
-    if (!isPush) {
-      isPush = await Permission.notification.request().isGranted;
-    }
+    bool isPush = await Permission.notification.request().isGranted;
     if (isPush || Platform.isAndroid) {
       String? type;
       AppConfig? app;
@@ -594,10 +586,10 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
   }
 
   void _wxShare() async {
-    shareToWeChat(WeChatShareMiniProgramModel(
-      webPageUrl: 'https://www.chavesgu.com',
-      userName: 'gh_0d6dcb6a7b49',
-      path: 'pages/index/index',
+    shareToWeChat(WeChatShareWebPageModel(
+      'https://www.chavesgu.com',
+      title: 'Chaves Gu',
+      description: 'Blog Page',
       thumbnail: WeChatImage.network('https://cdn.chavesgu.com/logo.png'),
     ));
     StreamSubscription? subscription;

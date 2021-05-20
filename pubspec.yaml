@@ -29,6 +29,7 @@ dependencies:
   cupertino_icons: ^1.0.2
 
 #  null safety
+  intl: ^0.17.0
   device_info: ^2.0.0
   connectivity: ^3.0.2
   url_launcher: ^6.0.2
@@ -41,6 +42,7 @@ dependencies:
   flutter_screenutil: ^5.0.0
 #  shared_preferences: ^2.0.3
   dio: ^4.0.0
+  dio_http2_adapter: ^2.0.0
   dio_cookie_manager: ^2.0.0
   cookie_jar: ^3.0.0
   web_socket_channel: ^2.0.0
@@ -55,13 +57,24 @@ dependencies:
 #  fl_amap: ^0.0.3
   video_player: ^2.0.0
   audioplayers: ^0.18.0
+#  just_audio
   vibration: ^1.7.4-nullsafety.0
   fluwx_no_pay: ^3.4.2
   fl_chart: ^0.35.0
   flutter_spinkit: ^5.0.0
   flutter_slidable: ^0.6.0
   native_pdf_view: ^4.0.1
-  #  qr_flutter: ^4.0.0
+  animations: ^2.0.0
+#  modal_bottom_sheet
+#  convex_bottom_bar
+#  flutter_svg
+  carousel_slider: 4.0.0-nullsafety.0
+#  carousel_slider
+#  auto_size_text
+#  animated_text_kit
+#  animate_do
+#  syncfusion_flutter_charts
+#  qr_flutter: ^4.0.0
 
 
   flutter_inner_drawer:
@@ -91,9 +104,6 @@ dependencies:
 #    git:
 #      url: https://github.com/flutter-package/images_picker.git
 #      ref: 451131c
-
-# no null safety
-#  flutter_swiper: ^1.1.6
 
 
 dev_dependencies:
