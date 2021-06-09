@@ -10,5 +10,6 @@ export 'package:flutter_play/pages/demo/pdf.dart';
 export 'package:flutter_play/pages/demo/canvas1.dart';
 export 'package:flutter_play/pages/demo/canvas2.dart';
 export 'package:flutter_play/pages/demo/chart.dart';
+export 'package:flutter_play/pages/demo/gestureDetector.dart';
 export 'package:flutter_play/pages/media/videoDetail.dart';
 export 'package:flutter_play/pages/media/audioDetail.dart';

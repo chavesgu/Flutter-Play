@@ -289,11 +289,9 @@ class DemoPageState extends State<DemoPage> with AutomaticKeepAliveClientMixin {
                 },
               ),
               ElevatedButton(
-                child: Text('test'),
+                child: Text('GestureDetectorDemo'),
                 onPressed: () async {
-                  bottomPopup(
-                    items: {'item1': '1'},
-                  );
+                  Get.toNamed(GestureDetectorDemo.name);
                 },
               ),
             ],

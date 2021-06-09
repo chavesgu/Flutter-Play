@@ -1,3 +1,4 @@
+import 'package:extended_sliver/extended_sliver.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -32,12 +33,19 @@ class UserCenterState extends State<UserCenter>
       onRefresh: _refresh,
       child: CustomScrollView(
         slivers: [
+          // ExtendedSliverAppbar(
+          //   title: Text('userCenter'.tr),
+          //   toolbarHeight: 50,
+          //   background: MyImage(
+          //     'assets/images/bilibili.jpg',
+          //   ),
+          // ),
           SliverAppBar(
             title: Text('userCenter'.tr),
             centerTitle: true,
             pinned: true,
             toolbarHeight: 50,
-            expandedHeight: 150.0,
+            expandedHeight: 180.0,
             flexibleSpace: FlexibleSpaceBar(
               background: MyImage(
                 'assets/images/bilibili.jpg',

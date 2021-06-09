@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CssBox extends StatelessWidget {
-  CssBox(
-    this.child, {
+  CssBox({
+    this.child,
     this.width,
     this.height,
     this.widthFactor,
@@ -33,7 +33,7 @@ class CssBox extends StatelessWidget {
         assert(padding == null || padding.length <= 4),
         assert(margin == null || margin.length <= 4);
 
-  final Widget child;
+  final Widget? child;
   final double? width;
   final double? height;
   final double? widthFactor;

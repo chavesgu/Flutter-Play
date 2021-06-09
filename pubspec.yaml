@@ -75,6 +75,7 @@ dependencies:
 #  animate_do
 #  syncfusion_flutter_charts
 #  qr_flutter: ^4.0.0
+  extended_sliver: ^2.0.0
 
 
   flutter_inner_drawer:

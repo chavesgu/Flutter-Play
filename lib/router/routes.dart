@@ -67,6 +67,12 @@ List<GetPage> routes = [
     transition: Transition.downToUp,
     popGesture: true,
   ),
+  GetPage(
+    name: GestureDetectorDemo.name,
+    page: () => GestureDetectorDemo(),
+    transition: Transition.cupertino,
+    popGesture: true,
+  ),
 ];
 
 // GetPage notFoundPage = GetPage(
